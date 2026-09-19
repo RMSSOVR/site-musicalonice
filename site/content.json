@@ -1,287 +1,287 @@
 {
-  "title": "Musical on Ice — мюзикл на льду в двух актах",
+  "title": "Musical on Ice — full-length musicals on ice",
   "brand": "Musical on Ice",
   "logoAlt": "Musical on Ice",
   "nav": [
     {
-      "label": "О проекте",
+      "label": "About",
       "href": "#about"
     },
     {
-      "label": "Шоу",
+      "label": "Shows",
       "href": "#shows"
     },
     {
-      "label": "Рояль",
+      "label": "Piano",
       "href": "#piano"
     },
     {
-      "label": "Расписание",
+      "label": "Tickets",
       "href": "#dates"
     }
   ],
   "hero": {
-    "lede": "Мюзикл в двух актах: живой вокал, оркестр в яме и лёд вместо сцены.",
-    "where": "С 12 декабря по 8 февраля. Москва, ледовая арена «Кристалл».",
-    "primary": "Купить билеты",
-    "secondary": "Что происходит на льду",
-    "secondaryHref": "#acts",
-    "pressed": "Открываем схему зала…"
+    "lede": "Full-length musicals on ice: live vocals, orchestral scores and world-class skaters.",
+    "where": "12 December to 8 February in Bali, Indonesia.",
+    "primary": "Buy tickets",
+    "secondary": "See the shows",
+    "secondaryHref": "#shows",
+    "pressed": "Opening the seating plan…"
   },
   "about": {
-    "heading": "Мюзиклы на льду, которые ездят по миру",
-    "statement": "Musical on Ice — пять полнометражных спектаклей на льду: живой вокал, оркестровая музыка, проекции во всю арену и фигуристы международного уровня.",
-    "text": "Мы привозим шоу целиком: свет, звук, костюмы, декорации и труппу. Площадке остаётся лёд. За десять лет постановки видели зрители Италии, Ирландии, Германии, Болгарии, Латвии, Литвы, Словакии и Китая.",
+    "heading": "Musicals on ice that tour the world",
+    "statement": "Musical on Ice is five full-length productions on ice: live vocals, orchestral music, arena-wide projections and skaters of international standard.",
+    "text": "We bring the whole show with us: lighting, sound, costumes, sets and the company. The venue provides the ice. Over ten years our productions have played to audiences in Italy, Ireland, Germany, Bulgaria, Latvia, Lithuania, Slovakia and China.",
     "video": "",
     "facts": [
       {
         "value": "5",
-        "label": "постановок в репертуаре"
+        "label": "productions in repertoire"
       },
       {
-        "value": "10 лет",
-        "label": "гастролей по миру"
+        "value": "10 years",
+        "label": "of touring worldwide"
       },
       {
         "value": "42",
-        "label": "артиста на льду"
+        "label": "performers on the ice"
       }
     ],
-    "nearest": "Ближайшее выступление",
-    "nearestCta": "Билеты"
+    "nearest": "Next performance",
+    "nearestCta": "Tickets"
   },
   "shows": {
-    "heading": "Наши шоу",
-    "intro": "Пять постановок на льду — от семейной сказки до готической драмы. Выберите шоу и посмотрите ближайшие даты.",
+    "heading": "Our shows",
+    "intro": "Five productions on ice, from a family fairy tale to a gothic drama. Pick a show to see what it is about.",
     "items": [
       {
-        "title": "Аладдин",
-        "status": "В туре",
+        "title": "Aladdin",
+        "status": "On tour",
         "image": "images/aladdin.jpg",
         "href": "#show=aladdin",
-        "text": "«Аладдин и другие истории 1001 ночи» на льду: восточный город, джинн и танец над замёрзшим озером.",
+        "text": "Aladdin and other famous stories from 1001 Nights on ice: an Eastern city, a genie and a dance over a frozen lake.",
         "slug": "aladdin",
         "video": "",
-        "about": "Восточная сказка на льду: базары Багдада, дворец султана и лампа, из которой выходит джинн.\n\nВ спектакле заняты фигуристы международного уровня, живой вокал и видеопроекции во всю арену. Помимо истории Аладдина в шоу вплетены другие сюжеты из «1001 ночи».",
+        "about": "An Eastern fairy tale on ice: the bazaars of Baghdad, the Sultan’s palace and the lamp that releases the genie.\n\nThe show features skaters of international standard, live vocals and arena-wide video projection. Alongside Aladdin’s story it weaves in other tales from 1001 Nights.",
         "facts": [
           {
-            "label": "Длительность",
-            "value": "90 минут"
+            "label": "Running time",
+            "value": "90 minutes"
           },
           {
-            "label": "Возраст",
+            "label": "Age",
             "value": "0+"
           },
           {
-            "label": "Артистов",
+            "label": "Performers",
             "value": "24"
           },
           {
-            "label": "Антракт",
-            "value": "один, 20 минут"
+            "label": "Interval",
+            "value": "one, 20 minutes"
           }
         ],
-        "lead": "Восточная сказка на льду — с джинном, летающим ковром и городом из тысячи огней."
+        "lead": "An Eastern fairy tale on ice, with a genie, a flying carpet and a city of a thousand lights."
       },
       {
-        "title": "Алиса в Стране чудес",
-        "status": "В туре",
+        "title": "Alice in Wonderland",
+        "status": "On tour",
         "image": "images/alice.jpg",
         "href": "#show=alice",
-        "text": "Семейное шоу по Кэрроллу: Шляпник, Белый Кролик и ледяной тоннель Страны чудес.",
+        "text": "A family show after Lewis Carroll: the Mad Hatter, the White Rabbit and an icy tunnel into Wonderland.",
         "slug": "alice",
         "video": "",
-        "about": "Кэрролловская Алиса проваливается в кроличью нору и попадает в ледяную Страну чудес.\n\nШоу объехало Италию, Ирландию, Германию, Болгарию, Латвию, Литву, Словакию, Китай и другие страны. Семейная постановка: одинаково смотрится и детьми, и взрослыми.",
+        "about": "Carroll’s Alice falls down the rabbit hole and lands in a Wonderland made of ice.\n\nThe show has toured Italy, Ireland, Germany, Bulgaria, Latvia, Lithuania, Slovakia, China and beyond. A true family production that children and adults enjoy equally.",
         "facts": [
           {
-            "label": "Длительность",
-            "value": "90 минут"
+            "label": "Running time",
+            "value": "90 minutes"
           },
           {
-            "label": "Возраст",
+            "label": "Age",
             "value": "0+"
           },
           {
-            "label": "Артистов",
+            "label": "Performers",
             "value": "22"
           },
           {
-            "label": "Антракт",
-            "value": "один, 20 минут"
+            "label": "Interval",
+            "value": "one, 20 minutes"
           }
         ],
-        "lead": "Кроличья нора ведёт на лёд: Шляпник, Белый Кролик и Страна чудес во всю арену."
+        "lead": "The rabbit hole leads onto the ice: the Mad Hatter, the White Rabbit and a Wonderland that fills the whole arena."
       },
       {
-        "title": "Дракула",
-        "status": "В туре",
+        "title": "Dracula",
+        "status": "On tour",
         "image": "images/dracula.jpg",
         "href": "#show=dracula",
-        "text": "История вечной любви: замок под полной луной, готика и самый тёмный свет из наших постановок.",
+        "text": "The story of eternal love: a castle under a full moon, gothic drama and the darkest lighting of all our productions.",
         "slug": "dracula",
         "video": "",
-        "about": "История вечной любви, рассказанная коньками: замок под полной луной, летучие мыши и алый свет.\n\nСамая тёмная из наших постановок — для подростков и взрослых. Готическая музыка, сложные поддержки и финал, который мы просим не пересказывать.",
+        "about": "A story of eternal love told on skates: a castle under a full moon, bats and blood-red light.\n\nOur darkest production, made for teenagers and adults. Gothic music, demanding lifts and a finale we ask you not to spoil.",
         "facts": [
           {
-            "label": "Длительность",
-            "value": "100 минут"
+            "label": "Running time",
+            "value": "100 minutes"
           },
           {
-            "label": "Возраст",
+            "label": "Age",
             "value": "12+"
           },
           {
-            "label": "Артистов",
+            "label": "Performers",
             "value": "26"
           },
           {
-            "label": "Антракт",
-            "value": "один, 20 минут"
+            "label": "Interval",
+            "value": "one, 20 minutes"
           }
         ],
-        "lead": "История вечной любви, рассказанная коньками. Самая тёмная из наших постановок."
+        "lead": "A story of eternal love told on skates. The darkest of our productions."
       },
       {
-        "title": "Маленький принц",
-        "status": "В туре",
+        "title": "The Little Prince",
+        "status": "On tour",
         "image": "images/prince.jpg",
         "href": "#show=prince",
-        "text": "Фантастический спектакль по Сент-Экзюпери: звёздное небо, одна роза и много пустого льда.",
+        "text": "A fantastical performance after Saint-Exupéry: a starry sky, a single rose and a great deal of empty ice.",
         "slug": "prince",
         "video": "",
-        "about": "Тихий спектакль по Сент-Экзюпери: астероид, роза, лис и человек, который разучился видеть сердцем.\n\nЛёд здесь почти пустой — и это намеренно. Звёздное небо создаётся проекцией, а вся история держится на одном артисте и нескольких предметах.",
+        "about": "A quiet performance after Saint-Exupéry: an asteroid, a rose, a fox and a man who has forgotten how to see with his heart.\n\nThe ice is almost empty, and that is deliberate. The starry sky is created by projection, and the whole story rests on one performer and a handful of objects.",
         "facts": [
           {
-            "label": "Длительность",
-            "value": "80 минут"
+            "label": "Running time",
+            "value": "80 minutes"
           },
           {
-            "label": "Возраст",
+            "label": "Age",
             "value": "6+"
           },
           {
-            "label": "Артистов",
+            "label": "Performers",
             "value": "18"
           },
           {
-            "label": "Антракт",
-            "value": "без антракта"
+            "label": "Interval",
+            "value": "none"
           }
         ],
-        "lead": "Звёздное небо, одна роза и человек, который разучился видеть сердцем."
+        "lead": "A starry sky, a single rose and a man who forgot how to see with his heart."
       },
       {
-        "title": "Принцесса Анастасия",
-        "status": "В туре",
+        "title": "Princess Anastasia",
+        "status": "On tour",
         "image": "images/anastasia.jpg",
         "href": "#show=anastasia",
-        "text": "Тайная наследница престола: имперский Петербург, революция и мелодрама с живым вокалом.",
+        "text": "The secret heir to the throne: imperial St Petersburg, revolution and a melodrama with live vocals.",
         "slug": "anastasia",
         "video": "",
-        "about": "Тайная наследница престола: имперский Петербург, революция и судьба младшей дочери последнего царя.\n\nИсторическая мелодрама с живым вокалом, бальными сценами и финалом на фоне Зимнего дворца.",
+        "about": "The secret heir to the throne: imperial St Petersburg, revolution and the fate of the last Tsar’s youngest daughter.\n\nA historical melodrama with live vocals, ballroom scenes and a finale set against the Winter Palace.",
         "facts": [
           {
-            "label": "Длительность",
-            "value": "95 минут"
+            "label": "Running time",
+            "value": "95 minutes"
           },
           {
-            "label": "Возраст",
+            "label": "Age",
             "value": "6+"
           },
           {
-            "label": "Артистов",
+            "label": "Performers",
             "value": "24"
           },
           {
-            "label": "Антракт",
-            "value": "один, 20 минут"
+            "label": "Interval",
+            "value": "one, 20 minutes"
           }
         ],
-        "lead": "Имперский Петербург, революция и судьба младшей дочери последнего царя."
+        "lead": "Imperial St Petersburg, revolution and the fate of the last Tsar’s youngest daughter."
       }
     ],
-    "back": "Все шоу",
-    "cta": "Купить билеты",
-    "videoTitle": "Видео о шоу",
-    "videoEmpty": "Видео пока не подключено.",
-    "others": "Другие шоу",
-    "videoCta": "Смотреть видео",
-    "datesCta": "Смотреть даты",
-    "factsTitle": "О спектакле",
-    "watch": "Смотреть видео"
+    "back": "All shows",
+    "cta": "Buy tickets",
+    "videoTitle": "Watch the show",
+    "videoEmpty": "The video is coming soon.",
+    "others": "More shows",
+    "videoCta": "Watch the video",
+    "datesCta": "See dates",
+    "factsTitle": "About the show",
+    "watch": "Watch the video"
   },
   "piano": {
-    "heading": "Тот самый рояль",
-    "intro": "В первом акте на льду только фигуристка и рояль. Инструмент ниже — настоящий: нажмите клавишу мышкой, пальцем или на клавиатуре компьютера. Буквы подписаны на самих клавишах.",
-    "play": "Сыграть тему первого акта",
-    "stop": "Остановить",
-    "hint": "Звук включается только когда вы нажимаете клавишу."
+    "heading": "The piano itself",
+    "intro": "In the first act the ice belongs to one skater and a piano. The instrument below is real: press a key with your mouse, your finger or your computer keyboard. The letters are printed on the keys.",
+    "play": "Play the first-act theme",
+    "stop": "Stop",
+    "hint": "Sound plays only when you press a key."
   },
   "dates": {
-    "heading": "Расписание и билеты",
-    "intro": "Цены от 2 400 ₽. Первые три ряда у борта — оттуда видно и лёд, и оркестр.",
-    "button": "Выбрать места",
-    "soldLabel": "Продано",
+    "heading": "Dates and tickets",
+    "intro": "The first three rows by the boards give the best view of both the ice and the orchestra.",
+    "button": "Choose seats",
+    "soldLabel": "Sold out",
     "items": [
       {
-        "day": "12 декабря",
+        "day": "12 December",
         "time": "19:00",
-        "seats": "Мест нет",
+        "seats": "Sold out",
         "state": "none"
       },
       {
-        "day": "13 декабря",
+        "day": "13 December",
         "time": "16:00",
-        "seats": "Осталось 24 места",
+        "seats": "24 seats left",
         "state": "few"
       },
       {
-        "day": "20 декабря",
+        "day": "20 December",
         "time": "19:00",
-        "seats": "Свободно во всех секторах",
+        "seats": "Seats in every section",
         "state": "free"
       },
       {
-        "day": "4 января",
+        "day": "4 January",
         "time": "13:00",
-        "seats": "Свободно, детский сеанс",
+        "seats": "Available, family matinee",
         "state": "free"
       },
       {
-        "day": "8 февраля",
+        "day": "8 February",
         "time": "19:00",
-        "seats": "Последний вечер, осталось 9 мест",
+        "seats": "Final night, 9 seats left",
         "state": "few"
       }
     ]
   },
   "footer": {
     "lines": [
-      "Ледовая арена «Кристалл», Москва.",
-      "Касса работает с 11:00 до 21:00."
+      "Bali, Indonesia.",
+      "Box office open daily 11:00–21:00."
     ],
     "links": [
       {
-        "label": "Акты",
-        "href": "#acts"
+        "label": "About",
+        "href": "#about"
       },
       {
-        "label": "Состав",
-        "href": "#cast"
+        "label": "Shows",
+        "href": "#shows"
       },
       {
-        "label": "Расписание",
+        "label": "Tickets",
         "href": "#dates"
       },
       {
-        "label": "Наверх",
+        "label": "Back to top",
         "href": "#top"
       }
     ],
-    "note": "Фото- и видеосъёмка со вспышкой запрещена: свет сбивает артистов на поддержках, а вокал идёт вживую."
+    "note": "Flash photography and filming are not allowed: the light distracts performers during lifts, and the vocals are live."
   },
   "theme": {
-    "dark": "Ночь",
-    "light": "Лёд"
+    "dark": "Night",
+    "light": "Ice"
   }
 }
