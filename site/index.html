@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -136,8 +136,16 @@
   .top{
     position:fixed;inset:0 0 auto 0;z-index:30;
     display:flex;align-items:center;justify-content:space-between;gap:1rem;
-    width:var(--page);margin-inline:auto;padding-block:1rem;
+    width:var(--page);margin-inline:auto;padding-block:.85rem;
   }
+  .top::before{
+    content:"";position:absolute;z-index:-1;top:0;bottom:0;left:50%;width:100vw;translate:-50% 0;
+    background:rgba(5,19,32,.74);
+    backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);
+    border-bottom:1px solid var(--hair);
+  }
+  html[data-theme="light"] .top::before{background:rgba(236,244,253,.8)}
+  .slab,#shows,#dates,#about,#piano{scroll-margin-top:5rem}
   .mark{
     font-family:var(--display);font-size:1.06rem;letter-spacing:.055em;
     text-decoration:none;color:var(--glare);text-shadow:0 1px 10px rgba(5,18,30,.95);
@@ -176,6 +184,7 @@
   .fallboard span{margin-left:auto;letter-spacing:0;font-family:var(--text);font-size:.74rem;color:var(--mist)}
 
   .keybed{
+    --n:14;
     position:relative;display:flex;gap:0;
     padding-top:.5rem;
     touch-action:none;user-select:none;-webkit-user-select:none;
@@ -208,9 +217,10 @@
   }
   .bkey{
     position:absolute;top:.5rem;z-index:3;
-    width:clamp(1.5rem,3.2vw,2.5rem);
+    left:calc((var(--after) + 1) / var(--n) * 100%);
+    width:calc(100% / var(--n) * .6);
     height:62%;
-    margin-left:calc(clamp(1.5rem,3.2vw,2.5rem) / -2);
+    margin-left:calc(100% / var(--n) * -.3);
     display:flex;align-items:flex-end;justify-content:center;
     padding-bottom:.4rem;
     font:500 .58rem/1 var(--text);color:rgba(211,229,243,.45);
@@ -232,9 +242,13 @@
   .piano-bar{display:flex;flex-wrap:wrap;gap:1.2rem;align-items:center;margin-top:1.4rem}
   .piano-hint{font-size:.84rem;color:var(--mist)}
   @media (max-width:620px){
-    .wkey{font-size:0;padding-bottom:0}
+    .keybed{--n:7}
+    .keybed [data-oct="2"]{display:none}
+    .wkey{font-size:0;padding-bottom:0;height:9.5rem}
     .bkey{font-size:0}
-    .fallboard{font-size:.68rem;letter-spacing:.14em}
+    .piano{padding:.8rem .6rem 0}
+    .fallboard{font-size:.68rem;letter-spacing:.16em;white-space:nowrap}
+    .fallboard span{display:none}
   }
 
   /* ——— афиши шоу: один ряд с прокруткой ——— */
@@ -290,12 +304,20 @@
   .show-title{font-family:var(--display);font-size:1.1rem;color:#E8C078;line-height:1.2}
   .show-status{font:600 .72rem/1 var(--text);letter-spacing:.06em;text-transform:uppercase;color:var(--glare);margin-top:.55rem}
   .show-text{font-size:.84rem;color:var(--mist);margin-top:.65rem}
+  @media (max-width:560px){
+    .show-body{padding:.7rem .7rem .85rem}
+    .show-title{font-size:.95rem}
+    .show-status{font-size:.62rem;margin-top:.4rem}
+    .show-text{font-size:.76rem;line-height:1.45;margin-top:.45rem;
+      display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .show-blank{font-size:.85rem;padding:.6rem}
+  }
   html[data-theme="light"] .show{background:rgba(255,255,255,.66)}
   html[data-theme="light"] .show-title{color:#9C6C12}
   html[data-theme="light"] .show-poster{background:linear-gradient(160deg,#C2DAF4,#9FC0E4 60%,#84AAD6)}
   html[data-theme="light"] .show-blank{color:rgba(22,57,78,.55)}
-  @media (max-width:900px){.shows{--seen:2}}
-  @media (max-width:560px){.shows{--seen:1.15}}
+  @media (max-width:900px){.shows{--seen:3}}
+  @media (max-width:560px){.shows{--seen:2.25}}
 
   /* ——— страница шоу ——— */
   .showview{display:block}
@@ -358,8 +380,8 @@
 
   .sh-others{padding-bottom:clamp(3rem,6vw,5rem)}
   .sh-others .shows{--seen:4}
-  @media (max-width:900px){.sh-others .shows{--seen:2}}
-  @media (max-width:560px){.sh-others .shows{--seen:1.15}}
+  @media (max-width:900px){.sh-others .shows{--seen:3}}
+  @media (max-width:560px){.sh-others .shows{--seen:2.25}}
 
   /* ——— обычные кнопки ——— */
   .buy{
@@ -611,11 +633,11 @@
 
 <header class="top">
   <a class="mark" href="#top" data-f="brand"></a>
-  <nav class="nav" id="nav" aria-label="Разделы"></nav>
-  <button class="theme" type="button" id="theme" aria-label="Сменить оформление">
+  <nav class="nav" id="nav" aria-label="Sections"></nav>
+  <button class="theme" type="button" id="theme" aria-label="Switch theme">
     <span class="theme-knob"></span>
-    <span class="theme-side theme-dark">Ночь</span>
-    <span class="theme-side theme-light">Лёд</span>
+    <span class="theme-side theme-dark">Night</span>
+    <span class="theme-side theme-light">Ice</span>
   </button>
 </header>
 
@@ -689,290 +711,290 @@
 <!-- ═══ КОНТЕНТ САЙТА. Это единственный блок, который меняет админка. ═══ -->
 <script id="site-content" type="application/json">
 {
-  "title": "Musical on Ice — мюзикл на льду в двух актах",
+  "title": "Musical on Ice — full-length musicals on ice",
   "brand": "Musical on Ice",
   "logoAlt": "Musical on Ice",
   "nav": [
     {
-      "label": "О проекте",
+      "label": "About",
       "href": "#about"
     },
     {
-      "label": "Шоу",
+      "label": "Shows",
       "href": "#shows"
     },
     {
-      "label": "Рояль",
+      "label": "Piano",
       "href": "#piano"
     },
     {
-      "label": "Расписание",
+      "label": "Tickets",
       "href": "#dates"
     }
   ],
   "hero": {
-    "lede": "Мюзикл в двух актах: живой вокал, оркестр в яме и лёд вместо сцены.",
-    "where": "С 12 декабря по 8 февраля. Москва, ледовая арена «Кристалл».",
-    "primary": "Купить билеты",
-    "secondary": "Что происходит на льду",
-    "secondaryHref": "#acts",
-    "pressed": "Открываем схему зала…"
+    "lede": "Full-length musicals on ice: live vocals, orchestral scores and world-class skaters.",
+    "where": "12 December to 8 February in Bali, Indonesia.",
+    "primary": "Buy tickets",
+    "secondary": "See the shows",
+    "secondaryHref": "#shows",
+    "pressed": "Opening the seating plan…"
   },
   "about": {
-    "heading": "Мюзиклы на льду, которые ездят по миру",
-    "statement": "Musical on Ice — пять полнометражных спектаклей на льду: живой вокал, оркестровая музыка, проекции во всю арену и фигуристы международного уровня.",
-    "text": "Мы привозим шоу целиком: свет, звук, костюмы, декорации и труппу. Площадке остаётся лёд. За десять лет постановки видели зрители Италии, Ирландии, Германии, Болгарии, Латвии, Литвы, Словакии и Китая.",
+    "heading": "Musicals on ice that tour the world",
+    "statement": "Musical on Ice is five full-length productions on ice: live vocals, orchestral music, arena-wide projections and skaters of international standard.",
+    "text": "We bring the whole show with us: lighting, sound, costumes, sets and the company. The venue provides the ice. Over ten years our productions have played to audiences in Italy, Ireland, Germany, Bulgaria, Latvia, Lithuania, Slovakia and China.",
     "video": "",
     "facts": [
       {
         "value": "5",
-        "label": "постановок в репертуаре"
+        "label": "productions in repertoire"
       },
       {
-        "value": "10 лет",
-        "label": "гастролей по миру"
+        "value": "10 years",
+        "label": "of touring worldwide"
       },
       {
         "value": "42",
-        "label": "артиста на льду"
+        "label": "performers on the ice"
       }
     ],
-    "nearest": "Ближайшее выступление",
-    "nearestCta": "Билеты"
+    "nearest": "Next performance",
+    "nearestCta": "Tickets"
   },
   "shows": {
-    "heading": "Наши шоу",
-    "intro": "Пять постановок на льду — от семейной сказки до готической драмы. Выберите шоу и посмотрите ближайшие даты.",
+    "heading": "Our shows",
+    "intro": "Five productions on ice, from a family fairy tale to a gothic drama. Pick a show to see what it is about.",
     "items": [
       {
-        "title": "Аладдин",
-        "status": "В туре",
+        "title": "Aladdin",
+        "status": "On tour",
         "image": "images/aladdin.jpg",
         "href": "#show=aladdin",
-        "text": "«Аладдин и другие истории 1001 ночи» на льду: восточный город, джинн и танец над замёрзшим озером.",
+        "text": "Aladdin and other famous stories from 1001 Nights on ice: an Eastern city, a genie and a dance over a frozen lake.",
         "slug": "aladdin",
         "video": "",
-        "about": "Восточная сказка на льду: базары Багдада, дворец султана и лампа, из которой выходит джинн.\n\nВ спектакле заняты фигуристы международного уровня, живой вокал и видеопроекции во всю арену. Помимо истории Аладдина в шоу вплетены другие сюжеты из «1001 ночи».",
+        "about": "An Eastern fairy tale on ice: the bazaars of Baghdad, the Sultan’s palace and the lamp that releases the genie.\n\nThe show features skaters of international standard, live vocals and arena-wide video projection. Alongside Aladdin’s story it weaves in other tales from 1001 Nights.",
         "facts": [
           {
-            "label": "Длительность",
-            "value": "90 минут"
+            "label": "Running time",
+            "value": "90 minutes"
           },
           {
-            "label": "Возраст",
+            "label": "Age",
             "value": "0+"
           },
           {
-            "label": "Артистов",
+            "label": "Performers",
             "value": "24"
           },
           {
-            "label": "Антракт",
-            "value": "один, 20 минут"
+            "label": "Interval",
+            "value": "one, 20 minutes"
           }
         ],
-        "lead": "Восточная сказка на льду — с джинном, летающим ковром и городом из тысячи огней."
+        "lead": "An Eastern fairy tale on ice, with a genie, a flying carpet and a city of a thousand lights."
       },
       {
-        "title": "Алиса в Стране чудес",
-        "status": "В туре",
+        "title": "Alice in Wonderland",
+        "status": "On tour",
         "image": "images/alice.jpg",
         "href": "#show=alice",
-        "text": "Семейное шоу по Кэрроллу: Шляпник, Белый Кролик и ледяной тоннель Страны чудес.",
+        "text": "A family show after Lewis Carroll: the Mad Hatter, the White Rabbit and an icy tunnel into Wonderland.",
         "slug": "alice",
         "video": "",
-        "about": "Кэрролловская Алиса проваливается в кроличью нору и попадает в ледяную Страну чудес.\n\nШоу объехало Италию, Ирландию, Германию, Болгарию, Латвию, Литву, Словакию, Китай и другие страны. Семейная постановка: одинаково смотрится и детьми, и взрослыми.",
+        "about": "Carroll’s Alice falls down the rabbit hole and lands in a Wonderland made of ice.\n\nThe show has toured Italy, Ireland, Germany, Bulgaria, Latvia, Lithuania, Slovakia, China and beyond. A true family production that children and adults enjoy equally.",
         "facts": [
           {
-            "label": "Длительность",
-            "value": "90 минут"
+            "label": "Running time",
+            "value": "90 minutes"
           },
           {
-            "label": "Возраст",
+            "label": "Age",
             "value": "0+"
           },
           {
-            "label": "Артистов",
+            "label": "Performers",
             "value": "22"
           },
           {
-            "label": "Антракт",
-            "value": "один, 20 минут"
+            "label": "Interval",
+            "value": "one, 20 minutes"
           }
         ],
-        "lead": "Кроличья нора ведёт на лёд: Шляпник, Белый Кролик и Страна чудес во всю арену."
+        "lead": "The rabbit hole leads onto the ice: the Mad Hatter, the White Rabbit and a Wonderland that fills the whole arena."
       },
       {
-        "title": "Дракула",
-        "status": "В туре",
+        "title": "Dracula",
+        "status": "On tour",
         "image": "images/dracula.jpg",
         "href": "#show=dracula",
-        "text": "История вечной любви: замок под полной луной, готика и самый тёмный свет из наших постановок.",
+        "text": "The story of eternal love: a castle under a full moon, gothic drama and the darkest lighting of all our productions.",
         "slug": "dracula",
         "video": "",
-        "about": "История вечной любви, рассказанная коньками: замок под полной луной, летучие мыши и алый свет.\n\nСамая тёмная из наших постановок — для подростков и взрослых. Готическая музыка, сложные поддержки и финал, который мы просим не пересказывать.",
+        "about": "A story of eternal love told on skates: a castle under a full moon, bats and blood-red light.\n\nOur darkest production, made for teenagers and adults. Gothic music, demanding lifts and a finale we ask you not to spoil.",
         "facts": [
           {
-            "label": "Длительность",
-            "value": "100 минут"
+            "label": "Running time",
+            "value": "100 minutes"
           },
           {
-            "label": "Возраст",
+            "label": "Age",
             "value": "12+"
           },
           {
-            "label": "Артистов",
+            "label": "Performers",
             "value": "26"
           },
           {
-            "label": "Антракт",
-            "value": "один, 20 минут"
+            "label": "Interval",
+            "value": "one, 20 minutes"
           }
         ],
-        "lead": "История вечной любви, рассказанная коньками. Самая тёмная из наших постановок."
+        "lead": "A story of eternal love told on skates. The darkest of our productions."
       },
       {
-        "title": "Маленький принц",
-        "status": "В туре",
+        "title": "The Little Prince",
+        "status": "On tour",
         "image": "images/prince.jpg",
         "href": "#show=prince",
-        "text": "Фантастический спектакль по Сент-Экзюпери: звёздное небо, одна роза и много пустого льда.",
+        "text": "A fantastical performance after Saint-Exupéry: a starry sky, a single rose and a great deal of empty ice.",
         "slug": "prince",
         "video": "",
-        "about": "Тихий спектакль по Сент-Экзюпери: астероид, роза, лис и человек, который разучился видеть сердцем.\n\nЛёд здесь почти пустой — и это намеренно. Звёздное небо создаётся проекцией, а вся история держится на одном артисте и нескольких предметах.",
+        "about": "A quiet performance after Saint-Exupéry: an asteroid, a rose, a fox and a man who has forgotten how to see with his heart.\n\nThe ice is almost empty, and that is deliberate. The starry sky is created by projection, and the whole story rests on one performer and a handful of objects.",
         "facts": [
           {
-            "label": "Длительность",
-            "value": "80 минут"
+            "label": "Running time",
+            "value": "80 minutes"
           },
           {
-            "label": "Возраст",
+            "label": "Age",
             "value": "6+"
           },
           {
-            "label": "Артистов",
+            "label": "Performers",
             "value": "18"
           },
           {
-            "label": "Антракт",
-            "value": "без антракта"
+            "label": "Interval",
+            "value": "none"
           }
         ],
-        "lead": "Звёздное небо, одна роза и человек, который разучился видеть сердцем."
+        "lead": "A starry sky, a single rose and a man who forgot how to see with his heart."
       },
       {
-        "title": "Принцесса Анастасия",
-        "status": "В туре",
+        "title": "Princess Anastasia",
+        "status": "On tour",
         "image": "images/anastasia.jpg",
         "href": "#show=anastasia",
-        "text": "Тайная наследница престола: имперский Петербург, революция и мелодрама с живым вокалом.",
+        "text": "The secret heir to the throne: imperial St Petersburg, revolution and a melodrama with live vocals.",
         "slug": "anastasia",
         "video": "",
-        "about": "Тайная наследница престола: имперский Петербург, революция и судьба младшей дочери последнего царя.\n\nИсторическая мелодрама с живым вокалом, бальными сценами и финалом на фоне Зимнего дворца.",
+        "about": "The secret heir to the throne: imperial St Petersburg, revolution and the fate of the last Tsar’s youngest daughter.\n\nA historical melodrama with live vocals, ballroom scenes and a finale set against the Winter Palace.",
         "facts": [
           {
-            "label": "Длительность",
-            "value": "95 минут"
+            "label": "Running time",
+            "value": "95 minutes"
           },
           {
-            "label": "Возраст",
+            "label": "Age",
             "value": "6+"
           },
           {
-            "label": "Артистов",
+            "label": "Performers",
             "value": "24"
           },
           {
-            "label": "Антракт",
-            "value": "один, 20 минут"
+            "label": "Interval",
+            "value": "one, 20 minutes"
           }
         ],
-        "lead": "Имперский Петербург, революция и судьба младшей дочери последнего царя."
+        "lead": "Imperial St Petersburg, revolution and the fate of the last Tsar’s youngest daughter."
       }
     ],
-    "back": "Все шоу",
-    "cta": "Купить билеты",
-    "videoTitle": "Видео о шоу",
-    "videoEmpty": "Видео пока не подключено.",
-    "others": "Другие шоу",
-    "videoCta": "Смотреть видео",
-    "datesCta": "Смотреть даты",
-    "factsTitle": "О спектакле",
-    "watch": "Смотреть видео"
+    "back": "All shows",
+    "cta": "Buy tickets",
+    "videoTitle": "Watch the show",
+    "videoEmpty": "The video is coming soon.",
+    "others": "More shows",
+    "videoCta": "Watch the video",
+    "datesCta": "See dates",
+    "factsTitle": "About the show",
+    "watch": "Watch the video"
   },
   "piano": {
-    "heading": "Тот самый рояль",
-    "intro": "В первом акте на льду только фигуристка и рояль. Инструмент ниже — настоящий: нажмите клавишу мышкой, пальцем или на клавиатуре компьютера. Буквы подписаны на самих клавишах.",
-    "play": "Сыграть тему первого акта",
-    "stop": "Остановить",
-    "hint": "Звук включается только когда вы нажимаете клавишу."
+    "heading": "The piano itself",
+    "intro": "In the first act the ice belongs to one skater and a piano. The instrument below is real: press a key with your mouse, your finger or your computer keyboard. The letters are printed on the keys.",
+    "play": "Play the first-act theme",
+    "stop": "Stop",
+    "hint": "Sound plays only when you press a key."
   },
   "dates": {
-    "heading": "Расписание и билеты",
-    "intro": "Цены от 2 400 ₽. Первые три ряда у борта — оттуда видно и лёд, и оркестр.",
-    "button": "Выбрать места",
-    "soldLabel": "Продано",
+    "heading": "Dates and tickets",
+    "intro": "The first three rows by the boards give the best view of both the ice and the orchestra.",
+    "button": "Choose seats",
+    "soldLabel": "Sold out",
     "items": [
       {
-        "day": "12 декабря",
+        "day": "12 December",
         "time": "19:00",
-        "seats": "Мест нет",
+        "seats": "Sold out",
         "state": "none"
       },
       {
-        "day": "13 декабря",
+        "day": "13 December",
         "time": "16:00",
-        "seats": "Осталось 24 места",
+        "seats": "24 seats left",
         "state": "few"
       },
       {
-        "day": "20 декабря",
+        "day": "20 December",
         "time": "19:00",
-        "seats": "Свободно во всех секторах",
+        "seats": "Seats in every section",
         "state": "free"
       },
       {
-        "day": "4 января",
+        "day": "4 January",
         "time": "13:00",
-        "seats": "Свободно, детский сеанс",
+        "seats": "Available, family matinee",
         "state": "free"
       },
       {
-        "day": "8 февраля",
+        "day": "8 February",
         "time": "19:00",
-        "seats": "Последний вечер, осталось 9 мест",
+        "seats": "Final night, 9 seats left",
         "state": "few"
       }
     ]
   },
   "footer": {
     "lines": [
-      "Ледовая арена «Кристалл», Москва.",
-      "Касса работает с 11:00 до 21:00."
+      "Bali, Indonesia.",
+      "Box office open daily 11:00–21:00."
     ],
     "links": [
       {
-        "label": "Акты",
-        "href": "#acts"
+        "label": "About",
+        "href": "#about"
       },
       {
-        "label": "Состав",
-        "href": "#cast"
+        "label": "Shows",
+        "href": "#shows"
       },
       {
-        "label": "Расписание",
+        "label": "Tickets",
         "href": "#dates"
       },
       {
-        "label": "Наверх",
+        "label": "Back to top",
         "href": "#top"
       }
     ],
-    "note": "Фото- и видеосъёмка со вспышкой запрещена: свет сбивает артистов на поддержках, а вокал идёт вживую."
+    "note": "Flash photography and filming are not allowed: the light distracts performers during lifts, and the vocals are live."
   },
   "theme": {
-    "dark": "Ночь",
-    "light": "Лёд"
+    "dark": "Night",
+    "light": "Ice"
   }
 }
 </script>
@@ -1089,11 +1111,11 @@ function render() {
 
 /* ——— страница шоу по адресу #show=… ——— */
 function videoBlock(url) {
-  if (!url) return `<div class="video-frame">${esc((C.shows && C.shows.videoEmpty) || 'Видео пока не подключено.')}</div>`;
+  if (!url) return `<div class="video-frame">${esc((C.shows && C.shows.videoEmpty) || 'The video is coming soon.')}</div>`;
   const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{6,})/);
-  if (yt) return `<div class="video-frame"><iframe src="https://www.youtube.com/embed/${esc(yt[1])}" title="Видео" allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;
+  if (yt) return `<div class="video-frame"><iframe src="https://www.youtube.com/embed/${esc(yt[1])}" title="Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;
   const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
-  if (vm) return `<div class="video-frame"><iframe src="https://player.vimeo.com/video/${esc(vm[1])}" title="Видео" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`;
+  if (vm) return `<div class="video-frame"><iframe src="https://player.vimeo.com/video/${esc(vm[1])}" title="Video" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`;
   return `<div class="video-frame"><video src="${esc(url)}" controls preload="none"></video></div>`;
 }
 
@@ -1101,8 +1123,8 @@ function showCard(sh) {
   return `
     <a class="show" href="#show=${esc(sh.slug || '')}">
       <div class="show-poster">${sh.image
-        ? `<img src="${esc(sh.image)}" alt="${esc(sh.title)}" loading="lazy">`
-        : `<div class="show-blank">${esc(sh.title)}<small>афиша не подключена</small></div>`}</div>
+        ? `<img src="${esc(sh.image)}" alt="${esc(sh.title)}" loading="lazy" onerror="this.outerHTML='<div class=&quot;show-blank&quot;>'+this.alt+'<small>poster coming soon</small></div>'">`
+        : `<div class="show-blank">${esc(sh.title)}<small>poster coming soon</small></div>`}</div>
       <div class="show-body">
         <div class="show-title">${esc(sh.title)}</div>
         <div class="show-status">${esc(sh.status || '')}</div>
@@ -1121,16 +1143,16 @@ function renderShow(sh) {
     <header class="sh-hero" style="--poster:url('${sh.image ? esc(sh.image) : ''}')">
       <div class="sh-hero-bg"></div>
       <div class="wrap">
-        <a class="sh-back" href="#shows">← ${esc(S.back || 'Все шоу')}</a>
+        <a class="sh-back" href="#shows">← ${esc(S.back || 'All shows')}</a>
         <div class="sh-top">
-          <div>${sh.image ? `<img class="sh-cover" src="${esc(sh.image)}" alt="${esc(sh.title)}">` : ''}</div>
+          <div>${sh.image ? `<img class="sh-cover" src="${esc(sh.image)}" alt="${esc(sh.title)}" onerror="this.remove()">` : ''}</div>
           <div>
             <div class="sh-status">${esc(sh.status || '')}</div>
             <h1 class="sh-h1">${esc(sh.title)}</h1>
             <p class="sh-lead">${esc(sh.lead || sh.text || '')}</p>
             <div class="sh-actions">
-              <button class="buy" type="button" id="show-cta">${esc(S.cta || 'Купить билеты')}</button>
-              ${sh.video ? `<a class="quiet" href="#show=${esc(sh.slug)}" id="show-watch">${esc(S.watch || 'Смотреть видео')}</a>` : ''}
+              <button class="buy" type="button" id="show-cta">${esc(S.cta || 'Buy tickets')}</button>
+              ${sh.video ? `<a class="quiet" href="#show=${esc(sh.slug)}" id="show-watch">${esc(S.watch || 'Watch the video')}</a>` : ''}
             </div>
           </div>
         </div>
@@ -1140,19 +1162,19 @@ function renderShow(sh) {
     <div class="wrap sh-body">
       <div class="sh-about">${paras.map((p) => `<p>${esc(p)}</p>`).join('')}</div>
       <aside class="sh-side">
-        <h3>${esc(S.factsTitle || 'О спектакле')}</h3>
+        <h3>${esc(S.factsTitle || 'About the show')}</h3>
         <dl>${(sh.facts || []).map((f) => `
           <div class="sh-fact"><dt>${esc(f.label)}</dt><dd>${esc(f.value)}</dd></div>`).join('')}</dl>
       </aside>
     </div>
 
     <div class="wrap sh-video" id="sh-video">
-      <h3>${esc(S.videoTitle || 'Видео о шоу')}</h3>
+      <h3>${esc(S.videoTitle || 'Watch the show')}</h3>
       ${videoBlock(sh.video)}
     </div>
 
     ${list.length ? `<div class="wrap sh-others">
-      <h3>${esc(S.others || 'Другие шоу')}</h3>
+      <h3>${esc(S.others || 'More shows')}</h3>
       <div class="shows-rail"><div class="shows">${list.map(showCard).join('')}</div></div>
     </div>` : ''}`;
 
@@ -1199,8 +1221,8 @@ function applyTheme(mode) {
     t.setAttribute('aria-pressed', String(mode === 'light'));
     const names = (C && C.theme) || {};
     const dark = t.querySelector('.theme-dark'), light = t.querySelector('.theme-light');
-    if (dark) dark.textContent = names.dark || 'Ночь';
-    if (light) light.textContent = names.light || 'Лёд';
+    if (dark) dark.textContent = names.dark || 'Night';
+    if (light) light.textContent = names.light || 'Ice';
   }
   try { localStorage.setItem('moi-theme', mode); } catch (e) {}
 }
@@ -1304,7 +1326,7 @@ function bindKeys() {
     btn.addEventListener('click', () => {
       if (btn.disabled) return;
       const was = btn.textContent;
-      btn.textContent = C.hero.pressed || 'Открываем схему зала…';
+      btn.textContent = C.hero.pressed || 'Opening the seating plan…';
       btn.disabled = true;
       setTimeout(() => { btn.textContent = was; btn.disabled = false; }, 1600);
     });
@@ -1333,12 +1355,13 @@ function buildPiano() {
   if (!bed) return;
   bed.innerHTML = '';
 
-  WHITE.forEach(([name, freq, letter]) => {
+  WHITE.forEach(([name, freq, letter], i) => {
     const k = document.createElement('button');
     k.className = 'wkey';
+    k.dataset.oct = i < 7 ? '1' : '2';
     k.type = 'button';
     k.textContent = letter.toUpperCase();
-    k.setAttribute('aria-label', 'Нота ' + name);
+    k.setAttribute('aria-label', 'Note ' + name);
     k.dataset.freq = freq;
     bed.appendChild(k);
     byLetter[letter] = k;
@@ -1349,9 +1372,10 @@ function buildPiano() {
     k.className = 'bkey';
     k.type = 'button';
     k.textContent = letter.toUpperCase();
-    k.setAttribute('aria-label', 'Нота ' + name);
+    k.setAttribute('aria-label', 'Note ' + name);
     k.dataset.freq = freq;
-    k.style.left = ((after + 1) / WHITE.length * 100) + '%';
+    k.style.setProperty('--after', after);
+    k.dataset.oct = after < 7 ? '1' : '2';
     bed.appendChild(k);
     byLetter[letter] = k;
   });
@@ -1405,10 +1429,14 @@ function playTheme(btn) {
     btn.textContent = C.piano.play;
     return;
   }
-  btn.textContent = C.piano.stop || 'Остановить';
+  btn.textContent = C.piano.stop || 'Stop';
   THEME.forEach(([letter, at]) => {
     running.push(setTimeout(() => {
-      const k = byLetter[letter];
+      let k = byLetter[letter];
+      if (k && k.offsetParent === null) {
+        const low = { q: 'z', w: 'x', e: 'c', r: 'v', t: 'b', y: 'n', u: 'm' }[letter];
+        if (low) k = byLetter[low];
+      }
       if (!k) return;
       strike(+k.dataset.freq, k.classList.contains('bkey') ? .8 : .95);
       k.classList.add('lit');
