@@ -383,6 +383,58 @@
   @media (max-width:900px){.sh-others .shows{--seen:3}}
   @media (max-width:560px){.sh-others .shows{--seen:2.25}}
 
+  /* ——— музыка ——— */
+  #music{scroll-margin-top:5rem}
+  .albums{list-style:none;margin:clamp(1.8rem,4vw,2.6rem) 0 0;padding:0}
+  .album{
+    display:grid;gap:.4rem 1.4rem;align-items:center;
+    grid-template-columns:5.5rem 1fr auto;
+    padding-block:1.1rem;border-bottom:1px solid var(--hair);
+  }
+  .album:first-child{border-top:1px solid var(--hair)}
+  .album-cover{
+    position:relative;width:5.5rem;aspect-ratio:1;overflow:hidden;
+    background:linear-gradient(160deg,#143147,#081826 60%,#040E18);
+    box-shadow:0 14px 26px -18px rgba(0,0,0,.9);
+  }
+  html[data-theme="light"] .album-cover{background:linear-gradient(160deg,#C2DAF4,#9FC0E4 60%,#84AAD6)}
+  .album-cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .album-play{
+    position:absolute;inset:0;border:0;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(5,19,32,.35);opacity:0;transition:opacity .2s;
+  }
+  .album-cover:hover .album-play,.album-play:focus-visible,.album.playing .album-play{opacity:1}
+  .album-play::before{
+    content:"";width:0;height:0;margin-left:.2rem;
+    border-left:.8rem solid #fff;border-top:.5rem solid transparent;border-bottom:.5rem solid transparent;
+  }
+  .album.playing .album-play::before{
+    width:.75rem;height:.9rem;margin:0;border:0;
+    background:linear-gradient(90deg,#fff 0 35%,transparent 35% 65%,#fff 65%);
+  }
+  .album-title{font-family:var(--display);font-size:1.15rem;color:var(--glare);line-height:1.2}
+  .album-sub{font-size:.82rem;color:var(--mist);margin-top:.2rem}
+  .album-side{display:flex;align-items:center;gap:1rem;justify-content:flex-end}
+  .album-price{font-family:var(--display);font-size:1.05rem;color:var(--glare);white-space:nowrap}
+  .album-soon{font:600 .7rem/1 var(--text);letter-spacing:.08em;text-transform:uppercase;color:var(--mist)}
+  .album .pick{padding:.6rem 1.15rem;font-size:.82rem;text-decoration:none;white-space:nowrap}
+  .album-bar{grid-column:2 / -1;height:2px;background:var(--hair);border-radius:2px;overflow:hidden;display:none}
+  .album.playing .album-bar{display:block}
+  .album-bar i{display:block;height:100%;width:0;background:#E8B04B}
+  .album-tracks{grid-column:2 / -1;font-size:.84rem;color:var(--mist)}
+  .album-tracks summary{cursor:pointer;width:max-content;color:var(--crust)}
+  .album-tracks ol{margin:.6rem 0 0;padding-left:1.2rem}
+  .album-tracks li{display:flex;justify-content:space-between;gap:1rem;padding-block:.25rem;max-width:32rem}
+  .album-tracks li span:last-child{font-variant-numeric:tabular-nums}
+  @media (max-width:640px){
+    .album{grid-template-columns:4.5rem 1fr;gap:.5rem 1rem}
+    .album-cover{width:4.5rem}
+    .album-play{opacity:1;background:rgba(5,19,32,.25)}
+    .album-side{grid-column:2;justify-content:flex-start}
+    .album-bar,.album-tracks{grid-column:1 / -1}
+  }
+
   /* ——— обычные кнопки ——— */
   .buy{
     font:500 .98rem/1 var(--text);
@@ -672,6 +724,12 @@
       <div class="shows-rail" id="shows-rail"><div class="shows" id="shows-list"></div></div>
     </section>
 
+    <section class="slab" id="music">
+      <h2 class="h2" data-f="music.heading"></h2>
+      <p class="say" data-f="music.intro"></p>
+      <ul class="albums" id="albums"></ul>
+    </section>
+
     <section class="slab piano-slab" id="piano">
       <h2 class="h2" data-f="piano.heading"></h2>
       <p class="say" data-f="piano.intro"></p>
@@ -722,6 +780,10 @@
     {
       "label": "Shows",
       "href": "#shows"
+    },
+    {
+      "label": "Music",
+      "href": "#music"
     },
     {
       "label": "Piano",
@@ -922,6 +984,67 @@
     "factsTitle": "About the show",
     "watch": "Watch the video"
   },
+  "music": {
+    "heading": "Our music",
+    "intro": "Every production has its own score, recorded with the orchestra and the vocalists who perform it on the ice. Listen to a preview and take the music home.",
+    "buy": "Buy",
+    "listen": "Preview",
+    "pause": "Pause",
+    "soon": "Coming soon",
+    "tracklist": "Tracklist",
+    "albums": [
+      {
+        "title": "Aladdin on Ice",
+        "subtitle": "Original soundtrack",
+        "show": "aladdin",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "",
+        "tracks": []
+      },
+      {
+        "title": "Alice in Wonderland on Ice",
+        "subtitle": "Original soundtrack",
+        "show": "alice",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "",
+        "tracks": []
+      },
+      {
+        "title": "Dracula on Ice",
+        "subtitle": "Original soundtrack",
+        "show": "dracula",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "",
+        "tracks": []
+      },
+      {
+        "title": "The Little Prince on Ice",
+        "subtitle": "Original soundtrack",
+        "show": "prince",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "",
+        "tracks": []
+      },
+      {
+        "title": "Princess Anastasia on Ice",
+        "subtitle": "Original soundtrack",
+        "show": "anastasia",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "",
+        "tracks": []
+      }
+    ]
+  },
   "piano": {
     "heading": "The piano itself",
     "intro": "In the first act the ice belongs to one skater and a piano. The instrument below is real: press a key with your mouse, your finger or your computer keyboard. The letters are printed on the keys.",
@@ -1102,6 +1225,8 @@ function render() {
     addEventListener('resize', edge);
     setTimeout(edge, 60);
   }
+
+  buildMusic();
 
   el('foot-lines').innerHTML = ((C.footer && C.footer.lines) || []).map(esc).join('<br>');
 
@@ -1447,6 +1572,83 @@ function playTheme(btn) {
 }
 
 /* ——— рисунок скрипки ——— */
+/* ——— музыка: карточки альбомов и прослушивание отрывка ——— */
+const player = new Audio();
+player.preload = 'none';
+let playingRow = null;
+
+function stopPreview() {
+  player.pause();
+  if (playingRow) {
+    playingRow.classList.remove('playing');
+    const b = playingRow.querySelector('.album-play');
+    if (b) b.setAttribute('aria-label', (C.music && C.music.listen) || 'Preview');
+  }
+  playingRow = null;
+}
+
+player.addEventListener('ended', stopPreview);
+player.addEventListener('timeupdate', () => {
+  if (!playingRow || !player.duration) return;
+  const bar = playingRow.querySelector('.album-bar i');
+  if (bar) bar.style.width = (player.currentTime / player.duration * 100) + '%';
+});
+
+function buildMusic() {
+  const box = document.getElementById('albums');
+  if (!box) return;
+  const M = C.music || {};
+  const shows = (C.shows && C.shows.items) || [];
+  const albums = M.albums || [];
+  const section = document.getElementById('music');
+  if (section) section.hidden = !albums.length;
+
+  stopPreview();
+  box.innerHTML = albums.map((a, i) => {
+    const show = shows.find((x) => x.slug && x.slug === a.show);
+    const cover = a.cover || (show && show.image) || '';
+    const tracks = a.tracks || [];
+    return `
+      <li class="album" data-i="${i}">
+        <div class="album-cover">
+          ${cover ? `<img src="${esc(cover)}" alt="" loading="lazy" onerror="this.remove()">` : ''}
+          ${a.preview ? `<button class="album-play" type="button" aria-label="${esc(M.listen || 'Preview')}"></button>` : ''}
+        </div>
+        <div>
+          <div class="album-title">${esc(a.title)}</div>
+          <div class="album-sub">${esc(a.subtitle || '')}${tracks.length ? ` · ${tracks.length} tracks` : ''}</div>
+        </div>
+        <div class="album-side">
+          ${a.buyUrl
+            ? `${a.price ? `<span class="album-price">${esc(a.price)}</span>` : ''}
+               <a class="pick" href="${esc(a.buyUrl)}" target="_blank" rel="noopener">${esc(M.buy || 'Buy')}</a>`
+            : `<span class="album-soon">${esc(M.soon || 'Coming soon')}</span>`}
+        </div>
+        ${a.preview ? '<div class="album-bar"><i></i></div>' : ''}
+        ${tracks.length ? `<details class="album-tracks">
+          <summary>${esc(M.tracklist || 'Tracklist')}</summary>
+          <ol>${tracks.map((t) => `<li><span>${esc(t.title)}</span><span>${esc(t.length || '')}</span></li>`).join('')}</ol>
+        </details>` : ''}
+      </li>`;
+  }).join('');
+
+  box.querySelectorAll('.album-play').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('.album');
+      const a = albums[+row.dataset.i];
+      if (playingRow === row) { stopPreview(); return; }
+      stopPreview();
+      player.src = a.preview;
+      player.currentTime = 0;
+      player.play().then(() => {
+        playingRow = row;
+        row.classList.add('playing');
+        btn.setAttribute('aria-label', M.pause || 'Pause');
+      }).catch(() => {});
+    });
+  });
+}
+
 loadContent().then(() => {
   render();
   buildPiano();

@@ -12,6 +12,10 @@
       "href": "#shows"
     },
     {
+      "label": "Music",
+      "href": "#music"
+    },
+    {
       "label": "Piano",
       "href": "#piano"
     },
@@ -209,6 +213,67 @@
     "datesCta": "See dates",
     "factsTitle": "About the show",
     "watch": "Watch the video"
+  },
+  "music": {
+    "heading": "Our music",
+    "intro": "Every production has its own score, recorded with the orchestra and the vocalists who perform it on the ice. Listen to a preview and take the music home.",
+    "buy": "Buy",
+    "listen": "Preview",
+    "pause": "Pause",
+    "soon": "Coming soon",
+    "tracklist": "Tracklist",
+    "albums": [
+      {
+        "title": "Aladdin on Ice",
+        "subtitle": "Original soundtrack",
+        "show": "aladdin",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "",
+        "tracks": []
+      },
+      {
+        "title": "Alice in Wonderland on Ice",
+        "subtitle": "Original soundtrack",
+        "show": "alice",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "",
+        "tracks": []
+      },
+      {
+        "title": "Dracula on Ice",
+        "subtitle": "Original soundtrack",
+        "show": "dracula",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "",
+        "tracks": []
+      },
+      {
+        "title": "The Little Prince on Ice",
+        "subtitle": "Original soundtrack",
+        "show": "prince",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "",
+        "tracks": []
+      },
+      {
+        "title": "Princess Anastasia on Ice",
+        "subtitle": "Original soundtrack",
+        "show": "anastasia",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "",
+        "tracks": []
+      }
+    ]
   },
   "piano": {
     "heading": "The piano itself",

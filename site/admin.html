@@ -259,6 +259,25 @@ const FORM = [
            blank: { label: 'Длительность', value: '90 минут' } },
     blank: { title: 'Новое шоу', status: 'В туре', image: '', slug: 'new-show', href: '#show=new-show', text: '', lead: '', about: '', video: '', facts: [] } },
 
+  { t: 'Музыка', note: 'альбомы на продажу', fields: [
+    ['music.heading', 'Заголовок раздела', 'text'],
+    ['music.intro', 'Вводный абзац', 'area'],
+    ['music.buy', 'Кнопка покупки', 'text'],
+    ['music.soon', 'Надпись, когда ссылки на покупку нет', 'text'],
+    ['music.tracklist', 'Надпись над списком треков', 'text'],
+    ['music.listen', 'Подсказка кнопки прослушивания', 'text'],
+    ['music.pause', 'Подсказка кнопки паузы', 'text']
+  ], list: 'music.albums', label: 'Альбом', cols: 'cols-2',
+    item: [['title', 'Название альбома'], ['subtitle', 'Строка под названием'],
+           ['cover', 'Обложка (если пусто — берётся афиша шоу)', 'image'],
+           ['show', 'Адрес шоу для афиши-обложки: aladdin, alice…'],
+           ['price', 'Цена, например $9.99'],
+           ['buyUrl', 'Ссылка на покупку: Bandcamp, Apple Music, оплата Stripe…'],
+           ['preview', 'Отрывок для прослушивания: ссылка на .mp3']],
+    sub: { path: 'tracks', label: 'Трек', cols: 'cols-2',
+           item: [['title', 'Название трека'], ['length', 'Длительность, 3:45']],
+           blank: { title: '', length: '' } },
+    blank: { title: 'New album', subtitle: 'Original soundtrack', show: '', cover: '', price: '', buyUrl: '', preview: '', tracks: [] } },
   { t: 'Рояль', note: 'играющий инструмент в середине страницы', fields: [
     ['piano.heading', 'Заголовок раздела', 'text'],
     ['piano.intro', 'Вводный абзац', 'area'],
@@ -430,7 +449,7 @@ function listBlock(spec, box) {
         if (!get(sub.list)) set(sub.list, []);
         const cap = document.createElement('div');
         cap.className = 'hint';
-        cap.textContent = 'Характеристики в колонке справа:';
+        cap.textContent = spec.sub.path === 'tracks' ? 'Треки альбома:' : 'Характеристики в колонке справа:';
         row.appendChild(cap);
         listBlock(sub, row);
       }
