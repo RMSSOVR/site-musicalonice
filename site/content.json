@@ -57,7 +57,7 @@
       {
         "title": "Aladdin",
         "status": "On tour",
-        "image": "images/aladdin.jpg",
+        "image": "images/aladdin-20260920-mmtk.jpg",
         "href": "#show=aladdin",
         "text": "Aladdin and other famous stories from 1001 Nights on ice: an Eastern city, a genie and a dance over a frozen lake.",
         "slug": "aladdin",
@@ -280,5 +280,86 @@
   "theme": {
     "dark": "Night",
     "light": "Ice"
+  },
+  "music": {
+    "heading": "Our music",
+    "intro": "Every production has its own score, recorded with the orchestra and the vocalists who perform it on the ice. Listen to a preview and take the music home.",
+    "buy": "Buy",
+    "listen": "Preview",
+    "pause": "Pause",
+    "soon": "Coming soon",
+    "tracklist": "Tracklist",
+    "albums": [
+      {
+        "title": "AliceSolo",
+        "subtitle": "Original soundtrack",
+        "show": "aladdin",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "audio/aladdin-20260920-b4re.mp3",
+        "tracks": []
+      },
+      {
+        "title": "Teapot",
+        "subtitle": "Original soundtrack",
+        "show": "alice",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "audio/alice-20260920-1kjt.mp3",
+        "tracks": []
+      },
+      {
+        "title": "Cards",
+        "subtitle": "Original soundtrack",
+        "show": "dracula",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "audio/dracula-20260920-2m4c.mp3",
+        "tracks": []
+      },
+      {
+        "title": "RedQueenSolo",
+        "subtitle": "Original soundtrack",
+        "show": "prince",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "audio/prince-20260920-a72z.mp3",
+        "tracks": []
+      },
+      {
+        "title": "MadHatterSolo",
+        "subtitle": "Original soundtrack",
+        "show": "anastasia",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "audio/anastasia-20260920-8gcb.mp3",
+        "tracks": []
+      },
+      {
+        "title": "Croqet",
+        "subtitle": "Original soundtrack",
+        "show": "",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "audio/croqet-20260920-uwxt.mp3",
+        "tracks": []
+      },
+      {
+        "title": "Shine for me",
+        "subtitle": "Original soundtrack",
+        "show": "",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "audio/shine-for-me-20260920-oyqp.mp3",
+        "tracks": []
+      }
+    ]
   }
 }
