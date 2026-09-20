@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Musical on Ice — админка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prata&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --depth:#051320;
+    --panel:#081B2C;
+    --panel-2:#0B2338;
+    --crust:#D3E5F3;
+    --mist:#88A6C0;
+    --spot:#E8B04B;
+    --glare:#F4FAFF;
+    --hair:rgba(211,229,243,.16);
+    --display:"Prata",Georgia,serif;
+    --text:"Golos Text",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  body{
+    margin:0;font-family:var(--text);color:var(--crust);font-size:.94rem;line-height:1.55;
+    background:radial-gradient(120% 80% at 50% 0%,#12395A,#08202F 46%,#051320 100%) fixed;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2{font-family:var(--display);font-weight:400;margin:0;line-height:1.1}
+  p{margin:0}
+
+  .bar{
+    position:sticky;top:0;z-index:10;
+    display:flex;flex-wrap:wrap;gap:.9rem 1.4rem;align-items:center;
+    padding:.85rem clamp(1rem,3vw,2rem);
+    background:rgba(5,19,32,.86);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--hair);
+  }
+  .bar h1{font-size:1.05rem;letter-spacing:.05em;margin-right:auto}
+  .bar h1 small{display:block;font:400 .72rem/1.3 var(--text);letter-spacing:0;color:var(--mist);margin-top:.2rem}
+  .state{font-size:.78rem;color:var(--mist);min-width:9rem}
+  .state.ok{color:var(--spot)}
+
+  .btn{
+    font:500 .82rem/1 var(--text);cursor:pointer;text-decoration:none;
+    color:#16252E;padding:.62rem 1rem;border:0;border-radius:.42rem;
+    background:linear-gradient(180deg,#F3F0E6,#FBFAF4 60%,#F1EEE2);
+    box-shadow:0 2px 0 #B9BCB2,0 4px 8px -4px rgba(0,0,0,.6);
+    transition:transform .08s,box-shadow .08s;
+  }
+  .btn:active{transform:translateY(2px);box-shadow:0 0 0 #B9BCB2}
+  .btn-gold{color:#2E210A;background:linear-gradient(180deg,#EFD69F,#FBEFD2 60%,#EBD29A);box-shadow:0 2px 0 #B99B5C,0 4px 8px -4px rgba(0,0,0,.6)}
+  .btn-ghost{color:var(--crust);background:none;box-shadow:inset 0 0 0 1px var(--hair)}
+  .btn-ghost:hover{color:var(--glare);box-shadow:inset 0 0 0 1px rgba(232,176,75,.5)}
+
+  .shell{display:grid;gap:0;min-height:calc(100vh - 4rem)}
+  @media (min-width:1080px){.shell{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+
+  .editor{padding:clamp(1rem,2.5vw,2rem);max-width:56rem}
+  .preview{position:sticky;top:4rem;height:calc(100vh - 4rem);border-left:1px solid var(--hair);background:#040E17}
+  .preview iframe{width:100%;height:100%;border:0;display:block}
+  .preview-head{
+    display:flex;align-items:center;gap:.8rem;padding:.5rem .9rem;
+    border-bottom:1px solid var(--hair);font-size:.76rem;color:var(--mist)
+  }
+  @media (max-width:1079px){
+    .preview{position:static;height:34rem;border-left:0;border-top:1px solid var(--hair)}
+  }
+
+  .group{
+    border:1px solid var(--hair);background:rgba(8,27,44,.7);
+    margin-bottom:1rem;
+  }
+  .group > summary{
+    cursor:pointer;list-style:none;padding:.95rem 1.1rem;
+    display:flex;align-items:center;gap:.7rem;
+    font-family:var(--display);font-size:1.02rem;color:var(--glare);
+  }
+  .group > summary::-webkit-details-marker{display:none}
+  .group > summary::before{content:"+";color:var(--spot);font-family:var(--text);width:.9rem}
+  .group[open] > summary::before{content:"–"}
+  .group > summary span{font:400 .74rem/1 var(--text);color:var(--mist);margin-left:auto}
+  .body{padding:0 1.1rem 1.2rem;border-top:1px solid var(--hair)}
+
+  .field{display:block;margin-top:1rem}
+  .field > span{display:block;font-size:.76rem;color:var(--mist);margin-bottom:.34rem}
+  .more{position:relative}
+  .more > summary{list-style:none}
+  .more > summary::-webkit-details-marker{display:none}
+  .more-menu{
+    position:absolute;right:0;top:calc(100% + .5rem);z-index:20;width:17rem;
+    display:flex;flex-direction:column;gap:.5rem;align-items:stretch;
+    padding:.9rem;border:1px solid var(--hair);border-radius:.5rem;
+    background:#071A2B;box-shadow:0 20px 40px -20px rgba(0,0,0,.9);
+  }
+  .more-menu p{font-size:.76rem;color:var(--mist)}
+  input[type=text],input[type=password],textarea,select{
+    width:100%;font:400 .9rem/1.45 var(--text);color:var(--glare);
+    background:#04101B;border:1px solid var(--hair);border-radius:.3rem;
+    padding:.6rem .7rem;transition:border-color .2s,background .2s;
+  }
+  input[type=text]:focus,input[type=password]:focus,textarea:focus,select:focus{
+    outline:0;border-color:rgba(232,176,75,.65);background:#061725;
+  }
+  textarea{resize:vertical;min-height:4.6rem}
+  .grid{display:grid;gap:.8rem}
+  @media (min-width:620px){
+    .cols-2{grid-template-columns:1fr 1fr}
+    .cols-3{grid-template-columns:1fr 1fr 1fr}
+    .cols-time{grid-template-columns:1fr .6fr 1.4fr .8fr}
+  }
+
+  .row{
+    border:1px solid var(--hair);border-left:2px solid rgba(232,176,75,.45);
+    background:rgba(11,35,56,.55);padding:.8rem .9rem 1rem;margin-top:.9rem;
+  }
+  .row-head{display:flex;align-items:center;gap:.6rem;font-size:.76rem;color:var(--mist)}
+  .row-head strong{font:400 .84rem/1 var(--display);color:var(--crust)}
+  .row-head .sp{margin-left:auto;display:flex;gap:.35rem}
+  .mini{
+    font:500 .72rem/1 var(--text);cursor:pointer;color:var(--mist);
+    background:none;border:1px solid var(--hair);border-radius:.28rem;padding:.34rem .5rem;
+  }
+  .mini:hover{color:var(--glare);border-color:rgba(232,176,75,.5)}
+  .mini-del:hover{color:#F0A0A0;border-color:rgba(240,160,160,.5)}
+  .add{margin-top:.9rem}
+  .hint{font-size:.78rem;color:var(--mist);margin-top:.5rem}
+  .img-row{display:grid;gap:.8rem;grid-template-columns:5.5rem 1fr;align-items:start}
+  .img-prev{
+    aspect-ratio:3/4;border:1px solid var(--hair);border-radius:.25rem;overflow:hidden;
+    background:#04101B;display:flex;align-items:center;justify-content:center;
+    font-size:.64rem;color:var(--mist);text-align:center;padding:.3rem;
+  }
+  .img-prev img{width:100%;height:100%;object-fit:cover;display:block}
+  .img-side{display:flex;flex-direction:column;gap:.5rem;align-items:flex-start}
+  .img-side input[type=text]{width:100%}
+  .steps{margin:.6rem 0 0;padding-left:1.1rem;font-size:.82rem;color:var(--mist)}
+  .steps li{margin-top:.35rem}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.8em;color:var(--spot)}
+  .warn{border-left-color:#C4453F}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <h1>Админка Musical on Ice<small>Правьте тексты и афиши, затем «Опубликовать на сайт».</small></h1>
+  <span class="state" id="state">Черновик не сохранён</span>
+  <button class="btn btn-ghost" id="reload">Обновить превью</button>
+  <details class="more">
+    <summary class="btn btn-ghost">Ещё</summary>
+    <div class="more-menu">
+      <p>Запасные способы, если публикация не работает:</p>
+      <button class="btn btn-ghost" id="download">Скачать content.json</button>
+      <button class="btn btn-ghost" id="copy">Скопировать JSON</button>
+      <button class="btn btn-ghost" id="import">Загрузить JSON из файла</button>
+    </div>
+  </details>
+  <button class="btn btn-gold" id="publish">Опубликовать на сайт</button>
+  <input type="file" id="file" accept=".json,application/json" hidden>
+</div>
+
+<div class="shell">
+  <div class="editor" id="editor"></div>
+  <div class="preview">
+    <div class="preview-head">Живое превью — index.html<span style="margin-left:auto" id="pv-note">обновляется на каждое изменение</span></div>
+    <iframe id="frame" src="index.html" title="Превью лендинга"></iframe>
+  </div>
+</div>
+
+<script>
+/* ═══ исходные данные: тот же блок, что лежит в index.html ═══ */
+const FALLBACK = {
+  title: "Musical on Ice — мюзикл на льду в двух актах",
+  brand: "Musical on Ice",
+  logoAlt: "Musical on Ice",
+  nav: [], hero: {}, acts: { items: [] }, cast: { items: [] },
+  specs: { items: [] }, dates: { items: [] }, footer: { lines: [], links: [] }
+};
+
+let C = null;
+const frame = document.getElementById('frame');
+const stateBox = document.getElementById('state');
+
+const clone = (o) => JSON.parse(JSON.stringify(o));
+const get = (path) => path.split('.').reduce((o, k) => (o == null ? o : o[k]), C);
+const set = (path, val) => {
+  const keys = path.split('.');
+  const last = keys.pop();
+  const target = keys.reduce((o, k) => o[k], C);
+  target[last] = val;
+};
+
+function say(text, ok) {
+  stateBox.textContent = text;
+  stateBox.className = 'state' + (ok ? ' ok' : '');
+}
+
+/* ——— загрузка: черновик → JSON лендинга → запас ——— */
+/* Недостающие разделы достраиваются из шаблона, существующие не трогаются. */
+function fillMissing(data, template) {
+  if (!template || typeof template !== 'object') return data;
+  for (const k of Object.keys(template)) {
+    if (data[k] === undefined) {
+      data[k] = clone(template[k]);
+    } else if (data[k] && typeof data[k] === 'object' && !Array.isArray(data[k])
+               && template[k] && typeof template[k] === 'object' && !Array.isArray(template[k])) {
+      fillMissing(data[k], template[k]);
+    }
+  }
+  return data;
+}
+
+function readDraft() {
+  try {
+    const raw = localStorage.getItem('moi-content');
+    if (!raw) return null;
+    const d = JSON.parse(raw);
+    return d && d.data ? d : { at: 0, data: d };
+  } catch (e) { return null; }
+}
+
+async function boot() {
+  /* шаблон: блок внутри index.html, в нём есть все разделы */
+  let template = null;
+  try {
+    const html = await (await fetch('index.html', { cache: 'no-store' })).text();
+    const m = html.match(/<script id="site-content"[^>]*>([\s\S]*?)<\/script>/);
+    if (m) template = JSON.parse(m[1]);
+  } catch (e) {}
+
+  /* то, что сейчас опубликовано */
+  let live = null;
+  try {
+    const r = await fetch('content.json', { cache: 'no-store' });
+    if (r.ok) live = await r.json();
+  } catch (e) {}
+
+  const base = fillMissing(clone(live || template || FALLBACK), template);
+  C = clone(base);
+  window.BASE = clone(base);
+
+  build();
+  push();
+
+  const draft = readDraft();
+  if (draft) {
+    const when = draft.at ? new Date(draft.at).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) : 'раньше';
+    say(`Открыт текст с сайта. Есть неопубликованный черновик (${when}) — в меню «Ещё»`);
+    const box = document.querySelector('.more-menu');
+    if (box && !document.getElementById('draft-open')) {
+      const b = document.createElement('button');
+      b.className = 'btn btn-ghost';
+      b.id = 'draft-open';
+      b.textContent = 'Открыть черновик от ' + when;
+      b.onclick = () => {
+        if (!confirm('Заменить текст в редакторе черновиком? Недостающие разделы будут добавлены из шаблона.')) return;
+        C = fillMissing(clone(draft.data), template);
+        build(); push();
+        say('Открыт черновик. Проверьте его перед публикацией.', true);
+        b.closest('details').open = false;
+      };
+      box.appendChild(b);
+    }
+  } else {
+    say('Открыт текст с сайта', true);
+  }
+}
+
+/* ——— описание формы ——— */
+const FORM = [
+  { t: 'Шапка и вкладка', note: 'название в браузере и марка в углу', fields: [
+    ['title', 'Заголовок вкладки браузера', 'text'],
+    ['brand', 'Марка в шапке', 'text'],
+    ['logoAlt', 'Подпись логотипа для поиска и скринридеров', 'text'],
+    ['theme.dark', 'Переключатель: тёмная тема', 'text'],
+    ['theme.light', 'Переключатель: светлая тема', 'text']
+  ]},
+
+  { t: 'Первый экран', note: 'то, что видно без прокрутки', fields: [
+    ['hero.lede', 'Подзаголовок под логотипом', 'area'],
+    ['hero.where', 'Даты и место', 'area'],
+    ['hero.primary', 'Главная клавиша', 'text'],
+    ['hero.secondary', 'Вторая клавиша', 'text'],
+    ['hero.secondaryHref', 'Куда ведёт вторая клавиша', 'text'],
+    ['hero.pressed', 'Надпись после нажатия на клавишу билетов', 'text']
+  ]},
+
+  { t: 'Навигация', note: 'клавиши в шапке', list: 'nav', label: 'Пункт',
+    cols: 'cols-2', item: [['label', 'Надпись'], ['href', 'Ссылка (#acts, https://…)']],
+    blank: { label: 'Новый пункт', href: '#acts' } },
+
+  { t: 'О проекте', note: 'первый раздел', fields: [
+    ['about.heading', 'Заголовок', 'text'],
+    ['about.statement', 'Крупная фраза под заголовком', 'area'],
+    ['about.text', 'Абзац помельче', 'area'],
+    ['about.video', 'Видеонарезка: ссылка на YouTube, Vimeo или файл .mp4'],
+    ['about.nearest', 'Подпись строки с ближайшей датой', 'text'],
+    ['about.nearestCta', 'Ссылка в строке с датой', 'text']
+  ], list: 'about.facts', label: 'Цифра', cols: 'cols-2',
+    item: [['value', 'Значение, например «5»'], ['label', 'Подпись']],
+    blank: { value: '', label: '' } },
+
+  { t: 'Шоу', note: 'карточки постановок', fields: [
+    ['shows.heading', 'Заголовок раздела', 'text'],
+    ['shows.intro', 'Вводный абзац', 'area'],
+    ['shows.back', 'Ссылка «назад» на странице шоу', 'text'],
+    ['shows.cta', 'Кнопка на странице шоу', 'text'],
+    ['shows.videoTitle', 'Заголовок блока с видео', 'text'],
+    ['shows.videoEmpty', 'Текст, когда видео не подключено', 'area'],
+    ['shows.factsTitle', 'Заголовок блока характеристик', 'text'],
+    ['shows.watch', 'Ссылка «смотреть видео»', 'text'],
+    ['shows.others', 'Заголовок ленты «другие шоу»', 'text']
+  ], list: 'shows.items', label: 'Шоу', cols: 'cols-2',
+    item: [['title', 'Название'], ['status', 'Строка под названием, например «В туре»'],
+           ['image', 'Афиша', 'image'],
+           ['slug', 'Адрес страницы, латиницей: aladdin'],
+           ['text', 'Короткое описание в карточке', 'area'],
+           ['lead', 'Крупная фраза на странице шоу', 'area'],
+           ['about', 'Основной текст страницы, абзацы через пустую строку', 'area'],
+           ['video', 'Видео: ссылка на YouTube, Vimeo или файл .mp4']],
+    sub: { path: 'facts', label: 'Строка', cols: 'cols-2',
+           item: [['label', 'Название'], ['value', 'Значение']],
+           blank: { label: 'Длительность', value: '90 минут' } },
+    blank: { title: 'Новое шоу', status: 'В туре', image: '', slug: 'new-show', href: '#show=new-show', text: '', lead: '', about: '', video: '', facts: [] } },
+
+  { t: 'Музыка', note: 'альбомы на продажу', fields: [
+    ['music.heading', 'Заголовок раздела', 'text'],
+    ['music.intro', 'Вводный абзац', 'area'],
+    ['music.buy', 'Кнопка покупки', 'text'],
+    ['music.soon', 'Надпись, когда ссылки на покупку нет', 'text'],
+    ['music.tracklist', 'Надпись над списком треков', 'text'],
+    ['music.listen', 'Подсказка кнопки прослушивания', 'text'],
+    ['music.pause', 'Подсказка кнопки паузы', 'text']
+  ], list: 'music.albums', label: 'Альбом', cols: 'cols-2',
+    item: [['title', 'Название альбома'], ['subtitle', 'Строка под названием'],
+           ['cover', 'Обложка (если пусто — берётся афиша шоу)', 'image'],
+           ['show', 'Адрес шоу для афиши-обложки: aladdin, alice…'],
+           ['price', 'Цена, например $9.99'],
+           ['buyUrl', 'Ссылка на покупку: Bandcamp, Apple Music, оплата Stripe…'],
+           ['preview', 'Отрывок для прослушивания: ссылка на .mp3']],
+    sub: { path: 'tracks', label: 'Трек', cols: 'cols-2',
+           item: [['title', 'Название трека'], ['length', 'Длительность, 3:45']],
+           blank: { title: '', length: '' } },
+    blank: { title: 'New album', subtitle: 'Original soundtrack', show: '', cover: '', price: '', buyUrl: '', preview: '', tracks: [] } },
+  { t: 'Рояль', note: 'играющий инструмент в середине страницы', fields: [
+    ['piano.heading', 'Заголовок раздела', 'text'],
+    ['piano.intro', 'Вводный абзац', 'area'],
+    ['piano.hint', 'Подпись на крышке инструмента', 'text'],
+    ['piano.play', 'Кнопка запуска темы', 'text'],
+    ['piano.stop', 'Кнопка остановки', 'text']
+  ]},
+
+  { t: 'Расписание и билеты', fields: [
+    ['dates.heading', 'Заголовок раздела', 'text'],
+    ['dates.intro', 'Вводный абзац', 'area'],
+    ['dates.button', 'Надпись на клавише', 'text'],
+    ['dates.soldLabel', 'Надпись, когда мест нет', 'text']
+  ], list: 'dates.items', label: 'Дата', cols: 'cols-time',
+    item: [['day', 'Дата'], ['time', 'Время'], ['seats', 'Про места'],
+           ['state', 'Наличие', 'select', [['free', 'свободно'], ['few', 'мало мест'], ['none', 'продано']]]],
+    blank: { day: '1 марта', time: '19:00', seats: 'Свободно во всех секторах', state: 'free' } },
+
+  { t: 'Подвал', note: 'адрес, часы кассы, сноска', fields: [
+    ['footer.note', 'Сноска справа', 'area']
+  ], lines: 'footer.lines', list: 'footer.links', label: 'Ссылка', cols: 'cols-2',
+    item: [['label', 'Надпись'], ['href', 'Ссылка']],
+    blank: { label: 'Наверх', href: '#top' } }
+];
+
+/* ——— построение формы ——— */
+function input(path, label, kind, opts) {
+  const wrap = document.createElement('label');
+  wrap.className = 'field';
+  const cap = document.createElement('span');
+  cap.textContent = label;
+  wrap.appendChild(cap);
+
+  let el;
+  if (kind === 'area') {
+    el = document.createElement('textarea');
+    el.rows = 3;
+  } else if (kind === 'select') {
+    el = document.createElement('select');
+    (opts || []).forEach(([v, t]) => {
+      const o = document.createElement('option');
+      o.value = v; o.textContent = t;
+      el.appendChild(o);
+    });
+  } else {
+    el = document.createElement('input');
+    el.type = 'text';
+  }
+  el.value = get(path) == null ? '' : get(path);
+  el.addEventListener('input', () => { set(path, el.value); touch(); });
+  el.addEventListener('change', () => { set(path, el.value); touch(); });
+  wrap.appendChild(el);
+  return wrap;
+}
+
+/* поле афиши: файл превращается в картинку внутри сайта */
+function imageField(path, label) {
+  const wrap = document.createElement('label');
+  wrap.className = 'field';
+  const cap = document.createElement('span');
+  cap.textContent = label;
+  wrap.appendChild(cap);
+
+  const row = document.createElement('div');
+  row.className = 'img-row';
+
+  const prev = document.createElement('div');
+  prev.className = 'img-prev';
+
+  const side = document.createElement('div');
+  side.className = 'img-side';
+
+  const file = document.createElement('input');
+  file.type = 'file';
+  file.accept = 'image/*';
+  file.hidden = true;
+
+  const pick = document.createElement('button');
+  pick.className = 'btn btn-ghost';
+  pick.textContent = 'Загрузить афишу';
+  pick.onclick = () => file.click();
+
+  const clear = document.createElement('button');
+  clear.className = 'mini mini-del';
+  clear.textContent = 'Убрать';
+  clear.onclick = () => { set(path, ''); draw(); touch(); };
+
+  const text = document.createElement('input');
+  text.type = 'text';
+  text.placeholder = 'или путь к файлу: images/aladdin.jpg';
+
+  const note = document.createElement('div');
+  note.className = 'hint';
+  note.textContent = 'Картинка обрежется по центру под карточку 3:4. При публикации она уедет в репозиторий отдельным файлом.';
+
+  function draw() {
+    const v = get(path) || '';
+    prev.innerHTML = v ? `<img src="${v}">` : '<span>нет афиши</span>';
+    text.value = v.startsWith('data:') ? '' : v;
+    text.placeholder = v.startsWith('data:') ? 'афиша загружена в файл сайта' : 'или путь к файлу: images/aladdin.jpg';
+  }
+
+  text.addEventListener('input', () => { set(path, text.value); touch(); prev.innerHTML = text.value ? `<img src="${text.value}">` : '<span>нет афиши</span>'; });
+
+  file.addEventListener('change', () => {
+    const f = file.files[0];
+    if (!f) return;
+    const img = new Image();
+    img.onload = () => {
+      const W = 660, H = 880, target = W / H;
+      let nw = img.width, nh = img.height;
+      if (nw / nh > target) nw = nh * target; else nh = nw / target;
+      const x = (img.width - nw) / 2, y = (img.height - nh) / 2;
+      const cv = document.createElement('canvas');
+      cv.width = W; cv.height = H;
+      cv.getContext('2d').drawImage(img, x, y, nw, nh, 0, 0, W, H);
+      set(path, cv.toDataURL('image/jpeg', .8));
+      draw(); touch();
+      URL.revokeObjectURL(img.src);
+    };
+    img.src = URL.createObjectURL(f);
+    file.value = '';
+  });
+
+  side.appendChild(pick);
+  side.appendChild(text);
+  side.appendChild(clear);
+  side.appendChild(note);
+  row.appendChild(prev);
+  row.appendChild(side);
+  wrap.appendChild(row);
+  wrap.appendChild(file);
+  draw();
+  return wrap;
+}
+
+function listBlock(spec, box) {
+  const host = document.createElement('div');
+  box.appendChild(host);
+
+  function draw() {
+    host.innerHTML = '';
+    const arr = get(spec.list) || [];
+    arr.forEach((item, i) => {
+      const row = document.createElement('div');
+      row.className = 'row';
+
+      const head = document.createElement('div');
+      head.className = 'row-head';
+      head.innerHTML = `<strong>${spec.label} ${i + 1}</strong>`;
+      const sp = document.createElement('div');
+      sp.className = 'sp';
+      sp.appendChild(mini('↑', () => move(i, -1)));
+      sp.appendChild(mini('↓', () => move(i, 1)));
+      sp.appendChild(mini('Удалить', () => { arr.splice(i, 1); draw(); touch(); }, 'mini-del'));
+      head.appendChild(sp);
+      row.appendChild(head);
+
+      const grid = document.createElement('div');
+      grid.className = 'grid ' + (spec.cols || '');
+      spec.item.forEach(([key, label, kind, opts]) => {
+        const p = `${spec.list}.${i}.${key}`;
+        grid.appendChild(kind === 'image' ? imageField(p, label) : input(p, label, kind, opts));
+      });
+      row.appendChild(grid);
+
+      if (spec.sub) {
+        const sub = Object.assign({}, spec.sub, { list: `${spec.list}.${i}.${spec.sub.path}` });
+        if (!get(sub.list)) set(sub.list, []);
+        const cap = document.createElement('div');
+        cap.className = 'hint';
+        cap.textContent = spec.sub.path === 'tracks' ? 'Треки альбома:' : 'Характеристики в колонке справа:';
+        row.appendChild(cap);
+        listBlock(sub, row);
+      }
+
+      host.appendChild(row);
+    });
+
+    const add = document.createElement('button');
+    add.className = 'btn btn-ghost add';
+    add.textContent = '+ ' + spec.label.toLowerCase();
+    add.onclick = () => { (get(spec.list) || []).push(clone(spec.blank)); draw(); touch(); };
+    host.appendChild(add);
+
+    function move(i, d) {
+      const j = i + d;
+      if (j < 0 || j >= arr.length) return;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+      draw(); touch();
+    }
+  }
+
+  function mini(text, fn, extra) {
+    const b = document.createElement('button');
+    b.className = 'mini ' + (extra || '');
+    b.textContent = text;
+    b.onclick = fn;
+    return b;
+  }
+
+  draw();
+}
+
+/* строки подвала — простой список строк */
+function linesBlock(path, box) {
+  const host = document.createElement('div');
+  box.appendChild(host);
+
+  function draw() {
+    host.innerHTML = '';
+    const arr = get(path) || [];
+    arr.forEach((line, i) => {
+      const row = document.createElement('div');
+      row.className = 'row';
+      const head = document.createElement('div');
+      head.className = 'row-head';
+      head.innerHTML = `<strong>Строка ${i + 1}</strong>`;
+      const del = document.createElement('button');
+      del.className = 'mini mini-del';
+      del.textContent = 'Удалить';
+      del.style.marginLeft = 'auto';
+      del.onclick = () => { arr.splice(i, 1); draw(); touch(); };
+      head.appendChild(del);
+      row.appendChild(head);
+
+      const f = document.createElement('label');
+      f.className = 'field';
+      const inp = document.createElement('input');
+      inp.type = 'text';
+      inp.value = line;
+      inp.addEventListener('input', () => { arr[i] = inp.value; touch(); });
+      f.appendChild(inp);
+      row.appendChild(f);
+      host.appendChild(row);
+    });
+
+    const add = document.createElement('button');
+    add.className = 'btn btn-ghost add';
+    add.textContent = '+ строка адреса';
+    add.onclick = () => { arr.push('Новая строка'); draw(); touch(); };
+    host.appendChild(add);
+  }
+  draw();
+}
+
+function build() {
+  const editor = document.getElementById('editor');
+  editor.innerHTML = '';
+
+  FORM.forEach((spec, idx) => {
+    const d = document.createElement('details');
+    d.className = 'group';
+    if (idx < 2) d.open = true;
+
+    const sum = document.createElement('summary');
+    sum.textContent = spec.t;
+    if (spec.note) {
+      const s = document.createElement('span');
+      s.textContent = spec.note;
+      sum.appendChild(s);
+    }
+    d.appendChild(sum);
+
+    const body = document.createElement('div');
+    body.className = 'body';
+    (spec.fields || []).forEach(([path, label, kind]) => body.appendChild(input(path, label, kind)));
+    if (spec.lines) {
+      const cap = document.createElement('div');
+      cap.className = 'hint';
+      cap.textContent = 'Адрес и часы работы кассы, каждая строка с новой строки:';
+      body.appendChild(cap);
+      linesBlock(spec.lines, body);
+    }
+    if (spec.list) listBlock(spec, body);
+    d.appendChild(body);
+    editor.appendChild(d);
+  });
+
+  const gh = document.createElement('details');
+  gh.className = 'group';
+  gh.innerHTML = `
+    <summary>Публикация на сайт<span>GitHub</span></summary>
+    <div class="body">
+      <p class="hint"><b>Нужно заполнить только токен</b>, остальные поля уже настроены. Кнопка «Опубликовать на сайт» отправляет текст прямо в репозиторий. Новые афиши уезжают туда же отдельными файлами в папку <code>images</code>, а в тексте остаётся только путь — сайт не тяжелеет. GitHub сам пересоберёт страницы — обычно через минуту изменения уже на сайте.</p>
+      <label class="field"><span>Владелец репозитория (логин или организация)</span><input type="text" id="gh-owner" placeholder="RMSSOVR"></label>
+      <label class="field"><span>Название репозитория</span><input type="text" id="gh-repo" placeholder="site-musicalonice"></label>
+      <label class="field"><span>Ветка</span><input type="text" id="gh-branch" placeholder="main"></label>
+      <label class="field"><span>Путь к файлу в репозитории</span><input type="text" id="gh-path" placeholder="site/content.json"></label>
+      <label class="field"><span>Токен доступа</span><input type="password" id="gh-token" placeholder="github_pat_…"></label>
+      <p class="hint">Токен создаётся один раз: GitHub → Settings → Developer settings → Fine-grained tokens. Доступ — только к этому репозиторию, право Contents: Read and write. Токен хранится в этом браузере и никуда больше не отправляется.</p>
+      <button class="btn btn-ghost" id="gh-save" style="margin-top:.7rem">Запомнить настройки</button>
+    </div>`;
+  document.getElementById('editor').appendChild(gh);
+
+  const how = document.createElement('details');
+  how.className = 'group';
+  how.innerHTML = `
+    <summary>Как выложить изменения на сайт<span>без сервера</span></summary>
+    <div class="body">
+      <ol class="steps">
+        <li>Настройте раздел <b>Публикация на сайт</b> — один раз.</li>
+        <li>Правьте тексты и жмите <b>Опубликовать на сайт</b>. GitHub пересоберёт страницы сам.</li>
+        <li>Если публикация недоступна, есть запасной путь: <b>Скачать content.json</b> и положить файл в репозиторий вручную.</li>
+      </ol>
+      <p class="hint">Кнопка <b>Скачать content.json</b> сохраняет тот же текст отдельным файлом — удобно отдать разработчику или держать как резервную копию. <b>Загрузить JSON</b> открывает такой файл обратно в админку.</p>
+      <p class="hint">Пока вы не выложили изменения, они живут только в этом браузере как черновик. Кнопка ниже стирает черновик и возвращает текст, который сейчас лежит в <code>index.html</code>.</p>
+      <button class="btn btn-ghost" id="reset" style="margin-top:.7rem">Сбросить черновик</button>
+    </div>`;
+  document.getElementById('editor').appendChild(how);
+
+  ghFill();
+  const ghBtn = document.getElementById('gh-save');
+  if (ghBtn) ghBtn.onclick = ghSave;
+
+  document.getElementById('reset').onclick = () => {
+    if (!confirm('Стереть черновик и вернуть текст, который сейчас на сайте?')) return;
+    try { localStorage.removeItem('moi-content'); } catch (e) {}
+    C = clone(window.BASE);
+    build(); push();
+    say('Черновик стёрт');
+  };
+}
+
+/* ——— превью и сохранение ——— */
+let timer = null;
+function touch() {
+  clearTimeout(timer);
+  timer = setTimeout(() => {
+    push();
+    try {
+      localStorage.setItem('moi-content', JSON.stringify({ at: Date.now(), data: C }));
+      say('Черновик сохранён в браузере', true);
+    } catch (e) {
+      say('Черновик не сохранить: браузер не даёт');
+    }
+  }, 220);
+}
+
+function push() {
+  try {
+    frame.contentWindow.postMessage({ type: 'moi-content', content: C }, '*');
+  } catch (e) {}
+}
+
+frame.addEventListener('load', push);
+
+/* ——— кнопки ——— */
+document.getElementById('reload').onclick = () => { frame.src = frame.src; };
+
+document.getElementById('download').onclick = () => {
+  const blob = new Blob([JSON.stringify(C, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'content.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  say('Файл content.json скачан', true);
+};
+
+document.getElementById('copy').onclick = async () => {
+  const text = JSON.stringify(C, null, 2);
+  try {
+    await navigator.clipboard.writeText(text);
+    say('JSON в буфере обмена', true);
+  } catch (e) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    say('JSON в буфере обмена', true);
+  }
+};
+
+/* ——— публикация в репозиторий ——— */
+const GH_KEYS = ['owner', 'repo', 'branch', 'path', 'token'];
+
+function ghRead() {
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem('moi-gh') || '{}'); } catch (e) {}
+  const out = {};
+  GH_KEYS.forEach((k) => {
+    const el = document.getElementById('gh-' + k);
+    out[k] = (el && el.value.trim()) || saved[k] || '';
+  });
+  if (!out.owner) out.owner = 'RMSSOVR';
+  if (!out.repo) out.repo = 'site-musicalonice';
+  if (!out.branch) out.branch = 'main';
+  if (!out.path) out.path = 'site/content.json';
+  return out;
+}
+
+function ghFill() {
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem('moi-gh') || '{}'); } catch (e) {}
+  GH_KEYS.forEach((k) => {
+    const el = document.getElementById('gh-' + k);
+    if (el && saved[k]) el.value = saved[k];
+  });
+}
+
+function ghSave() {
+  const cfg = ghRead();
+  try { localStorage.setItem('moi-gh', JSON.stringify(cfg)); say('Настройки сохранены', true); }
+  catch (e) { say('Браузер не даёт сохранить настройки'); }
+}
+
+function toBase64(text) {
+  const bytes = new TextEncoder().encode(text);
+  let bin = '';
+  bytes.forEach((b) => { bin += String.fromCharCode(b); });
+  return btoa(bin);
+}
+
+/* ——— публикация одним коммитом: тексты и новые афиши вместе ——— */
+
+/* Находит вшитые картинки, заменяет их путями и возвращает список файлов для коммита. */
+function collectAssets(cfg, data) {
+  const dir = cfg.path.includes('/') ? cfg.path.slice(0, cfg.path.lastIndexOf('/')) : '';
+  const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const files = [];
+
+  function walk(node, hint) {
+    if (Array.isArray(node)) {
+      node.forEach((v, i) => walk(v, (v && v.slug) || hint || ('img-' + i)));
+      return;
+    }
+    if (!node || typeof node !== 'object') return;
+    for (const key of Object.keys(node)) {
+      const v = node[key];
+      if (typeof v === 'string' && v.startsWith('data:image/')) {
+        const mime = v.slice(5, v.indexOf(';'));
+        const ext = mime.includes('png') ? 'png' : mime.includes('webp') ? 'webp' : 'jpg';
+        const base = String(node.slug || node.show || hint || key).replace(/[^a-zA-Z0-9-]+/g, '-').toLowerCase() || 'poster';
+        const file = `${base}-${stamp}-${Math.random().toString(36).slice(2, 6)}.${ext}`;
+        files.push({ path: (dir ? dir + '/' : '') + 'images/' + file, base64: v.slice(v.indexOf(',') + 1) });
+        node[key] = 'images/' + file;
+      } else if (v && typeof v === 'object') {
+        walk(v, (v && v.slug) || hint || key);
+      }
+    }
+  }
+  walk(data, '');
+  return files;
+}
+
+async function gh(cfg, path, opts = {}) {
+  const res = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/${path}`, {
+    ...opts,
+    headers: {
+      Authorization: 'Bearer ' + cfg.token,
+      Accept: 'application/vnd.github+json',
+      ...(opts.body ? { 'Content-Type': 'application/json' } : {})
+    }
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || ('GitHub ответил ' + res.status));
+  }
+  return res.json();
+}
+
+async function publish() {
+  const cfg = ghRead();
+  if (!cfg.token) {
+    say('Вставьте токен в разделе «Публикация на сайт»');
+    document.getElementById('gh-token').closest('details').open = true;
+    document.getElementById('gh-token').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  const btn = document.getElementById('publish');
+  btn.disabled = true;
+  say('Публикуем…');
+
+  try {
+    const payload = clone(C);
+    const files = collectAssets(cfg, payload);
+    const branch = encodeURIComponent(cfg.branch);
+
+    const ref = await gh(cfg, `git/ref/heads/${branch}`);
+    const parent = await gh(cfg, `git/commits/${ref.object.sha}`);
+
+    const tree = [];
+    for (let i = 0; i < files.length; i++) {
+      say(`Загружаем афиши: ${i + 1} из ${files.length}…`);
+      const blob = await gh(cfg, 'git/blobs', {
+        method: 'POST',
+        body: JSON.stringify({ content: files[i].base64, encoding: 'base64' })
+      });
+      tree.push({ path: files[i].path, mode: '100644', type: 'blob', sha: blob.sha });
+    }
+    tree.push({ path: cfg.path, mode: '100644', type: 'blob', content: JSON.stringify(payload, null, 2) + '\n' });
+
+    say('Отправляем…');
+    const newTree = await gh(cfg, 'git/trees', {
+      method: 'POST',
+      body: JSON.stringify({ base_tree: parent.tree.sha, tree })
+    });
+    const message = files.length
+      ? `Сайт из админки: тексты и ${files.length} ${files.length === 1 ? 'афиша' : files.length < 5 ? 'афиши' : 'афиш'}`
+      : 'Сайт из админки: тексты';
+    const commit = await gh(cfg, 'git/commits', {
+      method: 'POST',
+      body: JSON.stringify({ message, tree: newTree.sha, parents: [ref.object.sha] })
+    });
+    await gh(cfg, `git/refs/heads/${branch}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ sha: commit.sha })
+    });
+
+    try { localStorage.setItem('moi-gh', JSON.stringify(cfg)); } catch (e) {}
+    C = payload;
+    build(); push();
+    try { localStorage.removeItem('moi-content'); } catch (e) {}
+    say(files.length ? `Опубликовано одним коммитом, афиш: ${files.length}` : 'Опубликовано, сайт обновится через минуту', true);
+  } catch (e) {
+    say('Не вышло: ' + e.message);
+    alert('Публикация не удалась.\n\n' + e.message + '\n\nЕсли пишет «Update is not a fast forward» — кто-то опубликовал одновременно с вами, просто нажмите ещё раз.\nИначе проверьте токен: доступ к этому репозиторию и право Contents: Read and write.');
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('publish').onclick = publish;
+document.querySelectorAll('.more-menu button').forEach((b) => b.addEventListener('click', () => { b.closest('details').open = false; }));
+
+document.getElementById('import').onclick = () => document.getElementById('file').click();
+document.getElementById('file').onchange = (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      C = JSON.parse(r.result);
+      build(); touch();
+      say('JSON загружен', true);
+    } catch (err) {
+      alert('Не получилось прочитать файл: ' + err.message);
+    }
+  };
+  r.readAsText(f);
+};
+
+boot();
+</script>
+
+</body>
+</html>
