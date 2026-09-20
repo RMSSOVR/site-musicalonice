@@ -35,11 +35,11 @@
     "video": "",
     "facts": [
       {
-        "value": "5",
+        "value": "7",
         "label": "productions in repertoire"
       },
       {
-        "value": "10 years",
+        "value": "20 years",
         "label": "of touring worldwide"
       },
       {
@@ -224,16 +224,16 @@
     "soldLabel": "Sold out",
     "items": [
       {
-        "day": "12 December",
+        "day": "30 October",
         "time": "19:00",
         "seats": "Sold out",
-        "state": "none"
+        "state": "free"
       },
       {
-        "day": "13 December",
+        "day": "13 November",
         "time": "16:00",
         "seats": "24 seats left",
-        "state": "few"
+        "state": "free"
       },
       {
         "day": "20 December",
