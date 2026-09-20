@@ -12,10 +12,6 @@
       "href": "#shows"
     },
     {
-      "label": "Music",
-      "href": "#music"
-    },
-    {
       "label": "Piano",
       "href": "#piano"
     },
@@ -26,7 +22,7 @@
   ],
   "hero": {
     "lede": "Full-length musicals on ice: live vocals, orchestral scores and world-class skaters.",
-    "where": "12 December to 8 February in Bali, Indonesia.",
+    "where": "",
     "primary": "Buy tickets",
     "secondary": "See the shows",
     "secondaryHref": "#shows",
@@ -90,7 +86,7 @@
       {
         "title": "Alice in Wonderland",
         "status": "On tour",
-        "image": "images/alice.jpg",
+        "image": "images/alice-20260920-aps6.jpg",
         "href": "#show=alice",
         "text": "A family show after Lewis Carroll: the Mad Hatter, the White Rabbit and an icy tunnel into Wonderland.",
         "slug": "alice",
@@ -119,7 +115,7 @@
       {
         "title": "Dracula",
         "status": "On tour",
-        "image": "images/dracula.jpg",
+        "image": "images/dracula-20260920-vl4q.jpg",
         "href": "#show=dracula",
         "text": "The story of eternal love: a castle under a full moon, gothic drama and the darkest lighting of all our productions.",
         "slug": "dracula",
@@ -148,7 +144,7 @@
       {
         "title": "The Little Prince",
         "status": "On tour",
-        "image": "images/prince.jpg",
+        "image": "images/prince-20260920-ov13.jpg",
         "href": "#show=prince",
         "text": "A fantastical performance after Saint-Exupéry: a starry sky, a single rose and a great deal of empty ice.",
         "slug": "prince",
@@ -177,7 +173,7 @@
       {
         "title": "Princess Anastasia",
         "status": "On tour",
-        "image": "images/anastasia.jpg",
+        "image": "images/anastasia-20260920-doag.jpg",
         "href": "#show=anastasia",
         "text": "The secret heir to the throne: imperial St Petersburg, revolution and a melodrama with live vocals.",
         "slug": "anastasia",
@@ -213,67 +209,6 @@
     "datesCta": "See dates",
     "factsTitle": "About the show",
     "watch": "Watch the video"
-  },
-  "music": {
-    "heading": "Our music",
-    "intro": "Every production has its own score, recorded with the orchestra and the vocalists who perform it on the ice. Listen to a preview and take the music home.",
-    "buy": "Buy",
-    "listen": "Preview",
-    "pause": "Pause",
-    "soon": "Coming soon",
-    "tracklist": "Tracklist",
-    "albums": [
-      {
-        "title": "Aladdin on Ice",
-        "subtitle": "Original soundtrack",
-        "show": "aladdin",
-        "cover": "",
-        "price": "",
-        "buyUrl": "",
-        "preview": "",
-        "tracks": []
-      },
-      {
-        "title": "Alice in Wonderland on Ice",
-        "subtitle": "Original soundtrack",
-        "show": "alice",
-        "cover": "",
-        "price": "",
-        "buyUrl": "",
-        "preview": "",
-        "tracks": []
-      },
-      {
-        "title": "Dracula on Ice",
-        "subtitle": "Original soundtrack",
-        "show": "dracula",
-        "cover": "",
-        "price": "",
-        "buyUrl": "",
-        "preview": "",
-        "tracks": []
-      },
-      {
-        "title": "The Little Prince on Ice",
-        "subtitle": "Original soundtrack",
-        "show": "prince",
-        "cover": "",
-        "price": "",
-        "buyUrl": "",
-        "preview": "",
-        "tracks": []
-      },
-      {
-        "title": "Princess Anastasia on Ice",
-        "subtitle": "Original soundtrack",
-        "show": "anastasia",
-        "cover": "",
-        "price": "",
-        "buyUrl": "",
-        "preview": "",
-        "tracks": []
-      }
-    ]
   },
   "piano": {
     "heading": "The piano itself",
@@ -321,10 +256,7 @@
     ]
   },
   "footer": {
-    "lines": [
-      "Bali, Indonesia.",
-      "Box office open daily 11:00–21:00."
-    ],
+    "lines": [],
     "links": [
       {
         "label": "About",
