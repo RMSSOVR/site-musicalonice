@@ -84,12 +84,22 @@
 
   .field{display:block;margin-top:1rem}
   .field > span{display:block;font-size:.76rem;color:var(--mist);margin-bottom:.34rem}
-  input[type=text],textarea,select{
+  .more{position:relative}
+  .more > summary{list-style:none}
+  .more > summary::-webkit-details-marker{display:none}
+  .more-menu{
+    position:absolute;right:0;top:calc(100% + .5rem);z-index:20;width:17rem;
+    display:flex;flex-direction:column;gap:.5rem;align-items:stretch;
+    padding:.9rem;border:1px solid var(--hair);border-radius:.5rem;
+    background:#071A2B;box-shadow:0 20px 40px -20px rgba(0,0,0,.9);
+  }
+  .more-menu p{font-size:.76rem;color:var(--mist)}
+  input[type=text],input[type=password],textarea,select{
     width:100%;font:400 .9rem/1.45 var(--text);color:var(--glare);
     background:#04101B;border:1px solid var(--hair);border-radius:.3rem;
     padding:.6rem .7rem;transition:border-color .2s,background .2s;
   }
-  input[type=text]:focus,textarea:focus,select:focus{
+  input[type=text]:focus,input[type=password]:focus,textarea:focus,select:focus{
     outline:0;border-color:rgba(232,176,75,.65);background:#061725;
   }
   textarea{resize:vertical;min-height:4.6rem}
@@ -133,12 +143,18 @@
 <body>
 
 <div class="bar">
-  <h1>Админка Musical on Ice<small>Меняет текст лендинга. Картинки и оформление не трогает.</small></h1>
+  <h1>Админка Musical on Ice<small>Правьте тексты и афиши, затем «Опубликовать на сайт».</small></h1>
   <span class="state" id="state">Черновик не сохранён</span>
-  <button class="btn btn-ghost" id="reload">Показать превью</button>
-  <button class="btn btn-ghost" id="import">Загрузить JSON</button>
-  <button class="btn" id="copy">Скопировать JSON</button>
-  <button class="btn btn-ghost" id="download">Скачать content.json</button>
+  <button class="btn btn-ghost" id="reload">Обновить превью</button>
+  <details class="more">
+    <summary class="btn btn-ghost">Ещё</summary>
+    <div class="more-menu">
+      <p>Запасные способы, если публикация не работает:</p>
+      <button class="btn btn-ghost" id="download">Скачать content.json</button>
+      <button class="btn btn-ghost" id="copy">Скопировать JSON</button>
+      <button class="btn btn-ghost" id="import">Загрузить JSON из файла</button>
+    </div>
+  </details>
   <button class="btn btn-gold" id="publish">Опубликовать на сайт</button>
   <input type="file" id="file" accept=".json,application/json" hidden>
 </div>
@@ -562,9 +578,9 @@ function build() {
   gh.innerHTML = `
     <summary>Публикация на сайт<span>GitHub</span></summary>
     <div class="body">
-      <p class="hint">Кнопка «Опубликовать на сайт» отправляет текст прямо в репозиторий. Новые афиши уезжают туда же отдельными файлами в папку <code>images</code>, а в тексте остаётся только путь — сайт не тяжелеет. GitHub сам пересоберёт страницы — обычно через минуту изменения уже на сайте.</p>
-      <label class="field"><span>Владелец репозитория (логин или организация)</span><input type="text" id="gh-owner" placeholder="musicalonice"></label>
-      <label class="field"><span>Название репозитория</span><input type="text" id="gh-repo" placeholder="site"></label>
+      <p class="hint"><b>Нужно заполнить только токен</b>, остальные поля уже настроены. Кнопка «Опубликовать на сайт» отправляет текст прямо в репозиторий. Новые афиши уезжают туда же отдельными файлами в папку <code>images</code>, а в тексте остаётся только путь — сайт не тяжелеет. GitHub сам пересоберёт страницы — обычно через минуту изменения уже на сайте.</p>
+      <label class="field"><span>Владелец репозитория (логин или организация)</span><input type="text" id="gh-owner" placeholder="RMSSOVR"></label>
+      <label class="field"><span>Название репозитория</span><input type="text" id="gh-repo" placeholder="site-musicalonice"></label>
       <label class="field"><span>Ветка</span><input type="text" id="gh-branch" placeholder="main"></label>
       <label class="field"><span>Путь к файлу в репозитории</span><input type="text" id="gh-path" placeholder="site/content.json"></label>
       <label class="field"><span>Токен доступа</span><input type="password" id="gh-token" placeholder="github_pat_…"></label>
@@ -665,6 +681,8 @@ function ghRead() {
     const el = document.getElementById('gh-' + k);
     out[k] = (el && el.value.trim()) || saved[k] || '';
   });
+  if (!out.owner) out.owner = 'RMSSOVR';
+  if (!out.repo) out.repo = 'site-musicalonice';
   if (!out.branch) out.branch = 'main';
   if (!out.path) out.path = 'site/content.json';
   return out;
@@ -736,10 +754,10 @@ async function uploadAssets(cfg, head, data) {
 
 async function publish() {
   const cfg = ghRead();
-  if (!cfg.owner || !cfg.repo || !cfg.token) {
-    say('Заполните настройки публикации');
-    document.getElementById('gh-owner').closest('details').open = true;
-    document.getElementById('gh-owner').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (!cfg.token) {
+    say('Вставьте токен в разделе «Публикация на сайт»');
+    document.getElementById('gh-token').closest('details').open = true;
+    document.getElementById('gh-token').scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
   const api = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path.split('/').map(encodeURIComponent).join('/')}`;
@@ -781,6 +799,7 @@ async function publish() {
 }
 
 document.getElementById('publish').onclick = publish;
+document.querySelectorAll('.more-menu button').forEach((b) => b.addEventListener('click', () => { b.closest('details').open = false; }));
 
 document.getElementById('import').onclick = () => document.getElementById('file').click();
 document.getElementById('file').onchange = (e) => {
