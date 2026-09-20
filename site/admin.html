@@ -196,26 +196,74 @@ function say(text, ok) {
 }
 
 /* ——— загрузка: черновик → JSON лендинга → запас ——— */
-async function boot() {
-  let base = null;
-  try {
-    const res = await fetch('index.html');
-    const html = await res.text();
-    const m = html.match(/<script id="site-content"[^>]*>([\s\S]*?)<\/script>/);
-    if (m) base = JSON.parse(m[1]);
-  } catch (e) {}
+/* Недостающие разделы достраиваются из шаблона, существующие не трогаются. */
+function fillMissing(data, template) {
+  if (!template || typeof template !== 'object') return data;
+  for (const k of Object.keys(template)) {
+    if (data[k] === undefined) {
+      data[k] = clone(template[k]);
+    } else if (data[k] && typeof data[k] === 'object' && !Array.isArray(data[k])
+               && template[k] && typeof template[k] === 'object' && !Array.isArray(template[k])) {
+      fillMissing(data[k], template[k]);
+    }
+  }
+  return data;
+}
 
-  let draft = null;
+function readDraft() {
   try {
     const raw = localStorage.getItem('moi-content');
-    if (raw) draft = JSON.parse(raw);
+    if (!raw) return null;
+    const d = JSON.parse(raw);
+    return d && d.data ? d : { at: 0, data: d };
+  } catch (e) { return null; }
+}
+
+async function boot() {
+  /* шаблон: блок внутри index.html, в нём есть все разделы */
+  let template = null;
+  try {
+    const html = await (await fetch('index.html', { cache: 'no-store' })).text();
+    const m = html.match(/<script id="site-content"[^>]*>([\s\S]*?)<\/script>/);
+    if (m) template = JSON.parse(m[1]);
   } catch (e) {}
 
-  C = draft || base || FALLBACK;
-  window.BASE = base || FALLBACK;
-  if (draft) say('Открыт сохранённый черновик', true);
+  /* то, что сейчас опубликовано */
+  let live = null;
+  try {
+    const r = await fetch('content.json', { cache: 'no-store' });
+    if (r.ok) live = await r.json();
+  } catch (e) {}
+
+  const base = fillMissing(clone(live || template || FALLBACK), template);
+  C = clone(base);
+  window.BASE = clone(base);
+
   build();
   push();
+
+  const draft = readDraft();
+  if (draft) {
+    const when = draft.at ? new Date(draft.at).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) : 'раньше';
+    say(`Открыт текст с сайта. Есть неопубликованный черновик (${when}) — в меню «Ещё»`);
+    const box = document.querySelector('.more-menu');
+    if (box && !document.getElementById('draft-open')) {
+      const b = document.createElement('button');
+      b.className = 'btn btn-ghost';
+      b.id = 'draft-open';
+      b.textContent = 'Открыть черновик от ' + when;
+      b.onclick = () => {
+        if (!confirm('Заменить текст в редакторе черновиком? Недостающие разделы будут добавлены из шаблона.')) return;
+        C = fillMissing(clone(draft.data), template);
+        build(); push();
+        say('Открыт черновик. Проверьте его перед публикацией.', true);
+        b.closest('details').open = false;
+      };
+      box.appendChild(b);
+    }
+  } else {
+    say('Открыт текст с сайта', true);
+  }
 }
 
 /* ——— описание формы ——— */
@@ -289,7 +337,7 @@ const FORM = [
            ['show', 'Адрес шоу для афиши-обложки: aladdin, alice…'],
            ['price', 'Цена, например $9.99'],
            ['buyUrl', 'Ссылка на покупку: Bandcamp, Apple Music, оплата Stripe…'],
-           ['preview', 'Отрывок для прослушивания: ссылка на .mp3']],
+           ['preview', 'Отрывок для прослушивания', 'audio']],
     sub: { path: 'tracks', label: 'Трек', cols: 'cols-2',
            item: [['title', 'Название трека'], ['length', 'Длительность, 3:45']],
            blank: { title: '', length: '' } },
@@ -346,6 +394,89 @@ function input(path, label, kind, opts) {
   el.addEventListener('input', () => { set(path, el.value); touch(); });
   el.addEventListener('change', () => { set(path, el.value); touch(); });
   wrap.appendChild(el);
+  return wrap;
+}
+
+/* поле музыки: mp3-файл уезжает в репозиторий при публикации */
+const AUDIO_MAX = 20 * 1024 * 1024;
+function audioField(path, label) {
+  const wrap = document.createElement('div');
+  wrap.className = 'field';
+  const cap = document.createElement('span');
+  cap.textContent = label;
+  wrap.appendChild(cap);
+
+  const box = document.createElement('div');
+  box.className = 'img-side';
+
+  const file = document.createElement('input');
+  file.type = 'file';
+  file.accept = 'audio/mpeg,audio/mp3,audio/mp4,audio/x-m4a,audio/aac,audio/ogg,audio/wav,.mp3,.m4a,.aac,.ogg,.wav';
+  file.hidden = true;
+
+  const player = document.createElement('audio');
+  player.controls = true;
+  player.preload = 'none';
+  player.style.width = '100%';
+
+  const btns = document.createElement('div');
+  btns.style.cssText = 'display:flex;gap:.5rem;flex-wrap:wrap;align-items:center';
+  const pick = document.createElement('button');
+  pick.className = 'btn btn-ghost';
+  pick.textContent = 'Загрузить музыку';
+  pick.onclick = (e) => { e.preventDefault(); file.click(); };
+  const clear = document.createElement('button');
+  clear.className = 'mini mini-del';
+  clear.textContent = 'Убрать';
+  clear.onclick = (e) => { e.preventDefault(); set(path, ''); draw(); touch(); };
+  const state = document.createElement('span');
+  state.className = 'hint';
+  btns.appendChild(pick); btns.appendChild(clear); btns.appendChild(state);
+
+  const text = document.createElement('input');
+  text.type = 'text';
+
+  const note = document.createElement('div');
+  note.className = 'hint';
+  note.textContent = 'Файл mp3 до 20 МБ. Лучше короткий отрывок на 30–60 секунд — полный альбом продаётся по ссылке покупки. При публикации файл уедет на сайт в папку audio.';
+
+  function draw() {
+    const v = get(path) || '';
+    const inline = v.startsWith('data:');
+    player.hidden = !v;
+    if (v) player.src = v; else player.removeAttribute('src');
+    text.value = inline ? '' : v;
+    text.placeholder = inline ? 'файл загружен, уедет на сайт при публикации' : 'или ссылка: audio/aladdin.mp3 или https://…mp3';
+    state.textContent = inline ? 'новый файл — нажмите «Опубликовать»' : v ? '' : 'музыки нет — кнопка ▶ на сайте не появится';
+  }
+
+  text.addEventListener('input', () => { set(path, text.value.trim()); touch(); player.hidden = !text.value.trim(); if (text.value.trim()) player.src = text.value.trim(); });
+
+  file.addEventListener('change', () => {
+    const f = file.files[0];
+    file.value = '';
+    if (!f) return;
+    if (f.size > AUDIO_MAX) {
+      alert('Файл ' + (f.size / 1048576).toFixed(1) + ' МБ — это слишком много для сайта.\nСделайте отрывок покороче или сохраните в mp3 128–192 kbps (до 20 МБ).');
+      return;
+    }
+    state.textContent = 'читаем файл…';
+    const r = new FileReader();
+    r.onload = () => {
+      let v = String(r.result);
+      if (v.startsWith('data:;') || v.startsWith('data:application/octet-stream')) v = 'data:audio/mpeg' + v.slice(v.indexOf(';'));
+      set(path, v); draw(); touch();
+    };
+    r.readAsDataURL(f);
+  });
+
+  box.appendChild(btns);
+  box.appendChild(player);
+  box.appendChild(text);
+  box.appendChild(note);
+  wrap.appendChild(box);
+  wrap.appendChild(file);
+  draw();
   return wrap;
 }
 
@@ -456,7 +587,7 @@ function listBlock(spec, box) {
       grid.className = 'grid ' + (spec.cols || '');
       spec.item.forEach(([key, label, kind, opts]) => {
         const p = `${spec.list}.${i}.${key}`;
-        grid.appendChild(kind === 'image' ? imageField(p, label) : input(p, label, kind, opts));
+        grid.appendChild(kind === 'image' ? imageField(p, label) : kind === 'audio' ? audioField(p, label) : input(p, label, kind, opts));
       });
       row.appendChild(grid);
 
@@ -610,7 +741,7 @@ function build() {
   if (ghBtn) ghBtn.onclick = ghSave;
 
   document.getElementById('reset').onclick = () => {
-    if (!confirm('Стереть черновик и вернуть текст из index.html?')) return;
+    if (!confirm('Стереть черновик и вернуть текст, который сейчас на сайте?')) return;
     try { localStorage.removeItem('moi-content'); } catch (e) {}
     C = clone(window.BASE);
     build(); push();
@@ -625,7 +756,7 @@ function touch() {
   timer = setTimeout(() => {
     push();
     try {
-      localStorage.setItem('moi-content', JSON.stringify(C));
+      localStorage.setItem('moi-content', JSON.stringify({ at: Date.now(), data: C }, (k, v) => (typeof v === 'string' && v.startsWith('data:audio/') ? '' : v)));
       say('Черновик сохранён в браузере', true);
     } catch (e) {
       say('Черновик не сохранить: браузер не даёт');
@@ -726,12 +857,19 @@ function collectAssets(cfg, data) {
     if (!node || typeof node !== 'object') return;
     for (const key of Object.keys(node)) {
       const v = node[key];
-      if (typeof v === 'string' && v.startsWith('data:image/')) {
+      if (typeof v === 'string' && v.startsWith('data:audio/')) {
+        const mime = v.slice(5, v.indexOf(';'));
+        const ext = /mp4|m4a|aac/.test(mime) ? 'm4a' : /ogg/.test(mime) ? 'ogg' : /wav/.test(mime) ? 'wav' : 'mp3';
+        const base = String(node.show || node.slug || node.title || hint || key).replace(/[^a-zA-Z0-9-]+/g, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'music';
+        const file = `${base}-${stamp}-${Math.random().toString(36).slice(2, 6)}.${ext}`;
+        files.push({ path: (dir ? dir + '/' : '') + 'audio/' + file, base64: v.slice(v.indexOf(',') + 1), kind: 'audio' });
+        node[key] = 'audio/' + file;
+      } else if (typeof v === 'string' && v.startsWith('data:image/')) {
         const mime = v.slice(5, v.indexOf(';'));
         const ext = mime.includes('png') ? 'png' : mime.includes('webp') ? 'webp' : 'jpg';
         const base = String(node.slug || node.show || hint || key).replace(/[^a-zA-Z0-9-]+/g, '-').toLowerCase() || 'poster';
         const file = `${base}-${stamp}-${Math.random().toString(36).slice(2, 6)}.${ext}`;
-        files.push({ path: (dir ? dir + '/' : '') + 'images/' + file, base64: v.slice(v.indexOf(',') + 1) });
+        files.push({ path: (dir ? dir + '/' : '') + 'images/' + file, base64: v.slice(v.indexOf(',') + 1), kind: 'image' });
         node[key] = 'images/' + file;
       } else if (v && typeof v === 'object') {
         walk(v, (v && v.slug) || hint || key);
@@ -780,7 +918,7 @@ async function publish() {
 
     const tree = [];
     for (let i = 0; i < files.length; i++) {
-      say(`Загружаем афиши: ${i + 1} из ${files.length}…`);
+      say(`Загружаем файлы: ${i + 1} из ${files.length}${files[i].kind === 'audio' ? ' (музыка, подождите)' : ''}…`);
       const blob = await gh(cfg, 'git/blobs', {
         method: 'POST',
         body: JSON.stringify({ content: files[i].base64, encoding: 'base64' })
@@ -794,9 +932,12 @@ async function publish() {
       method: 'POST',
       body: JSON.stringify({ base_tree: parent.tree.sha, tree })
     });
-    const message = files.length
-      ? `Сайт из админки: тексты и ${files.length} ${files.length === 1 ? 'афиша' : files.length < 5 ? 'афиши' : 'афиш'}`
-      : 'Сайт из админки: тексты';
+    const nImg = files.filter((f) => f.kind === 'image').length;
+    const nAud = files.filter((f) => f.kind === 'audio').length;
+    const parts = [];
+    if (nImg) parts.push(`афиш: ${nImg}`);
+    if (nAud) parts.push(`музыки: ${nAud}`);
+    const message = parts.length ? `Сайт из админки: тексты, ${parts.join(', ')}` : 'Сайт из админки: тексты';
     const commit = await gh(cfg, 'git/commits', {
       method: 'POST',
       body: JSON.stringify({ message, tree: newTree.sha, parents: [ref.object.sha] })
@@ -809,8 +950,8 @@ async function publish() {
     try { localStorage.setItem('moi-gh', JSON.stringify(cfg)); } catch (e) {}
     C = payload;
     build(); push();
-    try { localStorage.setItem('moi-content', JSON.stringify(C)); } catch (e) {}
-    say(files.length ? `Опубликовано одним коммитом, афиш: ${files.length}` : 'Опубликовано, сайт обновится через минуту', true);
+    try { localStorage.removeItem('moi-content'); } catch (e) {}
+    say(parts.length ? `Опубликовано одним коммитом (${parts.join(', ')}). Сайт обновится через минуту` : 'Опубликовано, сайт обновится через минуту', true);
   } catch (e) {
     say('Не вышло: ' + e.message);
     alert('Публикация не удалась.\n\n' + e.message + '\n\nЕсли пишет «Update is not a fast forward» — кто-то опубликовал одновременно с вами, просто нажмите ещё раз.\nИначе проверьте токен: доступ к этому репозиторию и право Contents: Read and write.');

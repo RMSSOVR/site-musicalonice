@@ -1131,12 +1131,21 @@ let C = DEFAULTS;
 
 /* Источник правды — content.json рядом с сайтом; его правит админка.
    Если файл недоступен (открыли index.html двойным кликом), работает встроенный блок ниже. */
+/* Если в опубликованном тексте нет какого-то раздела, берём его из встроенного шаблона. */
+function withDefaults(data, tpl) {
+  for (const k of Object.keys(tpl || {})) {
+    if (data[k] === undefined) data[k] = JSON.parse(JSON.stringify(tpl[k]));
+    else if (data[k] && typeof data[k] === 'object' && !Array.isArray(data[k]) && tpl[k] && typeof tpl[k] === 'object' && !Array.isArray(tpl[k])) withDefaults(data[k], tpl[k]);
+  }
+  return data;
+}
+
 async function loadContent() {
   try {
     const r = await fetch('content.json', { cache: 'no-store' });
     if (r.ok) {
       const data = await r.json();
-      if (data && data.shows) C = data;
+      if (data && data.shows) C = withDefaults(data, DEFAULTS);
     }
   } catch (e) {}
 }
