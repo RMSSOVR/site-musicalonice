@@ -317,7 +317,11 @@ const FORM = [
            ['text', 'Короткое описание в карточке', 'area'],
            ['lead', 'Крупная фраза на странице шоу', 'area'],
            ['about', 'Основной текст страницы, абзацы через пустую строку', 'area'],
-           ['video', 'Видео: ссылка на YouTube, Vimeo или файл .mp4']],
+           ['video', 'Видео: ссылка на YouTube, Vimeo или файл .mp4'],
+           ['heroVideo', 'Видео фоном в шапке страницы (файл mp4)', 'video'],
+           ['heroStart', 'Начало отрывка в этом видео, напр. 0:12'],
+           ['heroEnd', 'Конец отрывка, напр. 0:30'],
+           ['heroBlur', 'Размытие фона, 0–60 (по умолчанию 22)']],
     sub: { path: 'facts', label: 'Строка', cols: 'cols-2',
            item: [['label', 'Название'], ['value', 'Значение']],
            blank: { label: 'Длительность', value: '90 минут' } },
@@ -328,18 +332,21 @@ const FORM = [
     ['music.intro', 'Вводный абзац', 'area'],
     ['music.buy', 'Кнопка покупки', 'text'],
     ['music.soon', 'Надпись, когда ссылки на покупку нет', 'text'],
+    ['music.showHeading', 'Заголовок музыки на странице шоу', 'text'],
     ['music.tracklist', 'Надпись над списком треков', 'text'],
     ['music.listen', 'Подсказка кнопки прослушивания', 'text'],
     ['music.pause', 'Подсказка кнопки паузы', 'text']
   ], list: 'music.albums', label: 'Альбом', cols: 'cols-2',
     item: [['title', 'Название альбома'], ['subtitle', 'Строка под названием'],
            ['cover', 'Обложка альбома (если пусто — значок ноты)', 'image'],
+           ['show', 'Шоу, на странице которого показать альбом', 'select', showOptions],
            ['price', 'Цена, например $9.99'],
            ['buyUrl', 'Ссылка на покупку: Bandcamp, Apple Music, оплата Stripe…'],
            ['preview', 'Отрывок для прослушивания', 'audio']],
     sub: { path: 'tracks', label: 'Трек', cols: 'cols-2',
-           item: [['title', 'Название трека'], ['length', 'Длительность, 3:45']],
-           blank: { title: '', length: '' } },
+           item: [['title', 'Название трека'], ['length', 'Длительность, 3:45'],
+                  ['audio', 'Музыка трека (файл mp3)', 'audio']],
+           blank: { title: '', length: '', audio: '' } },
     blank: { title: 'New album', subtitle: 'Original soundtrack', show: '', cover: '', price: '', buyUrl: '', preview: '', tracks: [] } },
   { t: 'Рояль', note: 'играющий инструмент в середине страницы', fields: [
     ['piano.heading', 'Заголовок раздела', 'text'],
@@ -367,6 +374,14 @@ const FORM = [
 ];
 
 /* ——— построение формы ——— */
+/* список шоу для привязки альбома */
+function showOptions() {
+  const items = get('shows.items') || [];
+  return [['', '— не показывать на странице шоу —']].concat(
+    items.filter((x) => x && x.slug).map((x) => [x.slug, (x.title || x.slug) + ' (' + x.slug + ')'])
+  );
+}
+
 function input(path, label, kind, opts) {
   const wrap = document.createElement('label');
   wrap.className = 'field';
@@ -380,7 +395,10 @@ function input(path, label, kind, opts) {
     el.rows = 3;
   } else if (kind === 'select') {
     el = document.createElement('select');
-    (opts || []).forEach(([v, t]) => {
+    const list = (typeof opts === 'function' ? opts() : opts) || [];
+    const cur = get(path) == null ? '' : String(get(path));
+    if (cur && !list.some(([v]) => String(v) === cur)) list.push([cur, cur + ' — такого шоу нет']);
+    list.forEach(([v, t]) => {
       const o = document.createElement('option');
       o.value = v; o.textContent = t;
       el.appendChild(o);
@@ -396,9 +414,35 @@ function input(path, label, kind, opts) {
   return wrap;
 }
 
-/* поле музыки: mp3-файл уезжает в репозиторий при публикации */
+/* поле музыки и видео: файл уезжает в репозиторий при публикации */
 const AUDIO_MAX = 20 * 1024 * 1024;
+const VIDEO_MAX = 40 * 1024 * 1024;
+
+function videoField(path, label) {
+  return mediaField(path, label, {
+    accept: 'video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov',
+    max: VIDEO_MAX,
+    pick: 'Загрузить видео',
+    empty: 'видео нет — в шапке останется афиша',
+    mime: 'data:video/mp4',
+    hint: 'Файл mp4 до 40 МБ. Лучше короткий кусок на 10–20 секунд — он идёт фоном под названием шоу, без звука и по кругу. Отрывок и размытие настраиваются в полях ниже.',
+    placeholder: 'или ссылка: video/aladdin.mp4 или https://…mp4'
+  });
+}
+
 function audioField(path, label) {
+  return mediaField(path, label, {
+    accept: 'audio/mpeg,audio/mp3,audio/mp4,audio/x-m4a,audio/aac,audio/ogg,audio/wav,.mp3,.m4a,.aac,.ogg,.wav',
+    max: AUDIO_MAX,
+    pick: 'Загрузить музыку',
+    empty: 'музыки нет — кнопка ▶ на сайте не появится',
+    mime: 'data:audio/mpeg',
+    hint: 'Файл mp3 до 20 МБ. Лучше короткий отрывок на 30–60 секунд — полный альбом продаётся по ссылке покупки. При публикации файл уедет на сайт в папку audio.',
+    placeholder: 'или ссылка: audio/aladdin.mp3 или https://…mp3'
+  });
+}
+
+function mediaField(path, label, cfg) {
   const wrap = document.createElement('div');
   wrap.className = 'field';
   const cap = document.createElement('span');
@@ -410,10 +454,10 @@ function audioField(path, label) {
 
   const file = document.createElement('input');
   file.type = 'file';
-  file.accept = 'audio/mpeg,audio/mp3,audio/mp4,audio/x-m4a,audio/aac,audio/ogg,audio/wav,.mp3,.m4a,.aac,.ogg,.wav';
+  file.accept = cfg.accept;
   file.hidden = true;
 
-  const player = document.createElement('audio');
+  const player = document.createElement(cfg.mime.indexOf('video') > 0 ? 'video' : 'audio');
   player.controls = true;
   player.preload = 'none';
   player.style.width = '100%';
@@ -422,7 +466,7 @@ function audioField(path, label) {
   btns.style.cssText = 'display:flex;gap:.5rem;flex-wrap:wrap;align-items:center';
   const pick = document.createElement('button');
   pick.className = 'btn btn-ghost';
-  pick.textContent = 'Загрузить музыку';
+  pick.textContent = cfg.pick;
   pick.onclick = (e) => { e.preventDefault(); file.click(); };
   const clear = document.createElement('button');
   clear.className = 'mini mini-del';
@@ -437,7 +481,7 @@ function audioField(path, label) {
 
   const note = document.createElement('div');
   note.className = 'hint';
-  note.textContent = 'Файл mp3 до 20 МБ. Лучше короткий отрывок на 30–60 секунд — полный альбом продаётся по ссылке покупки. При публикации файл уедет на сайт в папку audio.';
+  note.textContent = cfg.hint;
 
   function draw() {
     const v = get(path) || '';
@@ -445,8 +489,8 @@ function audioField(path, label) {
     player.hidden = !v;
     if (v) player.src = v; else player.removeAttribute('src');
     text.value = inline ? '' : v;
-    text.placeholder = inline ? 'файл загружен, уедет на сайт при публикации' : 'или ссылка: audio/aladdin.mp3 или https://…mp3';
-    state.textContent = inline ? 'новый файл — нажмите «Опубликовать»' : v ? '' : 'музыки нет — кнопка ▶ на сайте не появится';
+    text.placeholder = inline ? 'файл загружен, уедет на сайт при публикации' : cfg.placeholder;
+    state.textContent = inline ? 'новый файл — нажмите «Опубликовать»' : v ? '' : cfg.empty;
   }
 
   text.addEventListener('input', () => { set(path, text.value.trim()); touch(); player.hidden = !text.value.trim(); if (text.value.trim()) player.src = text.value.trim(); });
@@ -455,15 +499,15 @@ function audioField(path, label) {
     const f = file.files[0];
     file.value = '';
     if (!f) return;
-    if (f.size > AUDIO_MAX) {
-      alert('Файл ' + (f.size / 1048576).toFixed(1) + ' МБ — это слишком много для сайта.\nСделайте отрывок покороче или сохраните в mp3 128–192 kbps (до 20 МБ).');
+    if (f.size > cfg.max) {
+      alert('Файл ' + (f.size / 1048576).toFixed(1) + ' МБ — это слишком много для сайта.\nДопустимо до ' + Math.round(cfg.max / 1048576) + ' МБ: сделайте отрывок покороче или сожмите файл.');
       return;
     }
     state.textContent = 'читаем файл…';
     const r = new FileReader();
     r.onload = () => {
       let v = String(r.result);
-      if (v.startsWith('data:;') || v.startsWith('data:application/octet-stream')) v = 'data:audio/mpeg' + v.slice(v.indexOf(';'));
+      if (v.startsWith('data:;') || v.startsWith('data:application/octet-stream')) v = cfg.mime + v.slice(v.indexOf(';'));
       set(path, v); draw(); touch();
     };
     r.readAsDataURL(f);
@@ -586,7 +630,7 @@ function listBlock(spec, box) {
       grid.className = 'grid ' + (spec.cols || '');
       spec.item.forEach(([key, label, kind, opts]) => {
         const p = `${spec.list}.${i}.${key}`;
-        grid.appendChild(kind === 'image' ? imageField(p, label) : kind === 'audio' ? audioField(p, label) : input(p, label, kind, opts));
+        grid.appendChild(kind === 'image' ? imageField(p, label) : kind === 'audio' ? audioField(p, label) : kind === 'video' ? videoField(p, label) : input(p, label, kind, opts));
       });
       row.appendChild(grid);
 
@@ -755,7 +799,7 @@ function touch() {
   timer = setTimeout(() => {
     push();
     try {
-      localStorage.setItem('moi-content', JSON.stringify({ at: Date.now(), data: C }, (k, v) => (typeof v === 'string' && v.startsWith('data:audio/') ? '' : v)));
+      localStorage.setItem('moi-content', JSON.stringify({ at: Date.now(), data: C }, (k, v) => (typeof v === 'string' && /^data:(audio|video)\//.test(v) ? '' : v)));
       say('Черновик сохранён в браузере', true);
     } catch (e) {
       say('Черновик не сохранить: браузер не даёт');
@@ -856,7 +900,14 @@ function collectAssets(cfg, data) {
     if (!node || typeof node !== 'object') return;
     for (const key of Object.keys(node)) {
       const v = node[key];
-      if (typeof v === 'string' && v.startsWith('data:audio/')) {
+      if (typeof v === 'string' && v.startsWith('data:video/')) {
+        const mime = v.slice(5, v.indexOf(';'));
+        const ext = /webm/.test(mime) ? 'webm' : /quicktime|mov/.test(mime) ? 'mov' : 'mp4';
+        const base = String(node.slug || node.show || hint || key).replace(/[^a-zA-Z0-9-]+/g, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'video';
+        const file = `${base}-${stamp}-${Math.random().toString(36).slice(2, 6)}.${ext}`;
+        files.push({ path: (dir ? dir + '/' : '') + 'video/' + file, base64: v.slice(v.indexOf(',') + 1), kind: 'video' });
+        node[key] = 'video/' + file;
+      } else if (typeof v === 'string' && v.startsWith('data:audio/')) {
         const mime = v.slice(5, v.indexOf(';'));
         const ext = /mp4|m4a|aac/.test(mime) ? 'm4a' : /ogg/.test(mime) ? 'ogg' : /wav/.test(mime) ? 'wav' : 'mp3';
         const base = String(node.show || node.slug || node.title || hint || key).replace(/[^a-zA-Z0-9-]+/g, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'music';
@@ -917,7 +968,7 @@ async function publish() {
 
     const tree = [];
     for (let i = 0; i < files.length; i++) {
-      say(`Загружаем файлы: ${i + 1} из ${files.length}${files[i].kind === 'audio' ? ' (музыка, подождите)' : ''}…`);
+      say(`Загружаем файлы: ${i + 1} из ${files.length}${files[i].kind === 'image' ? '' : ' (файл тяжёлый, подождите)'}…`);
       const blob = await gh(cfg, 'git/blobs', {
         method: 'POST',
         body: JSON.stringify({ content: files[i].base64, encoding: 'base64' })
@@ -933,9 +984,11 @@ async function publish() {
     });
     const nImg = files.filter((f) => f.kind === 'image').length;
     const nAud = files.filter((f) => f.kind === 'audio').length;
+    const nVid = files.filter((f) => f.kind === 'video').length;
     const parts = [];
     if (nImg) parts.push(`афиш: ${nImg}`);
     if (nAud) parts.push(`музыки: ${nAud}`);
+    if (nVid) parts.push(`видео: ${nVid}`);
     const message = parts.length ? `Сайт из админки: тексты, ${parts.join(', ')}` : 'Сайт из админки: тексты';
     const commit = await gh(cfg, 'git/commits', {
       method: 'POST',

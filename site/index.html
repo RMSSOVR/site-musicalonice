@@ -327,6 +327,13 @@
     background-image:var(--poster);background-size:cover;background-position:center;
     filter:blur(26px) saturate(1.15);transform:scale(1.12);opacity:.55;
   }
+  .sh-hero-vid{
+    position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;
+    filter:blur(var(--hblur,22px)) saturate(1.1);transform:scale(1.14);opacity:.6;
+    pointer-events:none;
+  }
+  html[data-theme="light"] .sh-hero-vid{opacity:.45}
+  @media (prefers-reduced-motion:reduce){.sh-hero-vid{display:none}}
   .sh-hero::after{
     content:"";position:absolute;inset:0;z-index:-1;
     background:linear-gradient(180deg,rgba(5,19,32,.72),rgba(5,19,32,.86) 60%,var(--depth));
@@ -386,6 +393,53 @@
   /* ——— музыка ——— */
   #music{scroll-margin-top:5rem}
   .albums{list-style:none;margin:clamp(1.8rem,4vw,2.6rem) 0 0;padding:0}
+  .sh-music{margin-top:3.4rem}
+  .sh-music h3{font-family:var(--serif);font-size:1.5rem;font-weight:500;margin:0 0 1rem}
+  .trackset{border-top:1px solid var(--hair);padding-top:1.2rem;margin-bottom:2.2rem}
+  .trk .pick,.trk-head .pick{padding:.6rem 1.15rem;font-size:.82rem;text-decoration:none;white-space:nowrap}
+  .trk-head .album-side{display:flex;align-items:center;gap:.9rem}
+  .trk-head{display:grid;grid-template-columns:4.5rem 1fr auto;gap:.3rem 1.2rem;align-items:center}
+  .trk-cover{
+    position:relative;width:4.5rem;aspect-ratio:1;overflow:hidden;
+    background:linear-gradient(160deg,#143147,#081826 60%,#040E18);
+    box-shadow:0 14px 26px -18px rgba(0,0,0,.9);
+  }
+  html[data-theme="light"] .trk-cover{background:linear-gradient(160deg,#C2DAF4,#9FC0E4 60%,#84AAD6)}
+  .trk-cover img{position:relative;width:100%;height:100%;object-fit:cover;display:block}
+  .trks{list-style:none;margin:1rem 0 0;padding:0}
+  .trk{
+    position:relative;display:grid;grid-template-columns:2rem 1fr auto;gap:.9rem;align-items:center;
+    padding:.55rem .2rem;border-bottom:1px solid var(--hair);
+  }
+  .trk-num{
+    width:2rem;text-align:center;font-size:.85rem;letter-spacing:.06em;
+    color:var(--mist);font-variant-numeric:tabular-nums;
+  }
+  .trk-play{
+    width:2rem;height:2rem;border-radius:50%;border:1px solid var(--hair);cursor:pointer;
+    background:transparent;display:flex;align-items:center;justify-content:center;
+    transition:background .2s,border-color .2s;
+  }
+  .trk-play:hover{background:rgba(211,229,243,.08);border-color:var(--mist)}
+  .trk-play::before{
+    content:"";width:0;height:0;margin-left:.16rem;
+    border-left:.55rem solid currentColor;border-top:.35rem solid transparent;border-bottom:.35rem solid transparent;
+  }
+  .trk.playing .trk-play::before{
+    width:.5rem;height:.62rem;margin-left:0;border:0;
+    background:linear-gradient(to right,currentColor 0 .16rem,transparent .16rem .34rem,currentColor .34rem .5rem);
+  }
+  .trk-title{font-size:1rem}
+  .trk.playing .trk-title{color:var(--spot)}
+  .trk-len{font-size:.9rem;color:var(--mist);font-variant-numeric:tabular-nums}
+  .trk-mute .trk-title{color:var(--mist)}
+  .trk-bar{position:absolute;left:0;right:0;bottom:-1px;height:2px;pointer-events:none}
+  .trk-bar i{display:block;height:100%;width:0;background:var(--spot)}
+  @media (max-width:620px){
+    .trk-head{grid-template-columns:3.6rem 1fr;gap:.3rem .9rem}
+    .trk-cover{width:3.6rem}
+    .trk-head .album-side{grid-column:1 / -1;justify-self:start;margin-top:.5rem}
+  }
   .album{
     display:grid;gap:.4rem 1.4rem;align-items:center;
     grid-template-columns:5.5rem 1fr auto;
@@ -430,17 +484,28 @@
   .album-bar{grid-column:2 / -1;height:2px;background:var(--hair);border-radius:2px;overflow:hidden;display:none}
   .album.playing .album-bar{display:block}
   .album-bar i{display:block;height:100%;width:0;background:#E8B04B}
-  .album-tracks{grid-column:2 / -1;font-size:.84rem;color:var(--mist)}
-  .album-tracks summary{cursor:pointer;width:max-content;color:var(--crust)}
-  .album-tracks ol{margin:.6rem 0 0;padding-left:1.2rem}
-  .album-tracks li{display:flex;justify-content:space-between;gap:1rem;padding-block:.25rem;max-width:32rem}
-  .album-tracks li span:last-child{font-variant-numeric:tabular-nums}
+  .album.has-tracks{cursor:pointer}
+  .album-toggle{
+    margin-top:.45rem;padding:0;border:0;background:none;cursor:pointer;color:var(--mist);
+    font:600 .7rem/1 var(--text);letter-spacing:.08em;text-transform:uppercase;
+    display:inline-flex;align-items:center;gap:.4rem;
+  }
+  .album-toggle:hover{color:var(--crust)}
+  .album-toggle i{
+    width:.42rem;height:.42rem;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
+    transform:rotate(45deg) translate(-1px,-1px);transition:transform .2s;
+  }
+  .album.open .album-toggle i{transform:rotate(-135deg) translate(-1px,-1px)}
+  .album-panel{grid-column:1 / -1;display:none}
+  .album.open .album-panel{display:block;margin-top:.7rem}
+  .album-panel .trks{margin:0}
+  .album-panel .trk:last-child{border-bottom:0}
   @media (max-width:640px){
     .album{grid-template-columns:4.5rem 1fr;gap:.5rem 1rem}
     .album-cover{width:4.5rem}
     .album-play{opacity:1;background:rgba(5,19,32,.25)}
     .album-side{grid-column:2;justify-content:flex-start}
-    .album-bar,.album-tracks{grid-column:1 / -1}
+    .album-bar,.album-panel{grid-column:1 / -1}
   }
 
   /* ——— обычные кнопки ——— */
@@ -999,6 +1064,7 @@
     "listen": "Preview",
     "pause": "Pause",
     "soon": "Coming soon",
+    "showHeading": "Music from this show",
     "tracklist": "Tracklist",
     "albums": [
       {
@@ -1280,10 +1346,13 @@ function renderShow(sh) {
   const S = C.shows || {};
   const list = (S.items || []).filter((x) => x.slug !== sh.slug);
   const paras = String(sh.about || sh.text || '').split(/\n\s*\n/).filter(Boolean);
+  const mine = albumsOfShow(sh);
+  const heroBlur = (() => { const n = parseFloat(sh.heroBlur); return isNaN(n) ? 22 : Math.max(0, Math.min(60, n)); })();
 
   view.innerHTML = `
-    <header class="sh-hero" style="--poster:url('${sh.image ? esc(sh.image) : ''}')">
+    <header class="sh-hero" style="--poster:url('${sh.image ? esc(sh.image) : ''}');--hblur:${heroBlur}px">
       <div class="sh-hero-bg"></div>
+      ${sh.heroVideo ? `<video class="sh-hero-vid" id="sh-hero-vid" muted playsinline autoplay loop preload="auto" tabindex="-1" aria-hidden="true" ${sh.image ? `poster="${esc(sh.image)}"` : ''}></video>` : ''}
       <div class="wrap">
         <a class="sh-back" href="#shows">← ${esc(S.back || 'All shows')}</a>
         <div class="sh-top">
@@ -1315,10 +1384,20 @@ function renderShow(sh) {
       ${videoBlock(sh.video)}
     </div>
 
+    ${mine.length ? `<div class="wrap sh-music" id="sh-music">
+      <h3>${esc((C.music && C.music.showHeading) || 'Music from this show')}</h3>
+      ${mine.map(trackSetHTML).join('')}
+    </div>` : ''}
+
     ${list.length ? `<div class="wrap sh-others">
       <h3>${esc(S.others || 'More shows')}</h3>
       <div class="shows-rail"><div class="shows">${list.map(showCard).join('')}</div></div>
     </div>` : ''}`;
+
+  setupHeroVideo(sh);
+
+  stopPreview();
+  view.querySelectorAll('#sh-music .trackset').forEach((box, i) => wireTrackSet(box, mine[i]));
 
   const cta = document.getElementById('show-cta');
   if (cta) cta.onclick = () => { location.hash = '#dates'; };
@@ -1328,6 +1407,37 @@ function renderShow(sh) {
     const v = document.getElementById('sh-video');
     if (v) v.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+}
+
+/* «0:12» или «12» -> секунды */
+function toSeconds(v) {
+  if (v == null || v === '') return null;
+  const parts = String(v).trim().split(':').map(Number);
+  if (parts.some(isNaN)) return null;
+  const sec = parts.reduce((acc, n) => acc * 60 + n, 0);
+  return sec >= 0 ? sec : null;
+}
+
+/* фоновое видео в шапке шоу: свой отрывок, зацикленный */
+function setupHeroVideo(sh) {
+  const v = document.getElementById('sh-hero-vid');
+  if (!v || !sh.heroVideo) return;
+  const start = toSeconds(sh.heroStart);
+  const end = toSeconds(sh.heroEnd);
+  v.src = sh.heroVideo + (start ? '#t=' + start + (end ? ',' + end : '') : '');
+  v.muted = true;
+  v.loop = !(end && start !== null);
+  const rewind = () => { try { v.currentTime = start || 0; } catch (e) {} };
+  v.addEventListener('loadedmetadata', () => { if (start) rewind(); });
+  if (start && v.readyState >= 1) rewind();
+  if (end) v.addEventListener('timeupdate', () => { if (v.currentTime >= end) rewind(); });
+  v.addEventListener('ended', rewind);
+  v.addEventListener('error', () => { v.remove(); });
+  const go = () => { const r = v.play(); if (r && r.catch) r.catch(() => {}); };
+  v.addEventListener('loadeddata', go);
+  v.addEventListener('canplay', go);
+  v.load();
+  go();
 }
 
 function route() {
@@ -1598,7 +1708,7 @@ function stopPreview() {
   player.pause();
   if (playingRow) {
     playingRow.classList.remove('playing');
-    const b = playingRow.querySelector('.album-play');
+    const b = playingRow.querySelector('.album-play, .trk-play');
     if (b) b.setAttribute('aria-label', (C.music && C.music.listen) || 'Preview');
   }
   playingRow = null;
@@ -1607,24 +1717,16 @@ function stopPreview() {
 player.addEventListener('ended', stopPreview);
 player.addEventListener('timeupdate', () => {
   if (!playingRow || !player.duration) return;
-  const bar = playingRow.querySelector('.album-bar i');
+  const bar = playingRow.querySelector('.album-bar i, .trk-bar i');
   if (bar) bar.style.width = (player.currentTime / player.duration * 100) + '%';
 });
 
-function buildMusic() {
-  const box = document.getElementById('albums');
-  if (!box) return;
+function albumHTML(a, i) {
   const M = C.music || {};
-  const albums = M.albums || [];
-  const section = document.getElementById('music');
-  if (section) section.hidden = !albums.length;
-
-  stopPreview();
-  box.innerHTML = albums.map((a, i) => {
-    const cover = a.cover || '';
-    const tracks = a.tracks || [];
-    return `
-      <li class="album" data-i="${i}">
+  const cover = a.cover || '';
+  const tracks = (a.tracks || []).filter((t) => t && (t.title || t.audio));
+  return `
+      <li class="album${tracks.length ? ' has-tracks' : ''}" data-i="${i}">
         <div class="album-cover">
           <svg class="album-note" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.5V5.2l11-2.2v12.3"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="15.3" r="2.5"/><path d="M9 9.2l11-2.2"/></svg>
           ${cover ? `<img src="${esc(cover)}" alt="" loading="lazy" onerror="this.remove()">` : ''}
@@ -1633,6 +1735,7 @@ function buildMusic() {
         <div>
           <div class="album-title">${esc(a.title)}</div>
           <div class="album-sub">${esc(a.subtitle || '')}${tracks.length ? ` · ${tracks.length} tracks` : ''}</div>
+          ${tracks.length ? `<button class="album-toggle" type="button" aria-expanded="false">${esc(M.tracklist || 'Tracklist')}<i></i></button>` : ''}
         </div>
         <div class="album-side">
           ${a.buyUrl
@@ -1641,13 +1744,31 @@ function buildMusic() {
             : `<span class="album-soon">${esc(M.soon || 'Coming soon')}</span>`}
         </div>
         ${a.preview ? '<div class="album-bar"><i></i></div>' : ''}
-        ${tracks.length ? `<details class="album-tracks">
-          <summary>${esc(M.tracklist || 'Tracklist')}</summary>
-          <ol>${tracks.map((t) => `<li><span>${esc(t.title)}</span><span>${esc(t.length || '')}</span></li>`).join('')}</ol>
-        </details>` : ''}
+        ${tracks.length ? `<div class="album-panel"><ol class="trks">${trackRows(tracks)}</ol></div>` : ''}
       </li>`;
-  }).join('');
+}
 
+/* один список альбомов: разметка и кнопки прослушивания */
+function fillAlbums(box, albums) {
+  if (!box) return;
+  const M = C.music || {};
+  box.innerHTML = albums.map((a, i) => albumHTML(a, i)).join('');
+
+  box.querySelectorAll('.album.has-tracks').forEach((row) => {
+    const a = albums[+row.dataset.i];
+    wireTrackSet(row, a);
+    const btn = row.querySelector('.album-toggle');
+    const toggle = () => {
+      const open = row.classList.toggle('open');
+      if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (!open && playingRow && row.contains(playingRow)) stopPreview();
+    };
+    if (btn) btn.addEventListener('click', (e) => { e.stopPropagation(); toggle(); });
+    row.addEventListener('click', (e) => {
+      if (e.target.closest('a, button, .trk')) return;
+      toggle();
+    });
+  });
   box.querySelectorAll('.album-play').forEach((btn) => {
     btn.addEventListener('click', () => {
       const row = btn.closest('.album');
@@ -1663,6 +1784,84 @@ function buildMusic() {
       }).catch(() => {});
     });
   });
+}
+
+/* строки треков — общие для главной и страницы шоу */
+function trackRows(tracks) {
+  const M = C.music || {};
+  return tracks.map((t, i) => `
+        <li class="trk${t.audio ? '' : ' trk-mute'}" data-i="${i}">
+          ${t.audio
+            ? `<button class="trk-play" type="button" aria-label="${esc(M.listen || 'Preview')}"></button>`
+            : '<span class="trk-num">' + (i + 1) + '</span>'}
+          <span class="trk-title">${esc(t.title || '')}</span>
+          <span class="trk-len">${esc(t.length || '')}</span>
+          <span class="trk-bar"><i></i></span>
+        </li>`).join('');
+}
+
+/* треки альбома на странице шоу: список, каждый играется отдельно */
+function trackSetHTML(a) {
+  const M = C.music || {};
+  const tracks = (a.tracks || []).filter((t) => t && (t.title || t.audio));
+  const rows = trackRows(tracks);
+  return `
+      <div class="trackset" data-album="${esc(a.title || '')}">
+        <div class="trk-head">
+          <div class="trk-cover">
+            <svg class="album-note" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.5V5.2l11-2.2v12.3"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="15.3" r="2.5"/><path d="M9 9.2l11-2.2"/></svg>
+            ${a.cover ? `<img src="${esc(a.cover)}" alt="" loading="lazy" onerror="this.remove()">` : ''}
+          </div>
+          <div class="trk-meta">
+            <div class="album-title">${esc(a.title || '')}</div>
+            <div class="album-sub">${esc(a.subtitle || '')}${tracks.length ? ` · ${tracks.length} tracks` : ''}</div>
+          </div>
+          <div class="album-side">
+            ${a.buyUrl
+              ? `${a.price ? `<span class="album-price">${esc(a.price)}</span>` : ''}
+                 <a class="pick" href="${esc(a.buyUrl)}" target="_blank" rel="noopener">${esc(M.buy || 'Buy')}</a>`
+              : `<span class="album-soon">${esc(M.soon || 'Coming soon')}</span>`}
+          </div>
+        </div>
+        ${rows ? `<ol class="trks">${rows}</ol>` : ''}
+      </div>`;
+}
+
+function wireTrackSet(box, a) {
+  const M = C.music || {};
+  const tracks = (a.tracks || []).filter((t) => t && (t.title || t.audio));
+  box.querySelectorAll('.trk-play').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('.trk');
+      const t = tracks[+row.dataset.i];
+      if (playingRow === row) { stopPreview(); return; }
+      stopPreview();
+      player.src = t.audio;
+      player.currentTime = 0;
+      player.play().then(() => {
+        playingRow = row;
+        row.classList.add('playing');
+        btn.setAttribute('aria-label', M.pause || 'Pause');
+      }).catch(() => {});
+    });
+  });
+}
+
+/* альбомы, привязанные к шоу */
+function albumsOfShow(sh) {
+  const albums = (C.music && C.music.albums) || [];
+  if (!sh || !sh.slug) return [];
+  return albums.filter((a) => (a.show || '') === sh.slug);
+}
+
+function buildMusic() {
+  const box = document.getElementById('albums');
+  if (!box) return;
+  const albums = (C.music && C.music.albums) || [];
+  const section = document.getElementById('music');
+  if (section) section.hidden = !albums.length;
+  stopPreview();
+  fillAlbums(box, albums);
 }
 
 loadContent().then(() => {
