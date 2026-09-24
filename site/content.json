@@ -29,21 +29,21 @@
     "pressed": "Opening the seating plan…"
   },
   "about": {
-    "heading": "Musicals on ice that tour the world",
-    "statement": "Musical on Ice is five full-length productions on ice: live vocals, orchestral music, arena-wide projections and skaters of international standard.",
-    "text": "We bring the whole show with us: lighting, sound, costumes, sets and the company. The venue provides the ice. Over ten years our productions have played to audiences in Italy, Ireland, Germany, Bulgaria, Latvia, Lithuania, Slovakia and China.",
+    "heading": "Where World Stories Come to Life on Ice",
+    "statement": "Musical on Ice brings iconic stories to life through original music, virtuoso skating, theatre, acrobatics, spectacular effects and immersive visuals. Each production transforms the ice into a living stage where performers become characters and movement becomes part of the story.",
+    "text": "With more than 20 years of international touring, Musical on Ice has brought its productions to audiences across Europe and Asia — creating a distinctive meeting point of music, storytelling and the art of skating.",
     "video": "",
     "facts": [
       {
-        "value": "7",
+        "value": "8",
         "label": "productions in repertoire"
       },
       {
-        "value": "20 years",
-        "label": "of touring worldwide"
+        "value": "30",
+        "label": "countries"
       },
       {
-        "value": "42",
+        "value": "22",
         "label": "performers on the ice"
       }
     ],
@@ -55,14 +55,14 @@
     "intro": "Five productions on ice, from a family fairy tale to a gothic drama. Pick a show to see what it is about.",
     "items": [
       {
-        "title": "Aladdin",
+        "title": "Aladdin and the Famous Stories from 1001 Nights on Ice",
         "status": "On tour",
         "image": "images/aladdin-20260920-mmtk.jpg",
         "href": "#show=aladdin",
-        "text": "Aladdin and other famous stories from 1001 Nights on ice: an Eastern city, a genie and a dance over a frozen lake.",
+        "text": "A spectacular journey into the world of Aladdin, Ali Baba and Sinbad — where legendary tales, breathtaking skating and oriental magic come to life on ice.",
         "slug": "aladdin",
         "video": "",
-        "about": "An Eastern fairy tale on ice: the bazaars of Baghdad, the Sultan’s palace and the lamp that releases the genie.\n\nThe show features skaters of international standard, live vocals and arena-wide video projection. Alongside Aladdin’s story it weaves in other tales from 1001 Nights.",
+        "about": "Sometimes, to understand that life is real, you need to live like a fairy tale.\nStep into the world of Scheherazade and discover the legendary tales of 1001 Nights on Ice — a spectacular performance filled with magic, adventure and ancient stories.\n\nMeet Aladdin as he discovers a magical lamp and a world where wishes can come true. Follow Ali Baba into a secret cave filled with treasure. Sail alongside Sinbad the Sailor as he faces storms and distant lands. Each story has its own adventure and its own meaning, brought together in one captivating show on ice.\n\nThe magic comes alive through world-class skating, ice acrobatics, aerial performances, fire juggling, hula hooping and magic tricks. Speed, precision and artistry meet oriental music, choreography and lavish costumes, creating a vivid world inspired by the legendary tales of the East.\n\nLarge-scale video installations, theatrical scenery and striking visual effects transform the ice arena into a world of ancient stories — where the cold of the ice meets the warmth and energy of the East.\nAladdin and the Famous Stories from 1001 Nights on Ice is a family show for audiences aged 6 and over.",
         "facts": [
           {
             "label": "Running time",
@@ -81,17 +81,17 @@
             "value": "one, 20 minutes"
           }
         ],
-        "lead": "An Eastern fairy tale on ice, with a genie, a flying carpet and a city of a thousand lights."
+        "lead": "A spectacular journey into the world of Aladdin, Ali Baba and Sinbad — where legendary tales, breathtaking skating and oriental magic come to life on ice."
       },
       {
-        "title": "Alice in Wonderland",
+        "title": "Alice in Wonderland on Ice",
         "status": "On tour",
         "image": "images/alice-20260920-aps6.jpg",
         "href": "#show=alice",
-        "text": "A family show after Lewis Carroll: the Mad Hatter, the White Rabbit and an icy tunnel into Wonderland.",
+        "text": "Audiences across the globe — from Italy, Ireland, Germany, Bulgaria, Latvia, Lithuania, Slovakia, India, China and beyond — have experienced the magic of this show over the past 10 years during its global world tour. And now, this beloved classic arrives in Bali!",
         "slug": "alice",
         "video": "",
-        "about": "Carroll’s Alice falls down the rabbit hole and lands in a Wonderland made of ice.\n\nThe show has toured Italy, Ireland, Germany, Bulgaria, Latvia, Lithuania, Slovakia, China and beyond. A true family production that children and adults enjoy equally.",
+        "about": "Lewis Carroll’s timeless tale of Alice and her unforgettable adventures, written in 1865, has inspired countless adaptations. Yet audiences continue to embrace fresh interpretations of this beloved story.\n\nPrepare to be mesmerised! The unique fusion of music and the artistry of ice dance creates a spectacular performance that captivates audiences of all ages. Stunning large-scale video projections bring the magic to life and immerse you in the heart of Wonderland.\n\nAlice in Wonderland on Ice takes us back to a childhood fairy tale filled with fantasy and excitement. This magical story reminds us that dreaming and believing in ourselves never go out of style.\n\nA modern interpretation of a cherished classic, enhanced by cutting-edge technology, surprises and delights, proving that even the most familiar stories can still spark vivid emotions.\n\nThis breathtaking show on ice will captivate every spectator. It’s a celebration for both children and adults.",
         "facts": [
           {
             "label": "Running time",
@@ -110,17 +110,17 @@
             "value": "one, 20 minutes"
           }
         ],
-        "lead": "The rabbit hole leads onto the ice: the Mad Hatter, the White Rabbit and a Wonderland that fills the whole arena."
+        "lead": "Audiences across the globe — from Italy, Ireland, Germany, Bulgaria, Latvia, Lithuania, Slovakia, India, China and beyond — have experienced the magic of this show over the past 10 years during its global world tour. And now, this beloved classic arrives in Bali!"
       },
       {
-        "title": "Dracula",
+        "title": "Dracula: The Story of Eternal Love",
         "status": "On tour",
         "image": "images/dracula-20260920-vl4q.jpg",
         "href": "#show=dracula",
-        "text": "The story of eternal love: a castle under a full moon, gothic drama and the darkest lighting of all our productions.",
+        "text": "A dark and passionate story of eternal love, brought to life on ice through breathtaking skating, aerial acrobatics, haunting music and the legendary Count Dracula.",
         "slug": "dracula",
         "video": "",
-        "about": "A story of eternal love told on skates: a castle under a full moon, bats and blood-red light.\n\nOur darkest production, made for teenagers and adults. Gothic music, demanding lifts and a finale we ask you not to spoil.",
+        "about": "At the end of the 19th century, young solicitor Jonathan Harker and his fiancée Mina are preparing to marry. But fate takes an unexpected turn when Jonathan must leave his beloved and travel to Transylvania to meet the mysterious Count who has summoned him to London.\n\nOn the ice, world-class figure skaters bring the story’s iconic characters to life — the devoted Mina and Jonathan, the fearless Van Helsing, who has dedicated his life to fighting the forces of darkness, ruthless vampires and, of course, the ominous Count Dracula.\nThe performers bring depth and intensity to their roles, taking the audience through a whirlwind of fear, rage, passion and love. \n\nBreathtaking acrobatics, aerial gymnastics, fire juggling and more add to the drama and spectacle.\nLarge-scale video installations, exquisite costumes inspired by the vampire era, interactive sets and dramatic lighting immerse the audience in Dracula’s world. A mirror ball scatters hundreds of beams across the venue, while fog, red steam, flying vampires and fire on the ice create a haunting atmosphere.\n\nHigh-level figure skating meets spectacular visual effects — high lifts, death spirals and triple jumps — all performed to an original musical score. The soundtrack was composed by Saint Petersburg-based composer Alexei Galinsky, known for his work on Olympia for the 2014 Sochi Winter Olympics, as well as the scores for Princess Anastasia, Alice in Wonderland, The Nutcracker and Lord of the Darkness and other acclaimed productions.\n\nDracula on Ice combines professional skating, lavish costumes, interactive sets, video projections, special effects, masterful lighting and a mesmerising soundtrack to tell the story of humanity’s first vampire — Count Dracula.\n",
         "facts": [
           {
             "label": "Running time",
@@ -139,7 +139,7 @@
             "value": "one, 20 minutes"
           }
         ],
-        "lead": "A story of eternal love told on skates. The darkest of our productions."
+        "lead": "A dark and passionate story of eternal love, brought to life on ice through breathtaking skating, aerial acrobatics, haunting music and the legendary Count Dracula."
       },
       {
         "title": "The Little Prince",
@@ -360,6 +360,7 @@
         "preview": "audio/shine-for-me-20260920-oyqp.mp3",
         "tracks": []
       }
-    ]
+    ],
+    "showHeading": "Music from this show"
   }
 }
