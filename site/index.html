@@ -1318,13 +1318,13 @@ function render() {
 }
 
 /* ——— страница шоу по адресу #show=… ——— */
-function videoBlock(url) {
+function videoBlock(url, poster) {
   if (!url) return `<div class="video-frame">${esc((C.shows && C.shows.videoEmpty) || 'The video is coming soon.')}</div>`;
   const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{6,})/);
   if (yt) return `<div class="video-frame"><iframe src="https://www.youtube.com/embed/${esc(yt[1])}" title="Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;
   const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
   if (vm) return `<div class="video-frame"><iframe src="https://player.vimeo.com/video/${esc(vm[1])}" title="Video" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`;
-  return `<div class="video-frame"><video src="${esc(url)}" controls preload="none"></video></div>`;
+  return `<div class="video-frame"><video src="${esc(url)}" controls preload="none"${poster ? ` poster="${esc(poster)}"` : ''} playsinline></video></div>`;
 }
 
 function showCard(sh) {
@@ -1381,7 +1381,7 @@ function renderShow(sh) {
 
     <div class="wrap sh-video" id="sh-video">
       <h3>${esc(S.videoTitle || 'Watch the show')}</h3>
-      ${videoBlock(sh.video)}
+      ${videoBlock(sh.video, sh.image)}
     </div>
 
     ${mine.length ? `<div class="wrap sh-music" id="sh-music">

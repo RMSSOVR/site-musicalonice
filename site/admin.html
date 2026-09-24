@@ -317,8 +317,8 @@ const FORM = [
            ['text', 'Короткое описание в карточке', 'area'],
            ['lead', 'Крупная фраза на странице шоу', 'area'],
            ['about', 'Основной текст страницы, абзацы через пустую строку', 'area'],
-           ['video', 'Видео: ссылка на YouTube, Vimeo или файл .mp4'],
-           ['heroVideo', 'Видео фоном в шапке страницы (файл mp4)', 'video'],
+           ['video', 'Видео шоу: ссылка YouTube/Vimeo или свой файл', 'video'],
+           ['heroVideo', 'Видео фоном в шапке страницы (файл mp4)', 'bgvideo'],
            ['heroStart', 'Начало отрывка в этом видео, напр. 0:12'],
            ['heroEnd', 'Конец отрывка, напр. 0:30'],
            ['heroBlur', 'Размытие фона, 0–60 (по умолчанию 22)']],
@@ -418,7 +418,7 @@ function input(path, label, kind, opts) {
 const AUDIO_MAX = 20 * 1024 * 1024;
 const VIDEO_MAX = 40 * 1024 * 1024;
 
-function videoField(path, label) {
+function bgVideoField(path, label) {
   return mediaField(path, label, {
     accept: 'video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov',
     max: VIDEO_MAX,
@@ -427,6 +427,18 @@ function videoField(path, label) {
     mime: 'data:video/mp4',
     hint: 'Файл mp4 до 40 МБ. Лучше короткий кусок на 10–20 секунд — он идёт фоном под названием шоу, без звука и по кругу. Отрывок и размытие настраиваются в полях ниже.',
     placeholder: 'или ссылка: video/aladdin.mp4 или https://…mp4'
+  });
+}
+
+function videoField(path, label) {
+  return mediaField(path, label, {
+    accept: 'video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov',
+    max: VIDEO_MAX,
+    pick: 'Загрузить видео',
+    empty: 'видео нет — на странице будет надпись «видео скоро»',
+    mime: 'data:video/mp4',
+    hint: 'Два способа: вставить ссылку на YouTube или Vimeo в поле ниже (лучше для полного ролика — он не занимает место на сервере), либо загрузить файл mp4 до 40 МБ прямо сюда.',
+    placeholder: 'ссылка на YouTube, Vimeo или файл .mp4'
   });
 }
 
@@ -630,7 +642,7 @@ function listBlock(spec, box) {
       grid.className = 'grid ' + (spec.cols || '');
       spec.item.forEach(([key, label, kind, opts]) => {
         const p = `${spec.list}.${i}.${key}`;
-        grid.appendChild(kind === 'image' ? imageField(p, label) : kind === 'audio' ? audioField(p, label) : kind === 'video' ? videoField(p, label) : input(p, label, kind, opts));
+        grid.appendChild(kind === 'image' ? imageField(p, label) : kind === 'audio' ? audioField(p, label) : kind === 'video' ? videoField(p, label) : kind === 'bgvideo' ? bgVideoField(p, label) : input(p, label, kind, opts));
       });
       row.appendChild(grid);
 
