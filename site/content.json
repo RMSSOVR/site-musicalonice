@@ -142,14 +142,14 @@
         "lead": "A dark and passionate story of eternal love, brought to life on ice through breathtaking skating, aerial acrobatics, haunting music and the legendary Count Dracula."
       },
       {
-        "title": "The Little Prince",
+        "title": "The Little Prince on Ice",
         "status": "On tour",
         "image": "images/prince-20260920-ov13.jpg",
         "href": "#show=prince",
-        "text": "A fantastical performance after Saint-Exupéry: a starry sky, a single rose and a great deal of empty ice.",
+        "text": "A breathtaking journey through the stars, where the Little Prince travels from planet to planet in search of friendship, love and the meaning of life.",
         "slug": "prince",
         "video": "",
-        "about": "A quiet performance after Saint-Exupéry: an asteroid, a rose, a fox and a man who has forgotten how to see with his heart.\n\nThe ice is almost empty, and that is deliberate. The starry sky is created by projection, and the whole story rests on one performer and a handful of objects.",
+        "about": "The Little Prince on Ice is a spectacular theatrical ice show inspired by Antoine de Saint-Exupéry’s timeless classic — brought to life through figure skating, aerial acrobatics, immersive video projections, original music and stunning visual effects.\n\nThe story follows the Little Prince as he travels from planet to planet, searching for the meaning of friendship, love and existence. Along the way, he meets extraordinary characters and discovers simple truths about life, responsibility and the people we care about.\n\nTender, touching and full of imagination, this story reminds us of what truly matters — kindness, friendship, responsibility and the ability to see with the heart. Its timeless message speaks to both children and adults, revealing new meanings at every age.\n\nThe ice becomes a vast cosmic stage, where planets, stars, comets and meteors come to life around the audience. Aerial performers fly above the ice without safety harnesses, while video projections transport the characters and spectators from one planet to another.\n\nThe production combines original lighting, LED costumes, dynamic visual effects and large-scale video projections with 90 minutes of enchanting original music, creating an immersive journey through the Little Prince’s universe.\n\nAt its heart, The Little Prince on Ice is a story about responsibility for ourselves and those close to us — a message that remains as relevant today as when the book was first published.",
         "facts": [
           {
             "label": "Running time",
@@ -168,17 +168,17 @@
             "value": "none"
           }
         ],
-        "lead": "A starry sky, a single rose and a man who forgot how to see with his heart."
+        "lead": "A breathtaking journey through the stars, where the Little Prince travels from planet to planet in search of friendship, love and the meaning of life."
       },
       {
-        "title": "Princess Anastasia",
+        "title": "Princess Anastasia — The Secret of the Heir to the Throne",
         "status": "On tour",
         "image": "images/anastasia-20260920-doag.jpg",
         "href": "#show=anastasia",
-        "text": "The secret heir to the throne: imperial St Petersburg, revolution and a melodrama with live vocals.",
+        "text": "A grand ice musical inspired by the legendary story of Princess Anastasia Romanova — a tale of love, destiny and a young woman searching for her place in a world on the brink of change.",
         "slug": "anastasia",
         "video": "",
-        "about": "The secret heir to the throne: imperial St Petersburg, revolution and the fate of the last Tsar’s youngest daughter.\n\nA historical melodrama with live vocals, ballroom scenes and a finale set against the Winter Palace.",
+        "about": "A vanished princess. An empire on the brink of collapse. A love powerful enough to change destiny. Princess Anastasia — The Secret of the Heir to the Throne brings to the ice one of the most captivating and mysterious stories of the 20th century, inspired by the legend of Anastasia Romanova.\n\nSet against the grandeur of the imperial court and the turmoil of the 1917 Revolution, the story follows young Anastasia as she faces a world transformed overnight. Forced to leave her familiar life behind, she sets out in search of a new beginning — and a chance to discover who she truly is.\n\nImperial palaces, lavish costumes, elegant balls, intrigue and passion come together with scenes of revolution, Gypsy songs and moments of deep romance, creating a story filled with love, betrayal, hope, fate and the search for freedom.\n\nOn the ice, theatrical artistry meets the elegance and energy of figure skating. Spectacular choreography, dramatic acting, exquisite costumes, historical video projections and original music created especially for the production transform the ice arena into a grand theatrical stage.\n\nAt the heart of the story is Anastasia — a young woman who has lost everything she once held dear and must find the strength to begin again. Along the way, she discovers love and loyalty, faces betrayal and uncertainty, and learns that sometimes destiny is something we must uncover for ourselves.\n\nA spectacular ice show where history, legend and passion come to life through the artistry of figure skating.",
         "facts": [
           {
             "label": "Running time",
@@ -197,7 +197,19 @@
             "value": "one, 20 minutes"
           }
         ],
-        "lead": "Imperial St Petersburg, revolution and the fate of the last Tsar’s youngest daughter."
+        "lead": "A grand ice musical inspired by the legendary story of Princess Anastasia Romanova — a tale of love, destiny and a young woman searching for her place in a world on the brink of change."
+      },
+      {
+        "title": "Alice Through the Looking-Glass on Ice",
+        "status": "On tour",
+        "image": "",
+        "slug": "new-show",
+        "href": "#show=new-show",
+        "text": "A magical ice show where Alice steps through the Looking-Glass and finds herself in a world where everything is turned upside down — and adventure awaits at every turn.",
+        "lead": "A magical ice show where Alice steps through the Looking-Glass and finds herself in a world where everything is turned upside down — and adventure awaits at every turn.",
+        "about": "Welcome to the world behind the Looking-Glass — a place where chess pieces come to life, paths lead in unexpected directions and nothing is quite what it seems.\nAlice Through the Looking-Glass on Ice is a spectacular musical ice show based on Lewis Carroll’s beloved classic. Professional figure skaters perform intricate elements of figure skating and circus arts, while cutting-edge special effects, large-scale video projections, lighting and original music bring the magical world of Wonderland to life.\nThis is not quite the Alice you remember.\n\nAfter stepping through the Looking-Glass, Alice finds herself in a strange and fascinating world where everything works differently. Here, chess pieces move across the board, roads seem to shift, and familiar characters appear in unexpected forms. The Red Queen rules this extraordinary kingdom, while the White Rabbit, Tweedledee and Tweedledum, the Cheshire Cat, the Mad Hatter and the March Hare await Alice along the way.\n\nBut who will help Alice find her way through this unpredictable world? Will she be able to reach the other side of the chessboard and become a queen? Or is the entire adventure simply a strange dream?\n\nYoung spectators are invited to step into Alice’s place and experience the adventure for themselves. The story will appeal to children aged 6 and over, while its humour, visual spectacle and familiar characters will also delight adults.",
+        "video": "",
+        "facts": []
       }
     ],
     "back": "All shows",
