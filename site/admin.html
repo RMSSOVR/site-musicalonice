@@ -63,6 +63,7 @@
   }
   .subhead strong{font-size:1rem;letter-spacing:.01em}
   .subhead span{font-size:.82rem;color:var(--mist)}
+  .subhead .batch{margin-left:auto;padding:.45rem .9rem;font-size:.8rem}
   .preview{position:sticky;top:4rem;height:calc(100vh - 4rem);border-left:1px solid var(--hair);background:#040E17}
   .preview iframe{width:100%;height:100%;border:0;display:block}
   .preview-head{
@@ -448,6 +449,76 @@ function videoField(path, label) {
   });
 }
 
+/* пачка mp3 разом: имя файла -> название трека, длительность считается сама */
+function trackTitleFromName(name) {
+  let t = name.replace(/\.[a-z0-9]+$/i, '');
+  t = t.replace(/^[\s\d]+[.\-_)\s]+/, '');      // «18.1. », «20. », «1001-»
+  t = t.replace(/[_]+/g, ' ').replace(/\s+/g, ' ').trim();
+  t = t.replace(/\s+(m|mm|08m|mix\d*)$/i, '').trim();
+  return t || name;
+}
+
+function mmss(sec) {
+  if (!isFinite(sec) || sec <= 0) return '';
+  const m = Math.floor(sec / 60), s = Math.round(sec % 60);
+  return m + ':' + String(s === 60 ? 0 : s).padStart(2, '0');
+}
+
+function readAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(String(r.result));
+    r.onerror = () => reject(new Error('не читается'));
+    r.readAsDataURL(file);
+  });
+}
+
+function audioLength(file) {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const a = document.createElement('audio');
+    a.preload = 'metadata';
+    const done = (v) => { URL.revokeObjectURL(url); resolve(v); };
+    a.onloadedmetadata = () => done(mmss(a.duration));
+    a.onerror = () => done('');
+    setTimeout(() => done(''), 4000);
+    a.src = url;
+  });
+}
+
+async function pickTracks(listPath, redraw) {
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.multiple = true;
+  inp.accept = 'audio/mpeg,audio/mp3,audio/mp4,audio/x-m4a,audio/aac,audio/ogg,audio/wav,.mp3,.m4a,.aac,.ogg,.wav';
+  inp.onchange = async () => {
+    const files = [...inp.files].sort((a, b) => a.name.localeCompare(b.name, 'ru', { numeric: true }));
+    if (!files.length) return;
+    const heavy = files.filter((f) => f.size > AUDIO_MAX).map((f) => f.name);
+    const ok = files.filter((f) => f.size <= AUDIO_MAX);
+    const total = ok.reduce((n, f) => n + f.size, 0);
+    if (total > 120 * 1024 * 1024) {
+      alert('Всего выбрано ' + (total / 1048576).toFixed(0) + ' МБ — слишком много за один раз.\nЗагрузите частями, до 120 МБ.');
+      return;
+    }
+    for (let i = 0; i < ok.length; i++) {
+      const f = ok[i];
+      say(`Читаю музыку: ${i + 1} из ${ok.length} — ${f.name}`);
+      let data = await readAsDataURL(f);
+      if (data.startsWith('data:;') || data.startsWith('data:application/octet-stream')) data = 'data:audio/mpeg' + data.slice(data.indexOf(';'));
+      const len = await audioLength(f);
+      const arr = get(listPath) || [];
+      arr.push({ title: trackTitleFromName(f.name), length: len, audio: data });
+      set(listPath, arr);
+    }
+    redraw();
+    touch();
+    const msg = `Добавлено треков: ${ok.length}. Проверьте названия и нажмите «Опубликовать на сайт»`;
+    setTimeout(() => say(heavy.length ? msg + '. Пропущены как слишком тяжёлые: ' + heavy.join(', ') : msg, true), 700);
+  };
+  inp.click();
+}
+
 function trackAudioField(path, label) {
   return mediaField(path, label, {
     accept: 'audio/mpeg,audio/mp3,audio/mp4,audio/x-m4a,audio/aac,audio/ogg,audio/wav,.mp3,.m4a,.aac,.ogg,.wav',
@@ -678,7 +749,14 @@ function listBlock(spec, box) {
           cap.textContent = 'Характеристики в колонке справа:';
         }
         row.appendChild(cap);
-        listBlock(sub, row);
+        const redraw = listBlock(sub, row);
+        if (spec.sub.path === 'tracks') {
+          const batch = document.createElement('button');
+          batch.className = 'btn btn-ghost batch';
+          batch.textContent = 'Загрузить пачку треков';
+          batch.onclick = (e) => { e.preventDefault(); pickTracks(sub.list, redraw); };
+          cap.appendChild(batch);
+        }
       }
 
       host.appendChild(row);
@@ -713,6 +791,7 @@ function listBlock(spec, box) {
   }
 
   draw();
+  return draw;
 }
 
 /* строки подвала — простой список строк */
