@@ -470,13 +470,17 @@
     display:flex;align-items:flex-end;cursor:pointer;touch-action:none;
   }
   .trk-mute .trk-bar{display:none}
-  .trk-bar::before{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--hair);border-radius:2px}
-  .trk-bar i{position:relative;display:block;height:3px;width:0;background:var(--spot);border-radius:2px}
+  .trk-bar::before{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:2px;border-radius:2px;
+    background:var(--hair);opacity:0;transition:opacity .2s;
+  }
+  .trk:hover .trk-bar::before,.trk.playing .trk-bar::before{opacity:1}
+  .trk-bar i{position:relative;display:block;height:2px;width:0;background:var(--spot);border-radius:2px;transition:height .15s}
   .trk.playing .trk-bar i::after{
-    content:"";position:absolute;right:-5px;top:50%;width:10px;height:10px;border-radius:50%;
+    content:"";position:absolute;right:-4px;top:50%;width:8px;height:8px;border-radius:50%;
     background:var(--spot);transform:translateY(-50%);
   }
-  .trk-bar:hover::before,.trk-bar:hover i{height:5px}
+  .trk-bar:hover::before,.trk-bar:hover i{height:4px}
   @media (max-width:620px){
     .trk-head{grid-template-columns:3.6rem 1fr;gap:.3rem .9rem}
     .trk-cover{width:3.6rem}
@@ -528,10 +532,10 @@
     cursor:pointer;touch-action:none;
   }
   .album.playing .album-bar{display:flex}
-  .album-bar::before{content:"";position:absolute;left:0;right:0;height:3px;background:var(--hair);border-radius:2px}
-  .album-bar i{position:relative;display:block;height:3px;width:0;background:var(--spot);border-radius:2px}
+  .album-bar::before{content:"";position:absolute;left:0;right:0;height:2px;background:var(--hair);border-radius:2px}
+  .album-bar i{position:relative;display:block;height:2px;width:0;background:var(--spot);border-radius:2px}
   .album.playing .album-bar i::after{
-    content:"";position:absolute;right:-5px;top:50%;width:10px;height:10px;border-radius:50%;
+    content:"";position:absolute;right:-4px;top:50%;width:8px;height:8px;border-radius:50%;
     background:var(--spot);transform:translateY(-50%);
   }
   .album.has-tracks{cursor:pointer}
