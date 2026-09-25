@@ -57,6 +57,12 @@
   @media (min-width:1080px){.shell{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
 
   .editor{padding:clamp(1rem,2.5vw,2rem);max-width:56rem}
+  .subhead{
+    display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap;
+    margin:1.4rem 0 .6rem;padding-top:.9rem;border-top:1px solid var(--hair);
+  }
+  .subhead strong{font-size:1rem;letter-spacing:.01em}
+  .subhead span{font-size:.82rem;color:var(--mist)}
   .preview{position:sticky;top:4rem;height:calc(100vh - 4rem);border-left:1px solid var(--hair);background:#040E17}
   .preview iframe{width:100%;height:100%;border:0;display:block}
   .preview-head{
@@ -342,10 +348,10 @@ const FORM = [
            ['show', 'Шоу, на странице которого показать альбом', 'select', showOptions],
            ['price', 'Цена, например $9.99'],
            ['buyUrl', 'Ссылка на покупку: Bandcamp, Apple Music, оплата Stripe…'],
-           ['preview', 'Отрывок для прослушивания', 'audio']],
+           ['preview', 'Общий отрывок альбома (играет по кнопке ▶ на обложке)', 'audio']],
     sub: { path: 'tracks', label: 'Трек', cols: 'cols-2',
            item: [['title', 'Название трека'], ['length', 'Длительность, 3:45'],
-                  ['audio', 'Музыка трека (файл mp3)', 'audio']],
+                  ['audio', 'Музыка трека (файл mp3)', 'trackaudio']],
            blank: { title: '', length: '', audio: '' } },
     blank: { title: 'New album', subtitle: 'Original soundtrack', show: '', cover: '', price: '', buyUrl: '', preview: '', tracks: [] } },
   { t: 'Рояль', note: 'играющий инструмент в середине страницы', fields: [
@@ -437,8 +443,20 @@ function videoField(path, label) {
     pick: 'Загрузить видео',
     empty: 'видео нет — на странице будет надпись «видео скоро»',
     mime: 'data:video/mp4',
-    hint: 'Два способа: вставить ссылку на YouTube или Vimeo в поле ниже (лучше для полного ролика — он не занимает место на сервере), либо загрузить файл mp4 до 40 МБ прямо сюда.',
-    placeholder: 'ссылка на YouTube, Vimeo или файл .mp4'
+    hint: 'Три способа: ссылка на YouTube или Vimeo; ссылка на нарезанное видео со своего сервера (…/media/имя/master.m3u8) — так грузятся тяжёлые ролики; либо файл mp4 до 40 МБ прямо сюда.',
+    placeholder: 'ссылка: YouTube, Vimeo, …/media/имя/master.m3u8 или файл .mp4'
+  });
+}
+
+function trackAudioField(path, label) {
+  return mediaField(path, label, {
+    accept: 'audio/mpeg,audio/mp3,audio/mp4,audio/x-m4a,audio/aac,audio/ogg,audio/wav,.mp3,.m4a,.aac,.ogg,.wav',
+    max: AUDIO_MAX,
+    pick: 'Загрузить музыку',
+    empty: 'файла нет — трек будет в списке без кнопки ▶',
+    mime: 'data:audio/mpeg',
+    hint: 'Файл mp3 этого трека, до 20 МБ. Лучше отрывок на 30–60 секунд.',
+    placeholder: 'или ссылка: audio/track.mp3'
   });
 }
 
@@ -642,7 +660,7 @@ function listBlock(spec, box) {
       grid.className = 'grid ' + (spec.cols || '');
       spec.item.forEach(([key, label, kind, opts]) => {
         const p = `${spec.list}.${i}.${key}`;
-        grid.appendChild(kind === 'image' ? imageField(p, label) : kind === 'audio' ? audioField(p, label) : kind === 'video' ? videoField(p, label) : kind === 'bgvideo' ? bgVideoField(p, label) : input(p, label, kind, opts));
+        grid.appendChild(kind === 'image' ? imageField(p, label) : kind === 'audio' ? audioField(p, label) : kind === 'trackaudio' ? trackAudioField(p, label) : kind === 'video' ? videoField(p, label) : kind === 'bgvideo' ? bgVideoField(p, label) : input(p, label, kind, opts));
       });
       row.appendChild(grid);
 
@@ -650,14 +668,27 @@ function listBlock(spec, box) {
         const sub = Object.assign({}, spec.sub, { list: `${spec.list}.${i}.${spec.sub.path}` });
         if (!get(sub.list)) set(sub.list, []);
         const cap = document.createElement('div');
-        cap.className = 'hint';
-        cap.textContent = spec.sub.path === 'tracks' ? 'Треки альбома:' : 'Характеристики в колонке справа:';
+        if (spec.sub.path === 'tracks') {
+          cap.className = 'subhead';
+          const n = (get(sub.list) || []).length;
+          cap.innerHTML = '<strong>Треки альбома</strong>' +
+            '<span>' + (n ? 'сейчас ' + n : 'пока пусто — нажмите «+ трек» внизу') + '</span>';
+        } else {
+          cap.className = 'hint';
+          cap.textContent = 'Характеристики в колонке справа:';
+        }
         row.appendChild(cap);
         listBlock(sub, row);
       }
 
       host.appendChild(row);
     });
+
+    const cap = host.previousElementSibling;
+    if (cap && cap.classList.contains('subhead')) {
+      const note = cap.querySelector('span');
+      if (note) note.textContent = arr.length ? 'сейчас ' + arr.length : 'пока пусто — нажмите «+ трек» внизу';
+    }
 
     const add = document.createElement('button');
     add.className = 'btn btn-ghost add';
@@ -716,6 +747,12 @@ function linesBlock(path, box) {
       row.appendChild(f);
       host.appendChild(row);
     });
+
+    const cap = host.previousElementSibling;
+    if (cap && cap.classList.contains('subhead')) {
+      const note = cap.querySelector('span');
+      if (note) note.textContent = arr.length ? 'сейчас ' + arr.length : 'пока пусто — нажмите «+ трек» внизу';
+    }
 
     const add = document.createElement('button');
     add.className = 'btn btn-ghost add';
