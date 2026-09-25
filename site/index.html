@@ -393,6 +393,34 @@
   /* ——— музыка ——— */
   #music{scroll-margin-top:5rem}
   .albums{list-style:none;margin:clamp(1.8rem,4vw,2.6rem) 0 0;padding:0}
+  .sh-shots{margin-top:3.2rem}
+  .sh-shots h3{font-family:var(--display);font-size:1.5rem;font-weight:500;margin:0 0 1rem}
+  .shots-rail{overflow-x:auto;scrollbar-width:thin;margin-inline:calc(-1 * max(0px,(100vw - var(--page)) / 2));padding-inline:max(0px,(100vw - var(--page)) / 2)}
+  .shots{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 5 * 0.9rem) / 6);gap:.9rem;padding-bottom:.6rem}
+  .shot{
+    padding:0;border:0;background:none;cursor:pointer;aspect-ratio:3/2;overflow:hidden;
+    box-shadow:0 18px 30px -22px rgba(0,0,0,.9);
+  }
+  .shot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
+  .shot:hover img{transform:scale(1.05)}
+  @media (max-width:900px){.shots{grid-auto-columns:calc((100% - 2 * 0.7rem) / 3);gap:.7rem}}
+  @media (max-width:560px){.shots{grid-auto-columns:calc((100% - 0.7rem) / 2)}}
+  .lightbox{
+    position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+    background:rgba(4,14,24,.94);padding:clamp(1rem,4vw,3rem);
+  }
+  .lightbox[hidden]{display:none}
+  .lightbox img{max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 40px 80px -40px #000}
+  .lb-close,.lb-nav{
+    position:absolute;border:0;background:rgba(211,229,243,.1);color:var(--crust);cursor:pointer;
+    width:2.8rem;height:2.8rem;border-radius:50%;font-size:1.6rem;line-height:1;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .lb-close{top:1.2rem;right:1.2rem}
+  .lb-nav{top:50%;transform:translateY(-50%)}
+  .lb-prev{left:1.2rem}
+  .lb-next{right:1.2rem}
+  .lb-close:hover,.lb-nav:hover{background:rgba(211,229,243,.2)}
   .sh-music{margin-top:3.4rem}
   .sh-music h3{font-family:var(--serif);font-size:1.5rem;font-weight:500;margin:0 0 1rem}
   .trackset{border-top:1px solid var(--hair);padding-top:1.2rem;margin-bottom:2.2rem}
@@ -425,6 +453,10 @@
     content:"";width:0;height:0;margin-left:.16rem;
     border-left:.55rem solid currentColor;border-top:.35rem solid transparent;border-bottom:.35rem solid transparent;
   }
+  .trk.playing.paused .trk-play::before{
+    width:0;height:0;margin-left:.16rem;border:0;background:none;
+    border-left:.55rem solid currentColor;border-top:.35rem solid transparent;border-bottom:.35rem solid transparent;
+  }
   .trk.playing .trk-play::before{
     width:.5rem;height:.62rem;margin-left:0;border:0;
     background:linear-gradient(to right,currentColor 0 .16rem,transparent .16rem .34rem,currentColor .34rem .5rem);
@@ -433,8 +465,18 @@
   .trk.playing .trk-title{color:var(--spot)}
   .trk-len{font-size:.9rem;color:var(--mist);font-variant-numeric:tabular-nums}
   .trk-mute .trk-title{color:var(--mist)}
-  .trk-bar{position:absolute;left:0;right:0;bottom:-1px;height:2px;pointer-events:none}
-  .trk-bar i{display:block;height:100%;width:0;background:var(--spot)}
+  .trk-bar{
+    position:absolute;left:0;right:0;bottom:0;height:10px;z-index:2;
+    display:flex;align-items:flex-end;cursor:pointer;touch-action:none;
+  }
+  .trk-mute .trk-bar{display:none}
+  .trk-bar::before{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--hair);border-radius:2px}
+  .trk-bar i{position:relative;display:block;height:3px;width:0;background:var(--spot);border-radius:2px}
+  .trk.playing .trk-bar i::after{
+    content:"";position:absolute;right:-5px;top:50%;width:10px;height:10px;border-radius:50%;
+    background:var(--spot);transform:translateY(-50%);
+  }
+  .trk-bar:hover::before,.trk-bar:hover i{height:5px}
   @media (max-width:620px){
     .trk-head{grid-template-columns:3.6rem 1fr;gap:.3rem .9rem}
     .trk-cover{width:3.6rem}
@@ -481,9 +523,17 @@
   .album-price{font-family:var(--display);font-size:1.05rem;color:var(--glare);white-space:nowrap}
   .album-soon{font:600 .7rem/1 var(--text);letter-spacing:.08em;text-transform:uppercase;color:var(--mist)}
   .album .pick{padding:.6rem 1.15rem;font-size:.82rem;text-decoration:none;white-space:nowrap}
-  .album-bar{grid-column:2 / -1;height:2px;background:var(--hair);border-radius:2px;overflow:hidden;display:none}
-  .album.playing .album-bar{display:block}
-  .album-bar i{display:block;height:100%;width:0;background:#E8B04B}
+  .album-bar{
+    grid-column:2 / -1;height:12px;display:none;align-items:center;position:relative;
+    cursor:pointer;touch-action:none;
+  }
+  .album.playing .album-bar{display:flex}
+  .album-bar::before{content:"";position:absolute;left:0;right:0;height:3px;background:var(--hair);border-radius:2px}
+  .album-bar i{position:relative;display:block;height:3px;width:0;background:var(--spot);border-radius:2px}
+  .album.playing .album-bar i::after{
+    content:"";position:absolute;right:-5px;top:50%;width:10px;height:10px;border-radius:50%;
+    background:var(--spot);transform:translateY(-50%);
+  }
   .album.has-tracks{cursor:pointer}
   .album-toggle{
     margin-top:.45rem;padding:0;border:0;background:none;cursor:pointer;color:var(--mist);
@@ -1049,6 +1099,7 @@
     ],
     "back": "All shows",
     "cta": "Buy tickets",
+    "shotsTitle": "Photos",
     "videoTitle": "Watch the show",
     "videoEmpty": "The video is coming soon.",
     "others": "More shows",
@@ -1324,6 +1375,9 @@ function videoBlock(url, poster) {
   if (yt) return `<div class="video-frame"><iframe src="https://www.youtube.com/embed/${esc(yt[1])}" title="Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;
   const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
   if (vm) return `<div class="video-frame"><iframe src="https://player.vimeo.com/video/${esc(vm[1])}" title="Video" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`;
+  if (/\.m3u8(\?|#|$)/i.test(url)) {
+    return `<div class="video-frame"><video class="hls" data-src="${esc(url)}" controls preload="none"${poster ? ` poster="${esc(poster)}"` : ''} playsinline></video></div>`;
+  }
   return `<div class="video-frame"><video src="${esc(url)}" controls preload="none"${poster ? ` poster="${esc(poster)}"` : ''} playsinline></video></div>`;
 }
 
@@ -1347,6 +1401,7 @@ function renderShow(sh) {
   const list = (S.items || []).filter((x) => x.slug !== sh.slug);
   const paras = String(sh.about || sh.text || '').split(/\n\s*\n/).filter(Boolean);
   const mine = albumsOfShow(sh);
+  const shots = (sh.gallery || []).map((g) => (typeof g === 'string' ? g : (g && g.src) || '')).filter(Boolean);
   const heroBlur = (() => { const n = parseFloat(sh.heroBlur); return isNaN(n) ? 22 : Math.max(0, Math.min(60, n)); })();
 
   view.innerHTML = `
@@ -1379,6 +1434,13 @@ function renderShow(sh) {
       </aside>
     </div>
 
+    ${shots.length ? `<div class="wrap sh-shots" id="sh-shots">
+      <h3>${esc(S.shotsTitle || 'Photos')}</h3>
+      <div class="shots-rail"><div class="shots">
+        ${shots.map((src, i) => `<button class="shot" type="button" data-i="${i}"><img src="${esc(src)}" alt="" loading="lazy" onerror="this.closest('.shot').remove()"></button>`).join('')}
+      </div></div>
+    </div>` : ''}
+
     <div class="wrap sh-video" id="sh-video">
       <h3>${esc(S.videoTitle || 'Watch the show')}</h3>
       ${videoBlock(sh.video, sh.image)}
@@ -1395,6 +1457,8 @@ function renderShow(sh) {
     </div>` : ''}`;
 
   setupHeroVideo(sh);
+  wireLightbox(view, shots);
+  setupHlsVideos(view);
 
   stopPreview();
   view.querySelectorAll('#sh-music .trackset').forEach((box, i) => wireTrackSet(box, mine[i]));
@@ -1407,6 +1471,97 @@ function renderShow(sh) {
     const v = document.getElementById('sh-video');
     if (v) v.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+}
+
+/* нарезанное видео (HLS): Safari играет сам, остальным нужен hls.js из папки vendor */
+let hlsLib = null;
+function withHls() {
+  if (hlsLib) return hlsLib;
+  hlsLib = new Promise((resolve) => {
+    if (window.Hls) return resolve(window.Hls);
+    const sources = ['vendor/hls.min.js', 'https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.light.min.js'];
+    (function next(i) {
+      if (i >= sources.length) return resolve(null);
+      const sc = document.createElement('script');
+      sc.src = sources[i];
+      sc.onload = () => resolve(window.Hls || null);
+      sc.onerror = () => { sc.remove(); next(i + 1); };
+      document.head.appendChild(sc);
+    })(0);
+  });
+  return hlsLib;
+}
+
+function setupHlsVideos(root) {
+  (root || document).querySelectorAll('video.hls').forEach((v) => {
+    const src = v.dataset.src;
+    if (!src || v.dataset.ready) return;
+    v.dataset.ready = '1';
+    if (v.canPlayType('application/vnd.apple.mpegurl')) { v.src = src; return; }
+    const start = () => withHls().then((Hls) => {
+      if (!Hls || !Hls.isSupported()) { v.src = src; return; }
+      const h = new Hls({ capLevelToPlayerSize: true });
+      h.loadSource(src);
+      h.attachMedia(v);
+      v.addEventListener('emptied', () => h.destroy(), { once: true });
+    });
+    v.addEventListener('play', start, { once: true });
+    v.addEventListener('pointerdown', start, { once: true });
+  });
+}
+
+/* просмотр фото во весь экран — одна панель на всю страницу */
+let lb = null, lbShots = [], lbAt = 0;
+
+function lbBuild() {
+  if (lb) return lb;
+  lb = document.createElement('div');
+  lb.className = 'lightbox';
+  lb.hidden = true;
+  lb.innerHTML = `
+    <button class="lb-close" type="button" aria-label="Close">&times;</button>
+    <button class="lb-nav lb-prev" type="button" aria-label="Previous">&#8249;</button>
+    <img alt="">
+    <button class="lb-nav lb-next" type="button" aria-label="Next">&#8250;</button>`;
+  document.body.appendChild(lb);
+  lb.querySelector('.lb-close').addEventListener('click', lbClose);
+  lb.querySelector('.lb-prev').addEventListener('click', (e) => { e.stopPropagation(); lbShow(lbAt - 1); });
+  lb.querySelector('.lb-next').addEventListener('click', (e) => { e.stopPropagation(); lbShow(lbAt + 1); });
+  lb.addEventListener('click', (e) => { if (e.target === lb || e.target.tagName === 'IMG') lbClose(); });
+  document.addEventListener('keydown', (e) => {
+    if (!lb || lb.hidden) return;
+    if (e.key === 'Escape') lbClose();
+    if (e.key === 'ArrowLeft') lbShow(lbAt - 1);
+    if (e.key === 'ArrowRight') lbShow(lbAt + 1);
+  });
+  return lb;
+}
+
+function lbShow(i) {
+  if (!lbShots.length) return;
+  lbAt = (i + lbShots.length) % lbShots.length;
+  lbBuild().querySelector('img').src = lbShots[lbAt];
+}
+
+function lbOpen(i) {
+  lbBuild().hidden = false;
+  document.body.style.overflow = 'hidden';
+  lbShow(i);
+}
+
+function lbClose() {
+  if (!lb) return;
+  lb.hidden = true;
+  lb.querySelector('img').removeAttribute('src');
+  document.body.style.overflow = '';
+}
+
+function wireLightbox(root, shots) {
+  lbShots = shots || [];
+  lbClose();
+  const box = root.querySelector('#sh-shots');
+  if (!box || !lbShots.length) return;
+  box.querySelectorAll('.shot').forEach((b) => b.addEventListener('click', () => lbOpen(+b.dataset.i)));
 }
 
 /* «0:12» или «12» -> секунды */
@@ -1701,24 +1856,118 @@ function playTheme(btn) {
 /* ——— рисунок скрипки ——— */
 /* ——— музыка: карточки альбомов и прослушивание отрывка ——— */
 const player = new Audio();
-player.preload = 'none';
+player.preload = 'metadata';
 let playingRow = null;
+let playingSrc = '';
+let scrubbing = false;
+
+function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+
+function fmtTime(sec) {
+  if (!isFinite(sec) || sec < 0) return '';
+  const m = Math.floor(sec / 60), r = Math.round(sec % 60);
+  return m + ':' + String(r === 60 ? 0 : r).padStart(2, '0');
+}
+
+function rowBar(row) { return row ? row.querySelector('.album-bar, .trk-bar') : null; }
+
+function setFill(row, ratio) {
+  const bar = rowBar(row);
+  const fill = bar && bar.querySelector('i');
+  if (fill) fill.style.width = clamp01(ratio) * 100 + '%';
+}
+
+function showTime(row, sec) {
+  const len = row && row.querySelector('.trk-len');
+  if (!len) return;
+  if (len.dataset.full === undefined) len.dataset.full = len.textContent;
+  len.textContent = sec === null ? len.dataset.full : (fmtTime(sec) + (len.dataset.full ? ' / ' + len.dataset.full : ''));
+}
 
 function stopPreview() {
   player.pause();
+  scrubbing = false;
   if (playingRow) {
     playingRow.classList.remove('playing');
+    playingRow.classList.remove('paused');
     const b = playingRow.querySelector('.album-play, .trk-play');
     if (b) b.setAttribute('aria-label', (C.music && C.music.listen) || 'Preview');
+    setFill(playingRow, 0);
+    showTime(playingRow, null);
   }
   playingRow = null;
 }
 
+/* включить строку с нужного места (ratio 0…1) */
+function playRow(row, src, ratio) {
+  if (!row || !src) return;
+  const M = C.music || {};
+  if (playingRow && playingRow !== row) stopPreview();
+  const seek = (r) => { if (player.duration) player.currentTime = clamp01(r) * player.duration; };
+  if (playingSrc !== src) {
+    playingSrc = src;
+    player.src = src;
+    if (ratio != null) player.addEventListener('loadedmetadata', () => seek(ratio), { once: true });
+  } else if (ratio != null) {
+    seek(ratio);
+  }
+  playingRow = row;
+  row.classList.add('playing');
+  row.classList.remove('paused');
+  const btn = row.querySelector('.album-play, .trk-play');
+  if (btn) btn.setAttribute('aria-label', M.pause || 'Pause');
+  const go = player.play();
+  if (go && go.catch) go.catch(() => {});
+}
+
+function toggleRow(row, src) {
+  if (playingRow === row) {
+    if (player.paused) { row.classList.remove('paused'); const go = player.play(); if (go && go.catch) go.catch(() => {}); }
+    else { player.pause(); row.classList.add('paused'); }
+    return;
+  }
+  playRow(row, src, 0);
+}
+
+/* перемотка: клик или протягивание по полоске */
+function wireBar(row, src) {
+  const bar = rowBar(row);
+  if (!bar) return;
+  const ratioAt = (e) => {
+    const r = bar.getBoundingClientRect();
+    return clamp01((e.clientX - r.left) / (r.width || 1));
+  };
+  bar.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    scrubbing = true;
+    try { bar.setPointerCapture(e.pointerId); } catch (err) {}
+    const r = ratioAt(e);
+    setFill(row, r);
+    if (playingRow === row) {
+      if (player.duration) player.currentTime = r * player.duration;
+      if (player.paused) playRow(row, src, r);
+    } else {
+      playRow(row, src, r);
+    }
+  });
+  bar.addEventListener('pointermove', (e) => {
+    if (!scrubbing || playingRow !== row) return;
+    const r = ratioAt(e);
+    setFill(row, r);
+    if (player.duration) { player.currentTime = r * player.duration; showTime(row, player.currentTime); }
+  });
+  const done = () => { scrubbing = false; };
+  bar.addEventListener('pointerup', done);
+  bar.addEventListener('pointercancel', done);
+  bar.addEventListener('click', (e) => e.stopPropagation());
+}
+
 player.addEventListener('ended', stopPreview);
 player.addEventListener('timeupdate', () => {
-  if (!playingRow || !player.duration) return;
-  const bar = playingRow.querySelector('.album-bar i, .trk-bar i');
-  if (bar) bar.style.width = (player.currentTime / player.duration * 100) + '%';
+  if (!playingRow || scrubbing || !player.duration) return;
+  setFill(playingRow, player.currentTime / player.duration);
+  showTime(playingRow, player.currentTime);
 });
 
 function albumHTML(a, i) {
@@ -1769,20 +2018,12 @@ function fillAlbums(box, albums) {
       toggle();
     });
   });
-  box.querySelectorAll('.album-play').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const row = btn.closest('.album');
-      const a = albums[+row.dataset.i];
-      if (playingRow === row) { stopPreview(); return; }
-      stopPreview();
-      player.src = a.preview;
-      player.currentTime = 0;
-      player.play().then(() => {
-        playingRow = row;
-        row.classList.add('playing');
-        btn.setAttribute('aria-label', M.pause || 'Pause');
-      }).catch(() => {});
-    });
+  box.querySelectorAll('.album').forEach((row) => {
+    const a = albums[+row.dataset.i];
+    if (!a || !a.preview) return;
+    wireBar(row, a.preview);
+    const btn = row.querySelector('.album-play');
+    if (btn) btn.addEventListener('click', (e) => { e.stopPropagation(); toggleRow(row, a.preview); });
   });
 }
 
@@ -1830,20 +2071,12 @@ function trackSetHTML(a) {
 function wireTrackSet(box, a) {
   const M = C.music || {};
   const tracks = (a.tracks || []).filter((t) => t && (t.title || t.audio));
-  box.querySelectorAll('.trk-play').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const row = btn.closest('.trk');
-      const t = tracks[+row.dataset.i];
-      if (playingRow === row) { stopPreview(); return; }
-      stopPreview();
-      player.src = t.audio;
-      player.currentTime = 0;
-      player.play().then(() => {
-        playingRow = row;
-        row.classList.add('playing');
-        btn.setAttribute('aria-label', M.pause || 'Pause');
-      }).catch(() => {});
-    });
+  box.querySelectorAll('.trk').forEach((row) => {
+    const t = tracks[+row.dataset.i];
+    if (!t || !t.audio) return;
+    wireBar(row, t.audio);
+    const btn = row.querySelector('.trk-play');
+    if (btn) btn.addEventListener('click', (e) => { e.stopPropagation(); toggleRow(row, t.audio); });
   });
 }
 

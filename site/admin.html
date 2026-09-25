@@ -312,12 +312,13 @@ const FORM = [
     ['shows.intro', 'Вводный абзац', 'area'],
     ['shows.back', 'Ссылка «назад» на странице шоу', 'text'],
     ['shows.cta', 'Кнопка на странице шоу', 'text'],
+    ['shows.shotsTitle', 'Заголовок над фотографиями шоу', 'text'],
     ['shows.videoTitle', 'Заголовок блока с видео', 'text'],
     ['shows.videoEmpty', 'Текст, когда видео не подключено', 'area'],
     ['shows.factsTitle', 'Заголовок блока характеристик', 'text'],
     ['shows.watch', 'Ссылка «смотреть видео»', 'text'],
     ['shows.others', 'Заголовок ленты «другие шоу»', 'text']
-  ], list: 'shows.items', label: 'Шоу', cols: 'cols-2',
+  ], list: 'shows.items', label: 'Шоу', gallery: true, cols: 'cols-2',
     item: [['title', 'Название'], ['status', 'Строка под названием, например «В туре»'],
            ['image', 'Афиша', 'image'],
            ['slug', 'Адрес страницы, латиницей: aladdin'],
@@ -332,7 +333,7 @@ const FORM = [
     sub: { path: 'facts', label: 'Строка', cols: 'cols-2',
            item: [['label', 'Название'], ['value', 'Значение']],
            blank: { label: 'Длительность', value: '90 минут' } },
-    blank: { title: 'Новое шоу', status: 'В туре', image: '', slug: 'new-show', href: '#show=new-show', text: '', lead: '', about: '', video: '', facts: [] } },
+    blank: { title: 'Новое шоу', status: 'В туре', image: '', slug: 'new-show', href: '#show=new-show', text: '', lead: '', about: '', video: '', heroVideo: '', heroStart: '', heroEnd: '', heroBlur: '', gallery: [], facts: [] } },
 
   { t: 'Музыка', note: 'альбомы на продажу', fields: [
     ['music.heading', 'Заголовок раздела', 'text'],
@@ -447,6 +448,52 @@ function videoField(path, label) {
     hint: 'Три способа: ссылка на YouTube или Vimeo; ссылка на нарезанное видео со своего сервера (…/media/имя/master.m3u8) — так грузятся тяжёлые ролики; либо файл mp4 до 40 МБ прямо сюда.',
     placeholder: 'ссылка: YouTube, Vimeo, …/media/имя/master.m3u8 или файл .mp4'
   });
+}
+
+/* пачка фото разом: каждое ужимается до 1400×933 */
+function shrinkImage(file, W, H) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const target = W / H;
+      let nw = img.width, nh = img.height;
+      if (nw / nh > target) nw = nh * target; else nh = nw / target;
+      const x = (img.width - nw) / 2, y = (img.height - nh) / 2;
+      const cv = document.createElement('canvas');
+      cv.width = W; cv.height = H;
+      cv.getContext('2d').drawImage(img, x, y, nw, nh, 0, 0, W, H);
+      URL.revokeObjectURL(url);
+      resolve(cv.toDataURL('image/jpeg', .82));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(''); };
+    img.src = url;
+  });
+}
+
+async function pickShots(listPath, redraw) {
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.multiple = true;
+  inp.accept = 'image/*';
+  inp.onchange = async () => {
+    const files = [...inp.files].sort((a, b) => a.name.localeCompare(b.name, 'ru', { numeric: true }));
+    if (!files.length) return;
+    let added = 0;
+    for (let i = 0; i < files.length; i++) {
+      say(`Готовлю фото: ${i + 1} из ${files.length}…`);
+      const data = await shrinkImage(files[i], 1400, 933);
+      if (!data) continue;
+      const arr = get(listPath) || [];
+      arr.push({ src: data });
+      set(listPath, arr);
+      added++;
+    }
+    redraw();
+    touch();
+    setTimeout(() => say(`Добавлено фото: ${added}. Нажмите «Опубликовать на сайт»`, true), 700);
+  };
+  inp.click();
 }
 
 /* пачка mp3 разом: имя файла -> название трека, длительность считается сама */
@@ -625,7 +672,8 @@ function mediaField(path, label, cfg) {
 }
 
 /* поле афиши: файл превращается в картинку внутри сайта */
-function imageField(path, label) {
+function imageField(path, label, size) {
+  const W = (size && size.w) || 660, H = (size && size.h) || 880;
   const wrap = document.createElement('label');
   wrap.className = 'field';
   const cap = document.createElement('span');
@@ -648,7 +696,7 @@ function imageField(path, label) {
 
   const pick = document.createElement('button');
   pick.className = 'btn btn-ghost';
-  pick.textContent = 'Загрузить афишу';
+  pick.textContent = size ? 'Загрузить фото' : 'Загрузить афишу';
   pick.onclick = () => file.click();
 
   const clear = document.createElement('button');
@@ -662,7 +710,9 @@ function imageField(path, label) {
 
   const note = document.createElement('div');
   note.className = 'hint';
-  note.textContent = 'Картинка обрежется по центру под карточку 3:4. При публикации она уедет в репозиторий отдельным файлом.';
+  note.textContent = size
+    ? 'Фото обрежется по центру в ландшафт 3:2 и ужмётся под сайт. При публикации уедет в репозиторий отдельным файлом.'
+    : 'Картинка обрежется по центру под карточку 3:4. При публикации она уедет в репозиторий отдельным файлом.';
 
   function draw() {
     const v = get(path) || '';
@@ -678,7 +728,7 @@ function imageField(path, label) {
     if (!f) return;
     const img = new Image();
     img.onload = () => {
-      const W = 660, H = 880, target = W / H;
+      const target = W / H;
       let nw = img.width, nh = img.height;
       if (nw / nh > target) nw = nh * target; else nh = nw / target;
       const x = (img.width - nw) / 2, y = (img.height - nh) / 2;
@@ -731,9 +781,30 @@ function listBlock(spec, box) {
       grid.className = 'grid ' + (spec.cols || '');
       spec.item.forEach(([key, label, kind, opts]) => {
         const p = `${spec.list}.${i}.${key}`;
-        grid.appendChild(kind === 'image' ? imageField(p, label) : kind === 'audio' ? audioField(p, label) : kind === 'trackaudio' ? trackAudioField(p, label) : kind === 'video' ? videoField(p, label) : kind === 'bgvideo' ? bgVideoField(p, label) : input(p, label, kind, opts));
+        grid.appendChild(kind === 'image' ? imageField(p, label) : kind === 'shot' ? imageField(p, label, { w: 1400, h: 933 }) : kind === 'audio' ? audioField(p, label) : kind === 'trackaudio' ? trackAudioField(p, label) : kind === 'video' ? videoField(p, label) : kind === 'bgvideo' ? bgVideoField(p, label) : input(p, label, kind, opts));
       });
       row.appendChild(grid);
+
+      if (spec.gallery) {
+        const gcap = document.createElement('div');
+        gcap.className = 'subhead';
+        const gpath = `${spec.list}.${i}.gallery`;
+        if (!get(gpath)) set(gpath, []);
+        const gn = (get(gpath) || []).length;
+        gcap.innerHTML = '<strong>Фото шоу</strong><span>' +
+          (gn ? 'сейчас ' + gn : 'пока пусто — идут в ряд над видео') + '</span>';
+        row.appendChild(gcap);
+        const gredraw = listBlock({
+          list: gpath, label: 'Фото', cols: 'cols-2',
+          item: [['src', 'Фото', 'shot']],
+          blank: { src: '' }
+        }, row);
+        const gbatch = document.createElement('button');
+        gbatch.className = 'btn btn-ghost batch';
+        gbatch.textContent = 'Загрузить пачку фото';
+        gbatch.onclick = (e) => { e.preventDefault(); pickShots(gpath, gredraw); };
+        gcap.appendChild(gbatch);
+      }
 
       if (spec.sub) {
         const sub = Object.assign({}, spec.sub, { list: `${spec.list}.${i}.${spec.sub.path}` });
