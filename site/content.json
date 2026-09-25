@@ -303,14 +303,40 @@
     "tracklist": "Tracklist",
     "albums": [
       {
-        "title": "AliceSolo",
+        "title": "Aladdin and the Famous Stories from 1001 Nights on Ice",
         "subtitle": "Original soundtrack",
         "show": "aladdin",
         "cover": "",
         "price": "",
         "buyUrl": "",
         "preview": "audio/aladdin-20260920-b4re.mp3",
-        "tracks": []
+        "tracks": [
+          {
+            "title": "theme",
+            "length": "2:38",
+            "audio": "audio/theme-20260925-t15n.mp3"
+          },
+          {
+            "title": "Budur",
+            "length": "2:38",
+            "audio": "audio/budur-20260925-n9ju.mp3"
+          },
+          {
+            "title": "Carpet mm 4416",
+            "length": "3:00",
+            "audio": "audio/carpet-mm-4416-20260925-cig1.mp3"
+          },
+          {
+            "title": "Gnie",
+            "length": "2:36",
+            "audio": "audio/gnie-20260925-gbta.mp3"
+          },
+          {
+            "title": "Sadal 08",
+            "length": "2:15",
+            "audio": "audio/sadal-08-20260925-pxhc.mp3"
+          }
+        ]
       },
       {
         "title": "Teapot",
