@@ -101,6 +101,13 @@
     background:#071A2B;box-shadow:0 20px 40px -20px rgba(0,0,0,.9);
   }
   .more-menu p{font-size:.76rem;color:var(--mist)}
+  .modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(4,14,24,.75);padding:1.5rem}
+  .modal-card{
+    width:min(26rem,100%);max-height:80vh;overflow:auto;display:flex;flex-direction:column;gap:.5rem;
+    padding:1.2rem;border:1px solid var(--hair);border-radius:.6rem;background:#071A2B;
+  }
+  .modal-card h3{margin:0;font-size:1.05rem}
+  .modal-card .hint{margin-bottom:.4rem}
   input[type=text],input[type=password],textarea,select{
     width:100%;font:400 .9rem/1.45 var(--text);color:var(--glare);
     background:#04101B;border:1px solid var(--hair);border-radius:.3rem;
@@ -160,6 +167,7 @@
       <button class="btn btn-ghost" id="download">Скачать content.json</button>
       <button class="btn btn-ghost" id="copy">Скопировать JSON</button>
       <button class="btn btn-ghost" id="import">Загрузить JSON из файла</button>
+      <button class="btn btn-ghost" id="restore">Восстановить из копии</button>
     </div>
   </details>
   <button class="btn btn-gold" id="publish">Опубликовать на сайт</button>
@@ -242,6 +250,7 @@ async function boot() {
     if (r.ok) live = await r.json();
   } catch (e) {}
 
+  window.TEMPLATE = template;
   const base = fillMissing(clone(live || template || FALLBACK), template);
   C = clone(base);
   window.BASE = clone(base);
@@ -1174,7 +1183,12 @@ async function publish() {
       });
       tree.push({ path: files[i].path, mode: '100644', type: 'blob', sha: blob.sha });
     }
-    tree.push({ path: cfg.path, mode: '100644', type: 'blob', content: JSON.stringify(payload, null, 2) + '\n' });
+    const body = JSON.stringify(payload, null, 2) + '\n';
+    tree.push({ path: cfg.path, mode: '100644', type: 'blob', content: body });
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    const when = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}`;
+    tree.push({ path: `backups/content-${when}.json`, mode: '100644', type: 'blob', content: body });
 
     say('Отправляем…');
     const newTree = await gh(cfg, 'git/trees', {
@@ -1211,6 +1225,63 @@ async function publish() {
   }
 }
 
+/* ——— восстановление: список копий из папки backups ——— */
+async function restoreDialog() {
+  const cfg = ghRead();
+  if (!cfg.token) { say('Сначала вставьте токен в разделе «Публикация на сайт»'); return; }
+  say('Смотрю резервные копии…');
+  let list;
+  try {
+    list = await gh(cfg, 'contents/backups?ref=' + encodeURIComponent(cfg.branch));
+  } catch (e) {
+    say('Копий пока нет — они появляются после публикации из админки');
+    return;
+  }
+  const files = (Array.isArray(list) ? list : [])
+    .filter((f) => f.name.endsWith('.json'))
+    .sort((a, b) => b.name.localeCompare(a.name))
+    .slice(0, 20);
+  if (!files.length) { say('Копий пока нет'); return; }
+
+  const back = document.createElement('div');
+  back.className = 'modal';
+  const card = document.createElement('div');
+  card.className = 'modal-card';
+  card.innerHTML = '<h3>Резервные копии</h3><p class="hint">Это тексты сайта на момент каждой публикации. Копия откроется в админке — проверьте и нажмите «Опубликовать на сайт».</p>';
+  files.forEach((f) => {
+    const m = f.name.match(/content-(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})/);
+    const label = m ? `${m[3]}.${m[2]}.${m[1]}, ${m[4]}:${m[5]}` : f.name;
+    const b = document.createElement('button');
+    b.className = 'btn btn-ghost';
+    b.textContent = label;
+    b.onclick = async () => {
+      back.remove();
+      say('Открываю копию…');
+      try {
+        const meta = await gh(cfg, 'contents/' + encodeURIComponent('backups/' + f.name) + '?ref=' + encodeURIComponent(cfg.branch));
+        const text = decodeURIComponent(escape(atob((meta.content || '').replace(/\n/g, ''))));
+        const data = JSON.parse(text);
+        C = fillMissing(clone(data), window.TEMPLATE || data);
+        build(); push(); touch();
+        setTimeout(() => say('Копия от ' + label + ' открыта. Проверьте и нажмите «Опубликовать на сайт»', true), 700);
+      } catch (e) {
+        say('Не вышло открыть копию: ' + e.message);
+      }
+    };
+    card.appendChild(b);
+  });
+  const cancel = document.createElement('button');
+  cancel.className = 'btn btn-ghost';
+  cancel.textContent = 'Отмена';
+  cancel.onclick = () => back.remove();
+  card.appendChild(cancel);
+  back.appendChild(card);
+  back.addEventListener('click', (e) => { if (e.target === back) back.remove(); });
+  document.body.appendChild(back);
+  say('Выберите копию');
+}
+
+document.getElementById('restore').onclick = restoreDialog;
 document.getElementById('publish').onclick = publish;
 document.querySelectorAll('.more-menu button').forEach((b) => b.addEventListener('click', () => { b.closest('details').open = false; }));
 
