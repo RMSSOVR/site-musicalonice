@@ -81,7 +81,8 @@
             "value": "one, 20 minutes"
           }
         ],
-        "lead": "A spectacular journey into the world of Aladdin, Ali Baba and Sinbad — where legendary tales, breathtaking skating and oriental magic come to life on ice."
+        "lead": "A spectacular journey into the world of Aladdin, Ali Baba and Sinbad — where legendary tales, breathtaking skating and oriental magic come to life on ice.",
+        "gallery": []
       },
       {
         "title": "Alice in Wonderland on Ice",
@@ -110,7 +111,8 @@
             "value": "one, 20 minutes"
           }
         ],
-        "lead": "Audiences across the globe — from Italy, Ireland, Germany, Bulgaria, Latvia, Lithuania, Slovakia, India, China and beyond — have experienced the magic of this show over the past 10 years during its global world tour. And now, this beloved classic arrives in Bali!"
+        "lead": "Audiences across the globe — from Italy, Ireland, Germany, Bulgaria, Latvia, Lithuania, Slovakia, India, China and beyond — have experienced the magic of this show over the past 10 years during its global world tour. And now, this beloved classic arrives in Bali!",
+        "gallery": []
       },
       {
         "title": "Dracula: The Story of Eternal Love",
@@ -139,7 +141,8 @@
             "value": "one, 20 minutes"
           }
         ],
-        "lead": "A dark and passionate story of eternal love, brought to life on ice through breathtaking skating, aerial acrobatics, haunting music and the legendary Count Dracula."
+        "lead": "A dark and passionate story of eternal love, brought to life on ice through breathtaking skating, aerial acrobatics, haunting music and the legendary Count Dracula.",
+        "gallery": []
       },
       {
         "title": "The Little Prince on Ice",
@@ -168,7 +171,8 @@
             "value": "none"
           }
         ],
-        "lead": "A breathtaking journey through the stars, where the Little Prince travels from planet to planet in search of friendship, love and the meaning of life."
+        "lead": "A breathtaking journey through the stars, where the Little Prince travels from planet to planet in search of friendship, love and the meaning of life.",
+        "gallery": []
       },
       {
         "title": "Princess Anastasia — The Secret of the Heir to the Throne",
@@ -197,7 +201,8 @@
             "value": "one, 20 minutes"
           }
         ],
-        "lead": "A grand ice musical inspired by the legendary story of Princess Anastasia Romanova — a tale of love, destiny and a young woman searching for her place in a world on the brink of change."
+        "lead": "A grand ice musical inspired by the legendary story of Princess Anastasia Romanova — a tale of love, destiny and a young woman searching for her place in a world on the brink of change.",
+        "gallery": []
       },
       {
         "title": "Alice Through the Looking-Glass on Ice",
@@ -209,7 +214,8 @@
         "lead": "A magical ice show where Alice steps through the Looking-Glass and finds herself in a world where everything is turned upside down — and adventure awaits at every turn.",
         "about": "Welcome to the world behind the Looking-Glass — a place where chess pieces come to life, paths lead in unexpected directions and nothing is quite what it seems.\nAlice Through the Looking-Glass on Ice is a spectacular musical ice show based on Lewis Carroll’s beloved classic. Professional figure skaters perform intricate elements of figure skating and circus arts, while cutting-edge special effects, large-scale video projections, lighting and original music bring the magical world of Wonderland to life.\nThis is not quite the Alice you remember.\n\nAfter stepping through the Looking-Glass, Alice finds herself in a strange and fascinating world where everything works differently. Here, chess pieces move across the board, roads seem to shift, and familiar characters appear in unexpected forms. The Red Queen rules this extraordinary kingdom, while the White Rabbit, Tweedledee and Tweedledum, the Cheshire Cat, the Mad Hatter and the March Hare await Alice along the way.\n\nBut who will help Alice find her way through this unpredictable world? Will she be able to reach the other side of the chessboard and become a queen? Or is the entire adventure simply a strange dream?\n\nYoung spectators are invited to step into Alice’s place and experience the adventure for themselves. The story will appeal to children aged 6 and over, while its humour, visual spectacle and familiar characters will also delight adults.",
         "video": "",
-        "facts": []
+        "facts": [],
+        "gallery": []
       }
     ],
     "back": "All shows",
@@ -220,7 +226,8 @@
     "videoCta": "Watch the video",
     "datesCta": "See dates",
     "factsTitle": "About the show",
-    "watch": "Watch the video"
+    "watch": "Watch the video",
+    "shotsTitle": "Photos"
   },
   "piano": {
     "heading": "The piano itself",
@@ -435,16 +442,6 @@
             "audio": "audio/c-20260925-d7lr.mp3"
           }
         ]
-      },
-      {
-        "title": "New album",
-        "subtitle": "Original soundtrack",
-        "show": "",
-        "cover": "",
-        "price": "",
-        "buyUrl": "",
-        "preview": "",
-        "tracks": []
       },
       {
         "title": "Princess Anastasia — The Secret of the Heir to the Throne",
