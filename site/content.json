@@ -312,7 +312,7 @@
         "preview": "audio/aladdin-20260920-b4re.mp3",
         "tracks": [
           {
-            "title": "theme",
+            "title": "Theme",
             "length": "2:38",
             "audio": "audio/theme-20260925-t15n.mp3"
           },
@@ -322,7 +322,7 @@
             "audio": "audio/budur-20260925-n9ju.mp3"
           },
           {
-            "title": "Carpet mm 4416",
+            "title": "Carpet",
             "length": "3:00",
             "audio": "audio/carpet-mm-4416-20260925-cig1.mp3"
           },
@@ -332,71 +332,155 @@
             "audio": "audio/gnie-20260925-gbta.mp3"
           },
           {
-            "title": "Sadal 08",
+            "title": "Sadal",
             "length": "2:15",
             "audio": "audio/sadal-08-20260925-pxhc.mp3"
           }
         ]
       },
       {
-        "title": "Teapot",
+        "title": "Alice in Wonderland on Ice",
         "subtitle": "Original soundtrack",
         "show": "alice",
         "cover": "",
         "price": "",
         "buyUrl": "",
         "preview": "audio/alice-20260920-1kjt.mp3",
-        "tracks": []
+        "tracks": [
+          {
+            "title": "AliceSolo",
+            "length": "2:57",
+            "audio": "audio/alicesolo-20260925-97gc.mp3"
+          },
+          {
+            "title": "Teapot",
+            "length": "1:40",
+            "audio": "audio/teapot-20260925-0bll.mp3"
+          },
+          {
+            "title": "RedQueenSolo",
+            "length": "4:03",
+            "audio": "audio/redqueensolo-20260925-kjlv.mp3"
+          },
+          {
+            "title": "MadHatterSolo",
+            "length": "3:31",
+            "audio": "audio/madhattersolo-20260925-mcxr.mp3"
+          },
+          {
+            "title": "Shine for me",
+            "length": "5:21",
+            "audio": "audio/shine-for-me-20260925-bpf0.mp3"
+          }
+        ]
       },
       {
-        "title": "Cards",
-        "subtitle": "Original soundtrack",
-        "show": "dracula",
-        "cover": "",
-        "price": "",
-        "buyUrl": "",
-        "preview": "audio/dracula-20260920-2m4c.mp3",
-        "tracks": []
-      },
-      {
-        "title": "RedQueenSolo",
-        "subtitle": "Original soundtrack",
-        "show": "prince",
-        "cover": "",
-        "price": "",
-        "buyUrl": "",
-        "preview": "audio/prince-20260920-a72z.mp3",
-        "tracks": []
-      },
-      {
-        "title": "MadHatterSolo",
-        "subtitle": "Original soundtrack",
-        "show": "anastasia",
-        "cover": "",
-        "price": "",
-        "buyUrl": "",
-        "preview": "audio/anastasia-20260920-8gcb.mp3",
-        "tracks": []
-      },
-      {
-        "title": "Croqet",
+        "title": "Dracula: The Story of Eternal Love",
         "subtitle": "Original soundtrack",
         "show": "",
         "cover": "",
         "price": "",
         "buyUrl": "",
-        "preview": "audio/croqet-20260920-uwxt.mp3",
-        "tracks": []
+        "preview": "",
+        "tracks": [
+          {
+            "title": "JohnSolo",
+            "length": "4:45",
+            "audio": "audio/johnsolo-20260925-n1cn.mp3"
+          },
+          {
+            "title": "MinaSolo",
+            "length": "3:41",
+            "audio": "audio/minasolo-20260925-npmy.mp3"
+          },
+          {
+            "title": "VampiresMarch",
+            "length": "4:43",
+            "audio": "audio/vampiresmarch-20260925-epx3.mp3"
+          }
+        ]
       },
       {
-        "title": "Shine for me",
+        "title": "The Little Prince on Ice",
         "subtitle": "Original soundtrack",
         "show": "",
         "cover": "",
         "price": "",
         "buyUrl": "",
-        "preview": "audio/shine-for-me-20260920-oyqp.mp3",
+        "preview": "",
+        "tracks": [
+          {
+            "title": "Планета Короля",
+            "length": "3:01",
+            "audio": "audio/music-20260925-8vgy.mp3"
+          },
+          {
+            "title": "МП прилетел на Землю",
+            "length": "2:49",
+            "audio": "audio/music-20260925-xizy.mp3"
+          },
+          {
+            "title": "Замерзание Розы",
+            "length": "3:49",
+            "audio": "audio/music-20260925-zlii.mp3"
+          },
+          {
+            "title": "МП - год скитания по Земле",
+            "length": "1:50",
+            "audio": "audio/music-20260925-cuzf.mp3"
+          },
+          {
+            "title": "Cоло Змеи",
+            "length": "4:16",
+            "audio": "audio/c-20260925-d7lr.mp3"
+          }
+        ]
+      },
+      {
+        "title": "New album",
+        "subtitle": "Original soundtrack",
+        "show": "",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "",
         "tracks": []
+      },
+      {
+        "title": "Princess Anastasia — The Secret of the Heir to the Throne",
+        "subtitle": "Original soundtrack",
+        "show": "",
+        "cover": "",
+        "price": "",
+        "buyUrl": "",
+        "preview": "",
+        "tracks": [
+          {
+            "title": "Anastasia",
+            "length": "2:06",
+            "audio": "audio/anastasia-20260925-ib74.mp3"
+          },
+          {
+            "title": "N9-5",
+            "length": "3:42",
+            "audio": "audio/n9-5-20260925-95uy.mp3"
+          },
+          {
+            "title": "N14",
+            "length": "3:05",
+            "audio": "audio/n14-20260925-vezo.mp3"
+          },
+          {
+            "title": "N21-22",
+            "length": "2:42",
+            "audio": "audio/n21-22-20260925-dlc2.mp3"
+          },
+          {
+            "title": "N32",
+            "length": "2:54",
+            "audio": "audio/n32-20260925-v8tm.mp3"
+          }
+        ]
       }
     ],
     "showHeading": "Music from this show"
