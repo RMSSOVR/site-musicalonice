@@ -8,10 +8,10 @@ on:
 permissions:
   contents: read
 
-# Если пришёл новый коммит, недоделанную выкладку отменяем.
+# Выкладки идут по очереди: вторая ждёт первую, ничего не отменяется.
 concurrency:
   group: deploy
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 env:
   DEPLOY_PATH: /var/www/musicalonice
@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Забрать файлы
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Подготовить SSH
         env:
