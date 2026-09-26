@@ -239,7 +239,19 @@
     background:linear-gradient(180deg,#4A3A22 0%,#2A1F10 34%,#0B0805 100%);
     box-shadow:inset 0 1px 0 rgba(244,250,255,.2),0 2px 10px -3px rgba(232,176,75,.55);
   }
-  .piano-bar{display:flex;flex-wrap:wrap;gap:1.2rem;align-items:center;margin-top:1.4rem}
+  .piano-bar{display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;margin-top:1.8rem}
+  .mel{
+    font:500 1rem/1 var(--text);cursor:pointer;color:var(--crust);
+    background:rgba(211,229,243,.06);border:1px solid var(--hair);border-radius:2rem;
+    padding:1rem 1.7rem;transition:background .2s,border-color .2s,color .2s,transform .12s;
+  }
+  .mel:hover{border-color:rgba(232,176,75,.55);color:var(--glare)}
+  .mel:active{transform:translateY(1px)}
+  .mel.on{background:var(--spot);border-color:var(--spot);color:#0A1A28}
+  html[data-theme="light"] .mel{background:rgba(20,57,92,.05);border-color:rgba(20,50,78,.25);color:#14395C}
+  html[data-theme="light"] .mel:hover{border-color:#14395C}
+  html[data-theme="light"] .mel.on{background:var(--spot);border-color:var(--spot);color:#14395C}
+  @media (max-width:560px){.mel{padding:.85rem 1.2rem;font-size:.92rem}}
   .piano-hint{font-size:.84rem;color:var(--mist)}
   @media (max-width:620px){
     .keybed{--n:7}
@@ -871,9 +883,7 @@
         <div class="keybed" id="keybed"></div>
       </div>
 
-      <div class="piano-bar">
-        <button class="buy" type="button" id="play"></button>
-      </div>
+      <div class="piano-bar" id="piano-bar"></div>
     </section>
 
     <section class="slab" id="dates">
@@ -1180,6 +1190,38 @@
     ]
   },
   "piano": {
+    "melodies": [
+      {
+        "title": "Aladdin",
+        "show": "aladdin",
+        "notes": "e g n q w q n g e",
+        "tempo": "330"
+      },
+      {
+        "title": "Alice in Wonderland",
+        "show": "alice",
+        "notes": "z c b n m q m n b c",
+        "tempo": "300"
+      },
+      {
+        "title": "Dracula",
+        "show": "dracula",
+        "notes": "z v b s v z - z v n",
+        "tempo": "360"
+      },
+      {
+        "title": "The Little Prince",
+        "show": "prince",
+        "notes": "c v b q w e w q b",
+        "tempo": "320"
+      },
+      {
+        "title": "Princess Anastasia",
+        "show": "anastasia",
+        "notes": "n m q e w q m n c",
+        "tempo": "300"
+      }
+    ],
     "heading": "The piano itself",
     "intro": "In the first act the ice belongs to one skater and a piano. The instrument below is real: press a key with your mouse, your finger or your computer keyboard. The letters are printed on the keys.",
     "play": "Play the first-act theme",
@@ -1344,11 +1386,7 @@ function render() {
     </li>`;
   }).join('');
 
-  const playBtn = el('play');
-  if (playBtn) {
-    playBtn.textContent = C.piano.play;
-    playBtn.onclick = () => playTheme(playBtn);
-  }
+  buildMelodies();
   const bow = el('bowplay');
   if (bow) bow.remove();
 
@@ -1833,22 +1871,33 @@ function buildPiano() {
   addEventListener('keyup', (e) => down.delete(e.key.toLowerCase()));
 }
 
-/* тема первого акта */
-const THEME = [
-  ['e', 0], ['g', 340], ['n', 680], ['q', 1020], ['m', 1360], ['n', 1560],
-  ['b', 1900], ['c', 2240], ['x', 2580], ['c', 2760], ['b', 3100], ['n', 3440], ['e', 3780]
-];
+/* мелодии: буквы клавиш через пробел, «-» — пауза */
+const FALLBACK_MELODY = 'e g n q m n b c x c b n e';
 let running = [];
+let runningBtn = null;
 
-function playTheme(btn) {
-  if (running.length) {
-    running.forEach(clearTimeout);
-    running = [];
-    btn.textContent = C.piano.play;
-    return;
+function stopMelody() {
+  running.forEach(clearTimeout);
+  running = [];
+  if (runningBtn) {
+    runningBtn.classList.remove('on');
+    runningBtn.textContent = runningBtn.dataset.title;
   }
-  btn.textContent = C.piano.stop || 'Stop';
-  THEME.forEach(([letter, at]) => {
+  runningBtn = null;
+}
+
+function playMelody(notes, tempo, btn) {
+  if (runningBtn === btn) { stopMelody(); return; }
+  stopMelody();
+  runningBtn = btn;
+  btn.classList.add('on');
+  btn.textContent = (C.piano && C.piano.stop) || 'Stop';
+
+  const step = Math.max(90, Math.min(1200, parseInt(tempo, 10) || 320));
+  const list = String(notes || '').trim().split(/\s+/).filter(Boolean);
+  list.forEach((token, i) => {
+    if (token === '-' || token === '.') return;
+    const letter = token[0].toLowerCase();
     running.push(setTimeout(() => {
       let k = byLetter[letter];
       if (k && k.offsetParent === null) {
@@ -1859,9 +1908,40 @@ function playTheme(btn) {
       strike(+k.dataset.freq, k.classList.contains('bkey') ? .8 : .95);
       k.classList.add('lit');
       setTimeout(() => k.classList.remove('lit'), 220);
-    }, at));
+    }, i * step));
   });
-  running.push(setTimeout(() => { running = []; btn.textContent = C.piano.play; }, 4400));
+  running.push(setTimeout(stopMelody, list.length * step + 400));
+}
+
+/* ряд кнопок с мелодиями под роялем */
+function buildMelodies() {
+  const bar = document.getElementById('piano-bar');
+  if (!bar) return;
+  stopMelody();
+  bar.innerHTML = '';
+  const P = C.piano || {};
+  const shows = (C.shows && C.shows.items) || [];
+  let list = (P.melodies || []).filter((m) => m && (m.notes || '').trim());
+  if (!list.length) list = [{ title: P.play || 'Play the theme', notes: FALLBACK_MELODY, tempo: 340 }];
+
+  list.forEach((m) => {
+    const show = shows.find((x) => x.slug && x.slug === m.show);
+    const title = m.title || (show && show.title) || P.play || 'Play';
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'mel';
+    b.dataset.title = title;
+    b.textContent = title;
+    b.addEventListener('click', () => playMelody(m.notes, m.tempo, b));
+    bar.appendChild(b);
+  });
+
+  if (P.hintBar) {
+    const note = document.createElement('span');
+    note.className = 'piano-hint';
+    note.textContent = P.hintBar;
+    bar.appendChild(note);
+  }
 }
 
 /* ——— рисунок скрипки ——— */
@@ -2103,6 +2183,7 @@ function buildMusic() {
 loadContent().then(() => {
   render();
   buildPiano();
+  buildMelodies();
   route();
 });
 </script>

@@ -426,13 +426,18 @@ const FORM = [
                   ['audio', 'Музыка трека (файл mp3)', 'trackaudio']],
            blank: { title: '', length: '', audio: '' } },
     blank: { title: 'New album', subtitle: 'Original soundtrack', show: '', cover: '', price: '', buyUrl: '', tracks: [] } },
-  { t: 'Рояль', note: 'играющий инструмент в середине страницы', fields: [
+  { t: 'Рояль', note: 'мелодии под инструментом', fields: [
     ['piano.heading', 'Заголовок раздела', 'text'],
     ['piano.intro', 'Вводный абзац', 'area'],
     ['piano.hint', 'Подпись на крышке инструмента', 'text'],
-    ['piano.play', 'Кнопка запуска темы', 'text'],
-    ['piano.stop', 'Кнопка остановки', 'text']
-  ]},
+    ['piano.stop', 'Надпись на кнопке, пока играет', 'text'],
+    ['piano.hintBar', 'Подсказка рядом с кнопками', 'text']
+  ], list: 'piano.melodies', label: 'Мелодия', cols: 'cols-2',
+    item: [['title', 'Название на кнопке'],
+           ['show', 'К какому шоу относится (необязательно)', 'select', showOptions],
+           ['notes', 'Ноты: буквы клавиш через пробел, «-» — пауза'],
+           ['tempo', 'Темп: миллисекунд на ноту, обычно 300']],
+    blank: { title: 'Новая мелодия', show: '', notes: 'c v b n m', tempo: '320' } },
 
   { t: 'Расписание и билеты', fields: [
     ['dates.heading', 'Заголовок раздела', 'text'],
