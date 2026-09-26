@@ -110,6 +110,15 @@
     content:"можно подвинуть";position:absolute;left:0;right:0;bottom:0;
     font-size:.62rem;text-align:center;padding:.2rem;background:rgba(4,16,27,.75);color:var(--mist);
   }
+  .shot-edit{
+    position:relative;width:100%;aspect-ratio:3/2;overflow:hidden;background:#04101B;
+    border:1px solid var(--hair);cursor:grab;touch-action:none;
+  }
+  .shot-edit.free{aspect-ratio:auto;max-height:22rem;display:flex;align-items:center;justify-content:center;cursor:default}
+  .shot-edit img{width:100%;height:100%;object-fit:cover;display:block}
+  .shot-edit.free img{width:auto;max-width:100%;max-height:22rem;height:auto;object-fit:contain}
+  .modal-card .mini.on{color:var(--depth);background:var(--spot);border-color:var(--spot)}
+  .modal-card{width:min(34rem,100%)}
   .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(7.5rem,1fr));gap:.6rem;margin-top:.8rem}
   .thumb{position:relative;aspect-ratio:3/2;overflow:hidden;border:1px solid var(--hair);background:#04101B}
   .thumb img{width:100%;height:100%;object-fit:contain;display:block;background:#04101B}
@@ -869,6 +878,10 @@ function galleryBlock(path, box) {
         const img = document.createElement('img');
         img.src = src;
         img.alt = '';
+        if (it.ratio && it.ratio !== 'auto') {
+          img.style.objectFit = 'cover';
+          img.style.objectPosition = it.pos || '50% 50%';
+        }
         img.onerror = () => { cell.classList.add('bad'); img.remove(); };
         cell.appendChild(img);
       } else {
@@ -883,6 +896,7 @@ function galleryBlock(path, box) {
       bar.className = 'thumb-bar';
       bar.appendChild(miniBtn('←', () => { if (i > 0) { [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]]; draw(); touch(); } }));
       bar.appendChild(miniBtn('→', () => { if (i < arr.length - 1) { [arr[i + 1], arr[i]] = [arr[i], arr[i + 1]]; draw(); touch(); } }));
+      bar.appendChild(miniBtn('кадр', () => photoEditor(arr[i], () => { draw(); touch(); })));
       bar.appendChild(miniBtn('✕', () => { arr.splice(i, 1); draw(); touch(); }, 'mini-del'));
       cell.appendChild(bar);
       host.appendChild(cell);
@@ -897,6 +911,106 @@ function galleryBlock(path, box) {
 
   draw();
   return draw;
+}
+
+/* выбор кадра и положения для одного фото */
+function photoEditor(item, onSave) {
+  const ratios = [['auto', 'целиком'], ['3/2', '3:2'], ['4/3', '4:3'], ['1/1', 'квадрат'], ['16/9', '16:9'], ['4/5', 'вертикальное']];
+  let ratio = item.ratio || 'auto';
+  let pos = item.pos || '50% 50%';
+
+  const back = document.createElement('div');
+  back.className = 'modal';
+  const card = document.createElement('div');
+  card.className = 'modal-card';
+  card.innerHTML = '<h3>Кадр фотографии</h3><p class="hint">Выберите форму кадра, затем потяните фото мышкой, чтобы выбрать видимую часть. «Целиком» — фото показывается полностью, без обрезки.</p>';
+
+  const box = document.createElement('div');
+  box.className = 'shot-edit';
+  const img = document.createElement('img');
+  img.src = item.src || '';
+  box.appendChild(img);
+
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;gap:.4rem;flex-wrap:wrap;margin:.8rem 0';
+  const hint = document.createElement('p');
+  hint.className = 'hint';
+
+  function apply() {
+    if (ratio === 'auto') {
+      box.style.aspectRatio = '';
+      box.classList.add('free');
+      img.style.objectFit = 'contain';
+      img.style.objectPosition = '50% 50%';
+      hint.textContent = 'Фото целиком — двигать нечего.';
+    } else {
+      box.style.aspectRatio = ratio.replace('/', ' / ');
+      box.classList.remove('free');
+      img.style.objectFit = 'cover';
+      img.style.objectPosition = pos;
+      hint.textContent = 'Потяните фото внутри рамки.';
+    }
+    [...row.children].forEach((b) => b.classList.toggle('on', b.dataset.r === ratio));
+  }
+
+  ratios.forEach(([v, label]) => {
+    const b = document.createElement('button');
+    b.className = 'mini';
+    b.dataset.r = v;
+    b.textContent = label;
+    b.onclick = (e) => { e.preventDefault(); ratio = v; if (v !== 'auto' && !item.pos) pos = '50% 50%'; apply(); };
+    row.appendChild(b);
+  });
+
+  let drag = false, sx = 0, sy = 0, px = 50, py = 50;
+  box.addEventListener('pointerdown', (e) => {
+    if (ratio === 'auto') return;
+    drag = true;
+    const m = pos.match(/([\d.]+)%\s+([\d.]+)%/);
+    px = m ? +m[1] : 50; py = m ? +m[2] : 50;
+    sx = e.clientX; sy = e.clientY;
+    try { box.setPointerCapture(e.pointerId); } catch (err) {}
+    e.preventDefault();
+  });
+  box.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    const r = box.getBoundingClientRect();
+    const nx = Math.max(0, Math.min(100, px - (e.clientX - sx) / r.width * 100));
+    const ny = Math.max(0, Math.min(100, py - (e.clientY - sy) / r.height * 100));
+    pos = nx.toFixed(1) + '% ' + ny.toFixed(1) + '%';
+    img.style.objectPosition = pos;
+  });
+  const stop = () => { drag = false; };
+  box.addEventListener('pointerup', stop);
+  box.addEventListener('pointercancel', stop);
+
+  const actions = document.createElement('div');
+  actions.style.cssText = 'display:flex;gap:.5rem;margin-top:.6rem';
+  const ok = document.createElement('button');
+  ok.className = 'btn btn-gold';
+  ok.textContent = 'Сохранить';
+  ok.onclick = (e) => {
+    e.preventDefault();
+    if (ratio === 'auto') { delete item.ratio; delete item.pos; }
+    else { item.ratio = ratio; item.pos = pos; }
+    back.remove();
+    onSave();
+  };
+  const cancel = document.createElement('button');
+  cancel.className = 'btn btn-ghost';
+  cancel.textContent = 'Отмена';
+  cancel.onclick = (e) => { e.preventDefault(); back.remove(); };
+  actions.appendChild(ok);
+  actions.appendChild(cancel);
+
+  card.appendChild(box);
+  card.appendChild(row);
+  card.appendChild(hint);
+  card.appendChild(actions);
+  back.appendChild(card);
+  back.addEventListener('click', (e) => { if (e.target === back) back.remove(); });
+  document.body.appendChild(back);
+  apply();
 }
 
 function listBlock(spec, box) {

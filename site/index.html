@@ -398,13 +398,16 @@
     font-family:var(--display);font-weight:400;color:var(--glare);
     font-size:clamp(1.4rem,1.2rem + 1vw,2rem);margin:0 0 1.2rem;
   }
-  .shots-rail{overflow-x:auto;scrollbar-width:thin;margin-inline:calc(-1 * max(0px,(100vw - var(--page)) / 2));padding-inline:max(0px,(100vw - var(--page)) / 2)}
+  .shots-rail{overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;scroll-behavior:smooth;margin-inline:calc(-1 * max(0px,(100vw - var(--page)) / 2));padding-inline:max(0px,(100vw - var(--page)) / 2)}
   .shots{display:flex;gap:1rem;padding-bottom:.6rem;align-items:stretch}
+  .shots-rail::-webkit-scrollbar{display:none}
   .shot{
     flex:0 0 auto;padding:0;border:0;background:none;cursor:pointer;overflow:hidden;
     height:clamp(11rem,20vw,17rem);box-shadow:0 18px 30px -22px rgba(0,0,0,.9);
   }
   .shot img{height:100%;width:auto;max-width:none;object-fit:contain;display:block;transition:transform .35s}
+  .shot-crop{width:auto}
+  .shot-crop img{width:100%;height:100%;object-fit:cover;object-position:50% 50%}
   .shot:hover img{transform:scale(1.05)}
   @media (max-width:900px){.shots{gap:.7rem}}
   @media (max-width:560px){.shot{height:9.5rem}}
@@ -1408,7 +1411,9 @@ function renderShow(sh) {
   const list = (S.items || []).filter((x) => x.slug !== sh.slug);
   const paras = String(sh.about || sh.text || '').split(/\n\s*\n/).filter(Boolean);
   const mine = albumsOfShow(sh);
-  const shots = (sh.gallery || []).map((g) => (typeof g === 'string' ? g : (g && g.src) || '')).filter(Boolean);
+  const shots = (sh.gallery || [])
+    .map((g) => (typeof g === 'string' ? { src: g } : g || {}))
+    .filter((g) => g.src);
   const heroBlur = (() => { const n = parseFloat(sh.heroBlur); return isNaN(n) ? 22 : Math.max(0, Math.min(60, n)); })();
 
   view.innerHTML = `
@@ -1444,7 +1449,12 @@ function renderShow(sh) {
     ${shots.length ? `<div class="wrap sh-shots" id="sh-shots">
       <h3>${esc(S.shotsTitle || 'Photos')}</h3>
       <div class="shots-rail"><div class="shots">
-        ${shots.map((src, i) => `<button class="shot" type="button" data-i="${i}"><img src="${esc(src)}" alt="" loading="lazy" onerror="this.closest('.shot').remove()"></button>`).join('')}
+        ${shots.map((g, i) => {
+          const crop = g.ratio && g.ratio !== 'auto';
+          const style = crop ? `aspect-ratio:${esc(g.ratio)}` : '';
+          const pos = g.pos ? `object-position:${esc(g.pos)}` : '';
+          return `<button class="shot${crop ? ' shot-crop' : ''}" type="button" data-i="${i}" style="${style}"><img src="${esc(g.src)}" alt="" loading="lazy" style="${pos}" onerror="this.closest('.shot').remove()"></button>`;
+        }).join('')}
       </div></div>
     </div>` : ''}
 
@@ -1464,7 +1474,7 @@ function renderShow(sh) {
     </div>` : ''}`;
 
   setupHeroVideo(sh);
-  wireLightbox(view, shots);
+  wireLightbox(view, shots.map((g) => g.src));
   setupHlsVideos(view);
 
   stopPreview();
