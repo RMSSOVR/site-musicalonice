@@ -449,10 +449,27 @@ const FORM = [
            ['state', 'Наличие', 'select', [['free', 'свободно'], ['few', 'мало мест'], ['none', 'продано']]]],
     blank: { day: '1 марта', time: '19:00', seats: 'Свободно во всех секторах', state: 'free' } },
 
-  { t: 'Подвал', note: 'адрес, часы кассы, сноска', fields: [
-    ['footer.note', 'Сноска справа', 'area']
-  ], lines: 'footer.lines', list: 'footer.links', label: 'Ссылка', cols: 'cols-2',
-    item: [['label', 'Надпись'], ['href', 'Ссылка']],
+  { t: 'Подвал', note: 'логотип, соцсети, подписи', fields: [
+    ['footer.tagline', 'Короткая фраза под логотипом', 'area'],
+    ['footer.linksTitle', 'Заголовок колонки со ссылками', 'text'],
+    ['footer.contactsTitle', 'Заголовок колонки с контактами', 'text'],
+    ['footer.legal', 'Нижняя строка: {year} — год, {brand} — марка', 'text'],
+    ['footer.note', 'Сноска справа внизу', 'area']
+  ], lines: 'footer.lines',
+    list: 'footer.social', label: 'Соцсеть', cols: 'cols-3',
+    item: [['kind', 'Сеть', 'select', [['instagram', 'Instagram'], ['youtube', 'YouTube'], ['tiktok', 'TikTok'], ['x', 'X (Twitter)'], ['facebook', 'Facebook'], ['telegram', 'Telegram'], ['whatsapp', 'WhatsApp'], ['vk', 'ВКонтакте'], ['spotify', 'Spotify'], ['applemusic', 'Apple Music'], ['soundcloud', 'SoundCloud'], ['pinterest', 'Pinterest'], ['site', 'другой сайт']]],
+           ['label', 'Подпись при наведении'],
+           ['url', 'Ссылка на профиль']],
+    blank: { kind: 'instagram', label: 'Instagram', url: '' } },
+
+  { t: 'Подвал: контакты', note: 'почта, телефон, мессенджеры', list: 'footer.contacts', label: 'Контакт', cols: 'cols-3',
+    item: [['label', 'Подпись, например «Билеты»'],
+           ['value', 'Значение: почта, телефон или ссылка'],
+           ['kind', 'Тип', 'select', [['', 'определить самому'], ['email', 'почта'], ['phone', 'телефон'], ['link', 'ссылка']]]],
+    blank: { label: '', value: '', kind: '' } },
+
+  { t: 'Подвал: ссылки', note: 'колонка навигации', list: 'footer.links', label: 'Ссылка', cols: 'cols-2',
+    item: [['label', 'Надпись'], ['href', 'Адрес: #about, #shows, #dates или полный']],
     blank: { label: 'Наверх', href: '#top' } }
 ];
 
