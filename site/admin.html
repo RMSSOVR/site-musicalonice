@@ -296,7 +296,19 @@ function readDraft() {
   } catch (e) { return null; }
 }
 
+/* если на сервере есть служба публикации — работаем через неё, без токенов */
+let SERVER = false;
+async function checkServer() {
+  try {
+    const r = await fetch('api/ping', { cache: 'no-store' });
+    if (!r.ok) return false;
+    const d = await r.json();
+    return !!(d && d.ok);
+  } catch (e) { return false; }
+}
+
 async function boot() {
+  SERVER = await checkServer();
   /* шаблон: блок внутри index.html, в нём есть все разделы */
   let template = null;
   try {
@@ -1219,7 +1231,10 @@ function build() {
       <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem">
         <button class="btn btn-ghost" id="gh-save">Запомнить настройки</button>
         <button class="btn btn-ghost" id="gh-eye">Показать значения</button>
+        <button class="btn btn-ghost" id="gh-share">Код для второго компьютера</button>
+        <button class="btn btn-ghost" id="gh-paste">Вставить код</button>
       </div>
+      <p class="hint">Код переносит настройки на другой компьютер, но <b>не</b> токен: его каждый вписывает свой. Токен для второго человека создайте отдельно на GitHub — так его можно отозвать, не трогая ваш.</p>
     </div>`;
   document.getElementById('editor').appendChild(gh);
 
@@ -1256,9 +1271,18 @@ function build() {
 
 /* ——— вкладки: показываем один раздел за раз ——— */
 let activeTab = 0;
+function devTabsHidden() {
+  if (SERVER) return true;
+  if (location.hash === '#dev') return false;
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem('moi-gh') || '{}'); } catch (e) {}
+  return !!(saved.owner && saved.repo && saved.token);
+}
+
 function buildTabs() {
   const editor = document.getElementById('editor');
   const groups = [...editor.querySelectorAll(':scope > .group')];
+  const hideDev = devTabsHidden();
   const old = document.getElementById('tabs');
   if (old) old.remove();
 
@@ -1268,14 +1292,19 @@ function buildTabs() {
   groups.forEach((g, i) => {
     const sum = g.querySelector('summary');
     const title = sum ? (sum.firstChild ? sum.firstChild.textContent : sum.textContent) : '';
+    const name = (title || '').trim() || 'Раздел';
+    const service = name.indexOf('Для разработчика') === 0 || name.indexOf('Памятка') === 0;
+    if (service && hideDev) { g.hidden = true; g.dataset.service = '1'; return; }
     const b = document.createElement('button');
     b.type = 'button';
-    b.textContent = (title || '').trim() || 'Раздел';
+    b.textContent = name;
     b.onclick = () => showTab(i);
+    b.dataset.group = i;
     nav.appendChild(b);
   });
   editor.insertBefore(nav, editor.firstChild);
-  showTab(Math.min(activeTab, groups.length - 1));
+  const visible = [...nav.children].map((b) => +b.dataset.group);
+  showTab(visible.indexOf(activeTab) >= 0 ? activeTab : (visible[0] || 0));
 }
 
 /* ——— раздел «Для разработчика» под паролем ——— */
@@ -1331,6 +1360,35 @@ function devLock(group) {
   };
 }
 
+function wireShare() {
+  const share = document.getElementById('gh-share');
+  const paste = document.getElementById('gh-paste');
+  if (share) share.onclick = (e) => {
+    e.preventDefault();
+    const cfg = ghRead();
+    const code = btoa(JSON.stringify({ owner: cfg.owner, repo: cfg.repo, branch: cfg.branch, path: cfg.path }));
+    const done = () => say('Код скопирован. Отправьте его второму человеку — токен он вписывает свой', true);
+    if (navigator.clipboard) navigator.clipboard.writeText(code).then(done, () => prompt('Скопируйте код:', code));
+    else prompt('Скопируйте код:', code);
+  };
+  if (paste) paste.onclick = (e) => {
+    e.preventDefault();
+    const code = prompt('Вставьте код настроек:');
+    if (!code) return;
+    try {
+      const cfg = JSON.parse(atob(code.trim()));
+      ['owner', 'repo', 'branch', 'path'].forEach((k) => {
+        const el = document.getElementById('gh-' + k);
+        if (el && cfg[k]) el.value = cfg[k];
+      });
+      ghSave();
+      say('Настройки приняты. Осталось вставить свой токен и нажать «Запомнить настройки»', true);
+    } catch (err) {
+      say('Код не подошёл — скопируйте его целиком');
+    }
+  };
+}
+
 function wireEye() {
   const eye = document.getElementById('gh-eye');
   if (!eye) return;
@@ -1370,6 +1428,7 @@ function devUnlock(group) {
   const ghBtn = document.getElementById('gh-save');
   if (ghBtn) ghBtn.onclick = ghSave;
   wireEye();
+  wireShare();
 }
 
 function showTab(i) {
@@ -1385,7 +1444,7 @@ function showTab(i) {
     }
   });
   const nav = document.getElementById('tabs');
-  if (nav) [...nav.children].forEach((b, n) => b.classList.toggle('on', n === i));
+  if (nav) [...nav.children].forEach((b) => b.classList.toggle('on', +b.dataset.group === i));
   editor.scrollTop = 0;
   window.scrollTo(0, 0);
 }
@@ -1542,7 +1601,48 @@ async function gh(cfg, path, opts = {}) {
   return res.json();
 }
 
+async function publishViaServer() {
+  const btn = document.getElementById('publish');
+  btn.disabled = true;
+  say('Публикуем…');
+  try {
+    const payload = clone(C);
+    const files = collectAssets({ path: 'site/content.json' }, payload);
+    const nImg = files.filter((f) => f.kind === 'image').length;
+    const nAud = files.filter((f) => f.kind === 'audio').length;
+    const nVid = files.filter((f) => f.kind === 'video').length;
+    const parts = [];
+    if (nImg) parts.push(`афиш: ${nImg}`);
+    if (nAud) parts.push(`музыки: ${nAud}`);
+    if (nVid) parts.push(`видео: ${nVid}`);
+    if (files.length) say(`Отправляем файлы (${files.length})…`);
+
+    const res = await fetch('api/publish', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: parts.length ? `Сайт из админки: тексты, ${parts.join(', ')}` : 'Сайт из админки: тексты',
+        content: JSON.stringify(payload, null, 2) + '\n',
+        files: files.map((f) => ({ path: f.path, base64: f.base64 }))
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || data.error) throw new Error(data.error || ('сервер ответил ' + res.status));
+
+    C = payload;
+    build(); push();
+    try { localStorage.removeItem('moi-content'); } catch (e) {}
+    setTimeout(() => say(parts.length ? `Опубликовано (${parts.join(', ')}). Сайт обновится через минуту` : 'Опубликовано, сайт обновится через минуту', true), 700);
+  } catch (e) {
+    say('Не вышло: ' + e.message);
+    alert('Публикация не удалась.\n\n' + e.message);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
 async function publish() {
+  if (SERVER) return publishViaServer();
   const cfg = ghRead();
   if (!cfg.owner || !cfg.repo) {
     say('Откройте раздел «Для разработчика» и заполните настройки публикации');
@@ -1618,7 +1718,62 @@ async function publish() {
 }
 
 /* ——— восстановление: список копий из папки backups ——— */
+async function restoreDialogServer() {
+  say('Смотрю резервные копии…');
+  let items = [];
+  try {
+    const r = await fetch('api/backups', { cache: 'no-store' });
+    const d = await r.json();
+    items = (d && d.items) || [];
+  } catch (e) {}
+  if (!items.length) { say('Копий пока нет — они появляются после публикации'); return; }
+  showRestoreList(items.map((name) => ({ name })), async (name) => {
+    const r = await fetch('api/backup/' + encodeURIComponent(name), { cache: 'no-store' });
+    const d = await r.json();
+    if (!d || !d.content) throw new Error('копия не читается');
+    return JSON.parse(d.content);
+  });
+}
+
+function showRestoreList(files, load) {
+  const back = document.createElement('div');
+  back.className = 'modal';
+  const card = document.createElement('div');
+  card.className = 'modal-card';
+  card.innerHTML = '<h3>Резервные копии</h3><p class="hint">Это тексты сайта на момент каждой публикации. Копия откроется в админке — проверьте и нажмите «Опубликовать на сайт».</p>';
+  files.forEach((f) => {
+    const m = f.name.match(/content-(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})/);
+    const label = m ? `${m[3]}.${m[2]}.${m[1]}, ${m[4]}:${m[5]}` : f.name;
+    const b = document.createElement('button');
+    b.className = 'btn btn-ghost';
+    b.textContent = label;
+    b.onclick = async () => {
+      back.remove();
+      say('Открываю копию…');
+      try {
+        const data = await load(f.name);
+        C = fillMissing(clone(data), window.TEMPLATE || data);
+        build(); push(); touch();
+        setTimeout(() => say('Копия от ' + label + ' открыта. Проверьте и нажмите «Опубликовать на сайт»', true), 700);
+      } catch (e) {
+        say('Не вышло открыть копию: ' + e.message);
+      }
+    };
+    card.appendChild(b);
+  });
+  const cancel = document.createElement('button');
+  cancel.className = 'btn btn-ghost';
+  cancel.textContent = 'Отмена';
+  cancel.onclick = () => back.remove();
+  card.appendChild(cancel);
+  back.appendChild(card);
+  back.addEventListener('click', (e) => { if (e.target === back) back.remove(); });
+  document.body.appendChild(back);
+  say('Выберите копию');
+}
+
 async function restoreDialog() {
+  if (SERVER) return restoreDialogServer();
   const cfg = ghRead();
   if (!cfg.token) { say('Сначала вставьте токен в разделе «Для разработчика»'); return; }
   say('Смотрю резервные копии…');
