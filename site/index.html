@@ -674,8 +674,8 @@
 
   .foot{padding-block:3rem 2.2rem;color:var(--mist);font-size:.9rem}
   .foot-top{
-    display:flex;flex-wrap:wrap;gap:2.2rem 3.5rem;justify-content:space-between;align-items:flex-start;
-    padding-bottom:2rem;border-bottom:1px solid var(--hair);
+    display:flex;flex-wrap:wrap;gap:2.2rem 3.5rem;justify-content:space-between;align-items:stretch;
+    padding-bottom:1.6rem;border-bottom:1px solid var(--hair);
   }
   .foot-tagline{margin-top:1rem;max-width:30ch;line-height:1.6}
   .foot-social{display:flex;gap:1.4rem;align-items:center;justify-content:flex-end}
@@ -683,7 +683,10 @@
   .foot-social span{opacity:.55}
   .foot-social a:hover{color:var(--spot);transform:translateY(-2px)}
   .foot-social svg{width:1.5rem;height:1.5rem}
-  .foot-right{display:flex;flex-direction:column;gap:1.3rem;align-items:flex-end;text-align:right;max-width:34ch;line-height:1.7}
+  .foot-right{
+    display:flex;flex-direction:column;gap:1.3rem;justify-content:flex-end;
+    align-items:flex-end;text-align:right;max-width:34ch;line-height:1.7;
+  }
   .foot-right a{color:var(--crust);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
   .foot-right a:hover{border-color:var(--spot)}
   .foot-base{padding-top:1.3rem;font-size:.82rem}
@@ -923,8 +926,8 @@
       <p class="foot-tagline" data-f="footer.tagline"></p>
     </div>
     <div class="foot-right">
-      <div class="foot-social" id="foot-social"></div>
       <p id="foot-contacts"></p>
+      <div class="foot-social" id="foot-social"></div>
     </div>
   </div>
   <div class="foot-base"><p id="foot-legal"></p></div>
