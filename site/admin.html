@@ -1099,13 +1099,16 @@ function build() {
     <summary>Для разработчика<span>служебные настройки</span></summary>
     <div class="body">
       <p class="hint"><b>Нужно заполнить только токен</b>, остальные поля уже настроены. Кнопка «Опубликовать на сайт» отправляет текст прямо в репозиторий. Новые афиши уезжают туда же отдельными файлами в папку <code>images</code>, а в тексте остаётся только путь — сайт не тяжелеет. GitHub сам пересоберёт страницы — обычно через минуту изменения уже на сайте.</p>
-      <label class="field"><span>Владелец репозитория (логин или организация)</span><input type="text" id="gh-owner" placeholder="логин на GitHub"></label>
-      <label class="field"><span>Название репозитория</span><input type="text" id="gh-repo" placeholder="название репозитория"></label>
+      <label class="field"><span>Владелец репозитория (логин или организация)</span><input type="password" id="gh-owner" placeholder="логин на GitHub"></label>
+      <label class="field"><span>Название репозитория</span><input type="password" id="gh-repo" placeholder="название репозитория"></label>
       <label class="field"><span>Ветка</span><input type="text" id="gh-branch" placeholder="main"></label>
       <label class="field"><span>Путь к файлу в репозитории</span><input type="text" id="gh-path" placeholder="site/content.json"></label>
       <label class="field"><span>Токен доступа</span><input type="password" id="gh-token" placeholder="github_pat_…"></label>
       <p class="hint">Токен создаётся один раз: GitHub → Settings → Developer settings → Fine-grained tokens. Доступ — только к этому репозиторию, право Contents: Read and write. Токен хранится в этом браузере и никуда больше не отправляется.</p>
-      <button class="btn btn-ghost" id="gh-save" style="margin-top:.7rem">Запомнить настройки</button>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem">
+        <button class="btn btn-ghost" id="gh-save">Запомнить настройки</button>
+        <button class="btn btn-ghost" id="gh-eye">Показать значения</button>
+      </div>
     </div>`;
   document.getElementById('editor').appendChild(gh);
 
@@ -1217,6 +1220,20 @@ function devLock(group) {
   };
 }
 
+function wireEye() {
+  const eye = document.getElementById('gh-eye');
+  if (!eye) return;
+  eye.onclick = (e) => {
+    e.preventDefault();
+    const hidden = document.getElementById('gh-owner').type === 'password';
+    ['owner', 'repo', 'token'].forEach((k) => {
+      const el = document.getElementById('gh-' + k);
+      if (el) el.type = hidden ? 'text' : 'password';
+    });
+    eye.textContent = hidden ? 'Скрыть значения' : 'Показать значения';
+  };
+}
+
 function devUnlock(group) {
   devOpen = true;
   const body = group.querySelector('.body');
@@ -1241,6 +1258,7 @@ function devUnlock(group) {
   ghFill();
   const ghBtn = document.getElementById('gh-save');
   if (ghBtn) ghBtn.onclick = ghSave;
+  wireEye();
 }
 
 function showTab(i) {
