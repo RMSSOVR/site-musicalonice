@@ -1194,32 +1194,32 @@
       {
         "title": "Aladdin",
         "show": "aladdin",
-        "notes": "e g n q w q n g e",
-        "tempo": "330"
+        "notes": "x d g b n j n g d x - x",
+        "tempo": "260"
       },
       {
         "title": "Alice in Wonderland",
         "show": "alice",
-        "notes": "z c b n m q m n b c",
-        "tempo": "300"
+        "notes": "z c g j q j g c z",
+        "tempo": "240"
       },
       {
         "title": "Dracula",
         "show": "dracula",
-        "notes": "z v b s v z - z v n",
-        "tempo": "360"
+        "notes": "n m q w e r 6 y - y 6 r e - n",
+        "tempo": "300"
       },
       {
         "title": "The Little Prince",
         "show": "prince",
-        "notes": "c v b q w e w q b",
+        "notes": "b n q w e w q n b - q",
         "tempo": "320"
       },
       {
         "title": "Princess Anastasia",
         "show": "anastasia",
-        "notes": "n m q e w q m n c",
-        "tempo": "300"
+        "notes": "n - q m - n x - c b - n",
+        "tempo": "280"
       }
     ],
     "heading": "The piano itself",
@@ -1901,7 +1901,7 @@ function playMelody(notes, tempo, btn) {
     running.push(setTimeout(() => {
       let k = byLetter[letter];
       if (k && k.offsetParent === null) {
-        const low = { q: 'z', w: 'x', e: 'c', r: 'v', t: 'b', y: 'n', u: 'm' }[letter];
+        const low = { q: 'z', w: 'x', e: 'c', r: 'v', t: 'b', y: 'n', u: 'm', '2': 's', '3': 'd', '5': 'g', '6': 'h', '7': 'j' }[letter];
         if (low) k = byLetter[low];
       }
       if (!k) return;
