@@ -679,7 +679,8 @@
   }
   .foot-tagline{margin-top:1rem;max-width:30ch;line-height:1.6}
   .foot-social{display:flex;gap:1.4rem;margin-top:1.4rem;align-items:center}
-  .foot-social a{color:var(--mist);display:flex;transition:color .2s,transform .15s}
+  .foot-social a,.foot-social span{color:var(--mist);display:flex;transition:color .2s,transform .15s}
+  .foot-social span{opacity:.55}
   .foot-social a:hover{color:var(--spot);transform:translateY(-2px)}
   .foot-social svg{width:1.5rem;height:1.5rem}
   .foot-right{display:flex;flex-direction:column;gap:1rem;align-items:flex-start;max-width:34ch;line-height:1.7}
@@ -2024,12 +2025,21 @@ function buildFooter() {
 
   const social = document.getElementById('foot-social');
   if (social) {
-    const list = (F.social || []).filter((x) => x && x.url);
-    social.innerHTML = list.map((x) => `
-      <a href="${esc(x.url)}" target="_blank" rel="noopener" aria-label="${esc(x.label || x.kind || 'link')}" title="${esc(x.label || x.kind || '')}">
-        ${socialIcon(x.kind || x.label)}
-      </a>`).join('');
-    social.hidden = !list.length;
+    const DEFAULT_SOCIAL = [
+      { kind: 'instagram', label: 'Instagram' }, { kind: 'youtube', label: 'YouTube' },
+      { kind: 'tiktok', label: 'TikTok' }, { kind: 'facebook', label: 'Facebook' },
+      { kind: 'x', label: 'X' }
+    ];
+    const list = (F.social || []).filter((x) => x && (x.url || x.kind));
+    const use = list.length ? list : DEFAULT_SOCIAL;
+    social.innerHTML = use.map((x) => {
+      const name = esc(x.label || x.kind || 'link');
+      const icon = socialIcon(x.kind || x.label);
+      return x.url
+        ? `<a href="${esc(x.url)}" target="_blank" rel="noopener" aria-label="${name}" title="${name}">${icon}</a>`
+        : `<span class="soon" aria-label="${name}" title="${name}">${icon}</span>`;
+    }).join('');
+    social.hidden = false;
   }
 
   const contacts = document.getElementById('foot-contacts');
