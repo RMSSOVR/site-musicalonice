@@ -76,7 +76,9 @@
 
   .tabs{
     position:sticky;top:0;z-index:15;display:flex;gap:.4rem;flex-wrap:wrap;
-    padding:.7rem 0 .8rem;margin-bottom:.4rem;background:var(--depth);
+    margin:calc(-1 * clamp(1rem,2.5vw,2rem)) calc(-1 * clamp(1rem,2.5vw,2rem)) 1rem;
+    padding:.85rem clamp(1rem,2.5vw,2rem);
+    background:var(--depth);border-bottom:1px solid var(--hair);
   }
   .tabs button{
     font:500 .78rem/1 var(--text);color:var(--mist);cursor:pointer;
@@ -110,7 +112,7 @@
   }
   .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(7.5rem,1fr));gap:.6rem;margin-top:.8rem}
   .thumb{position:relative;aspect-ratio:3/2;overflow:hidden;border:1px solid var(--hair);background:#04101B}
-  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .thumb img{width:100%;height:100%;object-fit:contain;display:block;background:#04101B}
   .thumb.bad::after{
     content:"файл появится после публикации";position:absolute;inset:0;padding:.6rem;
     display:flex;align-items:center;justify-content:center;text-align:center;
@@ -503,21 +505,19 @@ function videoField(path, label) {
   });
 }
 
-/* пачка фото разом: каждое ужимается до 1400×933 */
-function shrinkImage(file, W, H) {
+/* пачка фото разом: кадр не режем, только ужимаем под сайт */
+function shrinkImage(file, maxSide) {
   return new Promise((resolve) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
     img.onload = () => {
-      const target = W / H;
-      let nw = img.width, nh = img.height;
-      if (nw / nh > target) nw = nh * target; else nh = nw / target;
-      const x = (img.width - nw) / 2, y = (img.height - nh) / 2;
+      const k = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const W = Math.round(img.width * k), H = Math.round(img.height * k);
       const cv = document.createElement('canvas');
       cv.width = W; cv.height = H;
-      cv.getContext('2d').drawImage(img, x, y, nw, nh, 0, 0, W, H);
+      cv.getContext('2d').drawImage(img, 0, 0, W, H);
       URL.revokeObjectURL(url);
-      resolve(cv.toDataURL('image/jpeg', .82));
+      resolve(cv.toDataURL('image/jpeg', .85));
     };
     img.onerror = () => { URL.revokeObjectURL(url); resolve(''); };
     img.src = url;
@@ -535,7 +535,7 @@ async function pickShots(listPath, redraw) {
     let added = 0;
     for (let i = 0; i < files.length; i++) {
       say(`Готовлю фото: ${i + 1} из ${files.length}…`);
-      const data = await shrinkImage(files[i], 1400, 933);
+      const data = await shrinkImage(files[i], 1600);
       if (!data) continue;
       const arr = get(listPath) || [];
       arr.push({ src: data });
@@ -1096,11 +1096,11 @@ function build() {
   const gh = document.createElement('details');
   gh.className = 'group';
   gh.innerHTML = `
-    <summary>Публикация на сайт<span>GitHub</span></summary>
+    <summary>Для разработчика<span>служебные настройки</span></summary>
     <div class="body">
       <p class="hint"><b>Нужно заполнить только токен</b>, остальные поля уже настроены. Кнопка «Опубликовать на сайт» отправляет текст прямо в репозиторий. Новые афиши уезжают туда же отдельными файлами в папку <code>images</code>, а в тексте остаётся только путь — сайт не тяжелеет. GitHub сам пересоберёт страницы — обычно через минуту изменения уже на сайте.</p>
-      <label class="field"><span>Владелец репозитория (логин или организация)</span><input type="text" id="gh-owner" placeholder="RMSSOVR"></label>
-      <label class="field"><span>Название репозитория</span><input type="text" id="gh-repo" placeholder="site-musicalonice"></label>
+      <label class="field"><span>Владелец репозитория (логин или организация)</span><input type="text" id="gh-owner" placeholder="логин на GitHub"></label>
+      <label class="field"><span>Название репозитория</span><input type="text" id="gh-repo" placeholder="название репозитория"></label>
       <label class="field"><span>Ветка</span><input type="text" id="gh-branch" placeholder="main"></label>
       <label class="field"><span>Путь к файлу в репозитории</span><input type="text" id="gh-path" placeholder="site/content.json"></label>
       <label class="field"><span>Токен доступа</span><input type="password" id="gh-token" placeholder="github_pat_…"></label>
@@ -1112,7 +1112,7 @@ function build() {
   const how = document.createElement('details');
   how.className = 'group';
   how.innerHTML = `
-    <summary>Как выложить изменения на сайт<span>без сервера</span></summary>
+    <summary>Памятка<span>как всё устроено</span></summary>
     <div class="body">
       <ol class="steps">
         <li>Настройте раздел <b>Публикация на сайт</b> — один раз.</li>
@@ -1164,13 +1164,96 @@ function buildTabs() {
   showTab(Math.min(activeTab, groups.length - 1));
 }
 
+/* ——— раздел «Для разработчика» под паролем ——— */
+const DEV_KEY = 'moi-dev-pass';
+let devOpen = false;
+
+async function sha(text) {
+  if (!(window.crypto && crypto.subtle)) return 'plain:' + text;
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+function devHash() {
+  try { return localStorage.getItem(DEV_KEY) || ''; } catch (e) { return ''; }
+}
+
+function devLock(group) {
+  const body = group.querySelector('.body');
+  if (!body || group.dataset.locked) return;
+  group.dataset.locked = '1';
+  body.dataset.hidden = '1';
+  const real = body.innerHTML;
+  body.dataset.real = '';
+  group._realBody = real;
+
+  const hash = devHash();
+  body.innerHTML = hash
+    ? `<p class="hint">Раздел закрыт паролем. Здесь настройки публикации — обычная работа с текстами и фото идёт без него.</p>
+       <label class="field"><span>Пароль</span><input type="password" id="dev-pass"></label>
+       <button class="btn btn-ghost" id="dev-go" style="margin-top:.7rem">Открыть</button>
+       <p class="hint" id="dev-msg"></p>`
+    : `<p class="hint">Придумайте пароль для служебного раздела. Он хранится только в этом браузере, никуда не отправляется. Запишите его — восстановить нельзя.</p>
+       <label class="field"><span>Новый пароль</span><input type="password" id="dev-pass"></label>
+       <label class="field"><span>Ещё раз</span><input type="password" id="dev-pass2"></label>
+       <button class="btn btn-ghost" id="dev-go" style="margin-top:.7rem">Сохранить и открыть</button>
+       <p class="hint" id="dev-msg"></p>`;
+
+  const go = body.querySelector('#dev-go');
+  go.onclick = async (e) => {
+    e.preventDefault();
+    const val = (body.querySelector('#dev-pass') || {}).value || '';
+    const msg = body.querySelector('#dev-msg');
+    if (!val) { msg.textContent = 'Введите пароль'; return; }
+    if (!hash) {
+      const val2 = (body.querySelector('#dev-pass2') || {}).value || '';
+      if (val !== val2) { msg.textContent = 'Пароли не совпали'; return; }
+      try { localStorage.setItem(DEV_KEY, await sha(val)); } catch (err) {}
+      devUnlock(group);
+      return;
+    }
+    if (await sha(val) === hash) devUnlock(group);
+    else msg.textContent = 'Пароль не подошёл';
+  };
+}
+
+function devUnlock(group) {
+  devOpen = true;
+  const body = group.querySelector('.body');
+  body.innerHTML = group._realBody;
+  delete group.dataset.locked;
+
+  const change = document.createElement('button');
+  change.className = 'btn btn-ghost';
+  change.style.marginTop = '.7rem';
+  change.textContent = 'Сменить пароль';
+  change.onclick = async (e) => {
+    e.preventDefault();
+    const a = prompt('Новый пароль:');
+    if (!a) return;
+    const b = prompt('Повторите пароль:');
+    if (a !== b) { alert('Пароли не совпали'); return; }
+    try { localStorage.setItem(DEV_KEY, await sha(a)); } catch (err) {}
+    alert('Пароль изменён');
+  };
+  body.appendChild(change);
+
+  ghFill();
+  const ghBtn = document.getElementById('gh-save');
+  if (ghBtn) ghBtn.onclick = ghSave;
+}
+
 function showTab(i) {
   activeTab = i;
   const editor = document.getElementById('editor');
   const groups = [...editor.querySelectorAll(':scope > .group')];
   groups.forEach((g, n) => {
     g.hidden = n !== i;
-    if (n === i) g.open = true;
+    if (n === i) {
+      g.open = true;
+      const sum = g.querySelector('summary');
+      if (sum && sum.textContent.indexOf('Для разработчика') === 0 && !devOpen) devLock(g);
+    }
   });
   const nav = document.getElementById('tabs');
   if (nav) [...nav.children].forEach((b, n) => b.classList.toggle('on', n === i));
@@ -1241,8 +1324,6 @@ function ghRead() {
     const el = document.getElementById('gh-' + k);
     out[k] = (el && el.value.trim()) || saved[k] || '';
   });
-  if (!out.owner) out.owner = 'RMSSOVR';
-  if (!out.repo) out.repo = 'site-musicalonice';
   if (!out.branch) out.branch = 'main';
   if (!out.path) out.path = 'site/content.json';
   return out;
@@ -1334,8 +1415,12 @@ async function gh(cfg, path, opts = {}) {
 
 async function publish() {
   const cfg = ghRead();
+  if (!cfg.owner || !cfg.repo) {
+    say('Откройте раздел «Для разработчика» и заполните настройки публикации');
+    return;
+  }
   if (!cfg.token) {
-    say('Вставьте токен в разделе «Публикация на сайт»');
+    say('Вставьте токен в разделе «Для разработчика»');
     document.getElementById('gh-token').closest('details').open = true;
     document.getElementById('gh-token').scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
@@ -1406,7 +1491,7 @@ async function publish() {
 /* ——— восстановление: список копий из папки backups ——— */
 async function restoreDialog() {
   const cfg = ghRead();
-  if (!cfg.token) { say('Сначала вставьте токен в разделе «Публикация на сайт»'); return; }
+  if (!cfg.token) { say('Сначала вставьте токен в разделе «Для разработчика»'); return; }
   say('Смотрю резервные копии…');
   let list;
   try {
