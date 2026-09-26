@@ -1,0 +1,504 @@
+{
+  "title": "Musical on Ice",
+  "brand": "Musical on Ice",
+  "logoAlt": "Musical on Ice",
+  "nav": [
+    {
+      "label": "About",
+      "href": "#about"
+    },
+    {
+      "label": "Shows",
+      "href": "#shows"
+    },
+    {
+      "label": "Piano",
+      "href": "#piano"
+    },
+    {
+      "label": "Tickets",
+      "href": "#dates"
+    }
+  ],
+  "hero": {
+    "lede": "Full-length musicals on ice: live vocals, orchestral scores and world-class skaters.",
+    "where": "",
+    "primary": "Buy tickets",
+    "secondary": "See the shows",
+    "secondaryHref": "#shows",
+    "pressed": "Opening the seating plan…"
+  },
+  "about": {
+    "heading": "Where World Stories Come to Life on Ice",
+    "statement": "Musical on Ice brings iconic stories to life through original music, virtuoso skating, theatre, acrobatics, spectacular effects and immersive visuals. Each production transforms the ice into a living stage where performers become characters and movement becomes part of the story.",
+    "text": "With more than 20 years of international touring, Musical on Ice has brought its productions to audiences across Europe and Asia — creating a distinctive meeting point of music, storytelling and the art of skating.",
+    "video": "",
+    "facts": [
+      {
+        "value": "8",
+        "label": "productions in repertoire"
+      },
+      {
+        "value": "30",
+        "label": "countries"
+      },
+      {
+        "value": "22",
+        "label": "performers on the ice"
+      }
+    ],
+    "nearest": "Next performance",
+    "nearestCta": "Tickets"
+  },
+  "shows": {
+    "heading": "Our shows",
+    "intro": "Five productions on ice, from a family fairy tale to a gothic drama. Pick a show to see what it is about.",
+    "items": [
+      {
+        "title": "Aladdin and the Famous Stories from 1001 Nights on Ice",
+        "status": "On tour",
+        "image": "images/aladdin-20260925-i9zj.jpg",
+        "href": "#show=aladdin",
+        "text": "A spectacular journey into the world of Aladdin, Ali Baba and Sinbad — where legendary tales, breathtaking skating and oriental magic come to life on ice.",
+        "slug": "aladdin",
+        "video": "https://youtu.be/hS2oGzvGmUA?si=XXRjFu_b5OZExw3M",
+        "about": "Sometimes, to understand that life is real, you need to live like a fairy tale.\nStep into the world of Scheherazade and discover the legendary tales of 1001 Nights on Ice — a spectacular performance filled with magic, adventure and ancient stories.\n\nMeet Aladdin as he discovers a magical lamp and a world where wishes can come true. Follow Ali Baba into a secret cave filled with treasure. Sail alongside Sinbad the Sailor as he faces storms and distant lands. Each story has its own adventure and its own meaning, brought together in one captivating show on ice.\n\nThe magic comes alive through world-class skating, ice acrobatics, aerial performances, fire juggling, hula hooping and magic tricks. Speed, precision and artistry meet oriental music, choreography and lavish costumes, creating a vivid world inspired by the legendary tales of the East.\n\nLarge-scale video installations, theatrical scenery and striking visual effects transform the ice arena into a world of ancient stories — where the cold of the ice meets the warmth and energy of the East.\nAladdin and the Famous Stories from 1001 Nights on Ice is a family show for audiences aged 6 and over.",
+        "facts": [
+          {
+            "label": "Running time",
+            "value": "90 minutes"
+          },
+          {
+            "label": "Age",
+            "value": "0+"
+          },
+          {
+            "label": "Performers",
+            "value": "24"
+          },
+          {
+            "label": "Interval",
+            "value": "one, 20 minutes"
+          }
+        ],
+        "lead": "A spectacular journey into the world of Aladdin, Ali Baba and Sinbad — where legendary tales, breathtaking skating and oriental magic come to life on ice.",
+        "gallery": [
+          {
+            "src": "images/aladdin-20260926-clrw.jpg"
+          },
+          {
+            "src": "images/aladdin-20260926-qbq5.jpg"
+          },
+          {
+            "src": "images/aladdin-20260926-psz1.jpg"
+          },
+          {
+            "src": "images/aladdin-20260926-tasn.jpg"
+          },
+          {
+            "src": "images/aladdin-20260926-77f4.jpg"
+          },
+          {
+            "src": "images/aladdin-20260926-tt3h.jpg"
+          }
+        ]
+      },
+      {
+        "title": "Alice in Wonderland on Ice",
+        "status": "On tour",
+        "image": "images/alice-20260920-aps6.jpg",
+        "href": "#show=alice",
+        "text": "Audiences across the globe — from Italy, Ireland, Germany, Bulgaria, Latvia, Lithuania, Slovakia, India, China and beyond — have experienced the magic of this show over the past 10 years during its global world tour. And now, this beloved classic arrives in Bali!",
+        "slug": "alice",
+        "video": "https://youtu.be/rxacmggXpI0?si=LV606xafpLrZWIk-",
+        "about": "Lewis Carroll’s timeless tale of Alice and her unforgettable adventures, written in 1865, has inspired countless adaptations. Yet audiences continue to embrace fresh interpretations of this beloved story.\n\nPrepare to be mesmerised! The unique fusion of music and the artistry of ice dance creates a spectacular performance that captivates audiences of all ages. Stunning large-scale video projections bring the magic to life and immerse you in the heart of Wonderland.\n\nAlice in Wonderland on Ice takes us back to a childhood fairy tale filled with fantasy and excitement. This magical story reminds us that dreaming and believing in ourselves never go out of style.\n\nA modern interpretation of a cherished classic, enhanced by cutting-edge technology, surprises and delights, proving that even the most familiar stories can still spark vivid emotions.\n\nThis breathtaking show on ice will captivate every spectator. It’s a celebration for both children and adults.",
+        "facts": [
+          {
+            "label": "Running time",
+            "value": "90 minutes"
+          },
+          {
+            "label": "Age",
+            "value": "0+"
+          },
+          {
+            "label": "Performers",
+            "value": "22"
+          },
+          {
+            "label": "Interval",
+            "value": "one, 20 minutes"
+          }
+        ],
+        "lead": "Audiences across the globe — from Italy, Ireland, Germany, Bulgaria, Latvia, Lithuania, Slovakia, India, China and beyond — have experienced the magic of this show over the past 10 years during its global world tour. And now, this beloved classic arrives in Bali!",
+        "gallery": []
+      },
+      {
+        "title": "Dracula: The Story of Eternal Love",
+        "status": "On tour",
+        "image": "images/dracula-20260925-zjqi.jpg",
+        "href": "#show=dracula",
+        "text": "A dark and passionate story of eternal love, brought to life on ice through breathtaking skating, aerial acrobatics, haunting music and the legendary Count Dracula.",
+        "slug": "dracula",
+        "video": "https://youtu.be/XsPD38y4HYA?si=opafXbdauH9nLeLa",
+        "about": "At the end of the 19th century, young solicitor Jonathan Harker and his fiancée Mina are preparing to marry. But fate takes an unexpected turn when Jonathan must leave his beloved and travel to Transylvania to meet the mysterious Count who has summoned him to London.\n\nOn the ice, world-class figure skaters bring the story’s iconic characters to life — the devoted Mina and Jonathan, the fearless Van Helsing, who has dedicated his life to fighting the forces of darkness, ruthless vampires and, of course, the ominous Count Dracula.\nThe performers bring depth and intensity to their roles, taking the audience through a whirlwind of fear, rage, passion and love. \n\nBreathtaking acrobatics, aerial gymnastics, fire juggling and more add to the drama and spectacle.\nLarge-scale video installations, exquisite costumes inspired by the vampire era, interactive sets and dramatic lighting immerse the audience in Dracula’s world. A mirror ball scatters hundreds of beams across the venue, while fog, red steam, flying vampires and fire on the ice create a haunting atmosphere.\n\nHigh-level figure skating meets spectacular visual effects — high lifts, death spirals and triple jumps — all performed to an original musical score. The soundtrack was composed by Saint Petersburg-based composer Alexei Galinsky, known for his work on Olympia for the 2014 Sochi Winter Olympics, as well as the scores for Princess Anastasia, Alice in Wonderland, The Nutcracker and Lord of the Darkness and other acclaimed productions.\n\nDracula on Ice combines professional skating, lavish costumes, interactive sets, video projections, special effects, masterful lighting and a mesmerising soundtrack to tell the story of humanity’s first vampire — Count Dracula.\n",
+        "facts": [
+          {
+            "label": "Running time",
+            "value": "100 minutes"
+          },
+          {
+            "label": "Age",
+            "value": "12+"
+          },
+          {
+            "label": "Performers",
+            "value": "26"
+          },
+          {
+            "label": "Interval",
+            "value": "one, 20 minutes"
+          }
+        ],
+        "lead": "A dark and passionate story of eternal love, brought to life on ice through breathtaking skating, aerial acrobatics, haunting music and the legendary Count Dracula.",
+        "gallery": []
+      },
+      {
+        "title": "The Little Prince on Ice",
+        "status": "On tour",
+        "image": "images/prince-20260920-ov13.jpg",
+        "href": "#show=prince",
+        "text": "A breathtaking journey through the stars, where the Little Prince travels from planet to planet in search of friendship, love and the meaning of life.",
+        "slug": "prince",
+        "video": "https://youtu.be/RidcICyPL2k?si=5OfNOmL0XoVLtvdp",
+        "about": "The Little Prince on Ice is a spectacular theatrical ice show inspired by Antoine de Saint-Exupéry’s timeless classic — brought to life through figure skating, aerial acrobatics, immersive video projections, original music and stunning visual effects.\n\nThe story follows the Little Prince as he travels from planet to planet, searching for the meaning of friendship, love and existence. Along the way, he meets extraordinary characters and discovers simple truths about life, responsibility and the people we care about.\n\nTender, touching and full of imagination, this story reminds us of what truly matters — kindness, friendship, responsibility and the ability to see with the heart. Its timeless message speaks to both children and adults, revealing new meanings at every age.\n\nThe ice becomes a vast cosmic stage, where planets, stars, comets and meteors come to life around the audience. Aerial performers fly above the ice without safety harnesses, while video projections transport the characters and spectators from one planet to another.\n\nThe production combines original lighting, LED costumes, dynamic visual effects and large-scale video projections with 90 minutes of enchanting original music, creating an immersive journey through the Little Prince’s universe.\n\nAt its heart, The Little Prince on Ice is a story about responsibility for ourselves and those close to us — a message that remains as relevant today as when the book was first published.",
+        "facts": [
+          {
+            "label": "Running time",
+            "value": "80 minutes"
+          },
+          {
+            "label": "Age",
+            "value": "6+"
+          },
+          {
+            "label": "Performers",
+            "value": "18"
+          },
+          {
+            "label": "Interval",
+            "value": "none"
+          }
+        ],
+        "lead": "A breathtaking journey through the stars, where the Little Prince travels from planet to planet in search of friendship, love and the meaning of life.",
+        "gallery": []
+      },
+      {
+        "title": "Princess Anastasia — The Secret of the Heir to the Throne",
+        "status": "On tour",
+        "image": "images/anastasia-20260925-liez.jpg",
+        "href": "#show=anastasia",
+        "text": "A grand ice musical inspired by the legendary story of Princess Anastasia Romanova — a tale of love, destiny and a young woman searching for her place in a world on the brink of change.",
+        "slug": "anastasia",
+        "video": "",
+        "about": "A vanished princess. An empire on the brink of collapse. A love powerful enough to change destiny. Princess Anastasia — The Secret of the Heir to the Throne brings to the ice one of the most captivating and mysterious stories of the 20th century, inspired by the legend of Anastasia Romanova.\n\nSet against the grandeur of the imperial court and the turmoil of the 1917 Revolution, the story follows young Anastasia as she faces a world transformed overnight. Forced to leave her familiar life behind, she sets out in search of a new beginning — and a chance to discover who she truly is.\n\nImperial palaces, lavish costumes, elegant balls, intrigue and passion come together with scenes of revolution, Gypsy songs and moments of deep romance, creating a story filled with love, betrayal, hope, fate and the search for freedom.\n\nOn the ice, theatrical artistry meets the elegance and energy of figure skating. Spectacular choreography, dramatic acting, exquisite costumes, historical video projections and original music created especially for the production transform the ice arena into a grand theatrical stage.\n\nAt the heart of the story is Anastasia — a young woman who has lost everything she once held dear and must find the strength to begin again. Along the way, she discovers love and loyalty, faces betrayal and uncertainty, and learns that sometimes destiny is something we must uncover for ourselves.\n\nA spectacular ice show where history, legend and passion come to life through the artistry of figure skating.",
+        "facts": [
+          {
+            "label": "Running time",
+            "value": "95 minutes"
+          },
+          {
+            "label": "Age",
+            "value": "6+"
+          },
+          {
+            "label": "Performers",
+            "value": "24"
+          },
+          {
+            "label": "Interval",
+            "value": "one, 20 minutes"
+          }
+        ],
+        "lead": "A grand ice musical inspired by the legendary story of Princess Anastasia Romanova — a tale of love, destiny and a young woman searching for her place in a world on the brink of change.",
+        "gallery": []
+      },
+      {
+        "title": "Alice Through the Looking-Glass on Ice",
+        "status": "On tour",
+        "image": "images/new-show-20260925-wabd.jpg",
+        "slug": "new-show",
+        "href": "#show=new-show",
+        "text": "A magical ice show where Alice steps through the Looking-Glass and finds herself in a world where everything is turned upside down — and adventure awaits at every turn.",
+        "lead": "A magical ice show where Alice steps through the Looking-Glass and finds herself in a world where everything is turned upside down — and adventure awaits at every turn.",
+        "about": "Welcome to the world behind the Looking-Glass — a place where chess pieces come to life, paths lead in unexpected directions and nothing is quite what it seems.\nAlice Through the Looking-Glass on Ice is a spectacular musical ice show based on Lewis Carroll’s beloved classic. Professional figure skaters perform intricate elements of figure skating and circus arts, while cutting-edge special effects, large-scale video projections, lighting and original music bring the magical world of Wonderland to life.\nThis is not quite the Alice you remember.\n\nAfter stepping through the Looking-Glass, Alice finds herself in a strange and fascinating world where everything works differently. Here, chess pieces move across the board, roads seem to shift, and familiar characters appear in unexpected forms. The Red Queen rules this extraordinary kingdom, while the White Rabbit, Tweedledee and Tweedledum, the Cheshire Cat, the Mad Hatter and the March Hare await Alice along the way.\n\nBut who will help Alice find her way through this unpredictable world? Will she be able to reach the other side of the chessboard and become a queen? Or is the entire adventure simply a strange dream?\n\nYoung spectators are invited to step into Alice’s place and experience the adventure for themselves. The story will appeal to children aged 6 and over, while its humour, visual spectacle and familiar characters will also delight adults.",
+        "video": "",
+        "facts": [],
+        "gallery": []
+      }
+    ],
+    "back": "All shows",
+    "cta": "Buy tickets",
+    "videoTitle": "Watch the show",
+    "videoEmpty": "The video is coming soon.",
+    "others": "More shows",
+    "videoCta": "Watch the video",
+    "datesCta": "See dates",
+    "factsTitle": "About the show",
+    "watch": "Watch the video",
+    "shotsTitle": "Photos"
+  },
+  "piano": {
+    "heading": "The piano itself",
+    "intro": "In the first act the ice belongs to one skater and a piano. The instrument below is real: press a key with your mouse, your finger or your computer keyboard. The letters are printed on the keys.",
+    "play": "Play the first-act theme",
+    "stop": "Stop",
+    "hint": "Sound plays only when you press a key."
+  },
+  "dates": {
+    "heading": "Dates and tickets",
+    "intro": "The first three rows by the boards give the best view of both the ice and the orchestra.",
+    "button": "Choose seats",
+    "soldLabel": "Sold out",
+    "items": [
+      {
+        "day": "30 October",
+        "time": "19:00",
+        "seats": "Sold out",
+        "state": "free"
+      },
+      {
+        "day": "13 November",
+        "time": "16:00",
+        "seats": "24 seats left",
+        "state": "free"
+      },
+      {
+        "day": "20 December",
+        "time": "19:00",
+        "seats": "Seats in every section",
+        "state": "free"
+      },
+      {
+        "day": "4 January",
+        "time": "13:00",
+        "seats": "Available, family matinee",
+        "state": "free"
+      },
+      {
+        "day": "8 February",
+        "time": "19:00",
+        "seats": "Final night, 9 seats left",
+        "state": "few"
+      }
+    ]
+  },
+  "footer": {
+    "lines": [],
+    "links": [
+      {
+        "label": "About",
+        "href": "#about"
+      },
+      {
+        "label": "Shows",
+        "href": "#shows"
+      },
+      {
+        "label": "Tickets",
+        "href": "#dates"
+      },
+      {
+        "label": "Back to top",
+        "href": "#top"
+      }
+    ],
+    "note": "Flash photography and filming are not allowed: the light distracts performers during lifts, and the vocals are live."
+  },
+  "theme": {
+    "dark": "Night",
+    "light": "Ice"
+  },
+  "music": {
+    "heading": "Our music",
+    "intro": "Every production has its own score, recorded with the orchestra and the vocalists who perform it on the ice. Listen to a preview and take the music home.",
+    "buy": "Buy",
+    "listen": "Preview",
+    "pause": "Pause",
+    "soon": "Coming soon",
+    "tracklist": "Tracklist",
+    "albums": [
+      {
+        "title": "Aladdin and the Famous Stories from 1001 Nights on Ice",
+        "subtitle": "Original soundtrack",
+        "show": "aladdin",
+        "cover": "images/aladdin-20260925-x0ct.jpg",
+        "price": "",
+        "buyUrl": "",
+        "preview": "audio/aladdin-20260920-b4re.mp3",
+        "tracks": [
+          {
+            "title": "Theme",
+            "length": "2:38",
+            "audio": "audio/theme-20260925-t15n.mp3"
+          },
+          {
+            "title": "Budur",
+            "length": "2:38",
+            "audio": "audio/budur-20260925-n9ju.mp3"
+          },
+          {
+            "title": "Carpet",
+            "length": "3:00",
+            "audio": "audio/carpet-mm-4416-20260925-cig1.mp3"
+          },
+          {
+            "title": "Gnie",
+            "length": "2:36",
+            "audio": "audio/gnie-20260925-gbta.mp3"
+          },
+          {
+            "title": "Sadal",
+            "length": "2:15",
+            "audio": "audio/sadal-08-20260925-pxhc.mp3"
+          }
+        ]
+      },
+      {
+        "title": "Alice in Wonderland on Ice",
+        "subtitle": "Original soundtrack",
+        "show": "alice",
+        "cover": "images/alice-20260926-sg30.jpg",
+        "price": "",
+        "buyUrl": "",
+        "preview": "audio/alice-20260920-1kjt.mp3",
+        "tracks": [
+          {
+            "title": "AliceSolo",
+            "length": "2:57",
+            "audio": "audio/alicesolo-20260925-97gc.mp3"
+          },
+          {
+            "title": "Teapot",
+            "length": "1:40",
+            "audio": "audio/teapot-20260925-0bll.mp3"
+          },
+          {
+            "title": "RedQueenSolo",
+            "length": "4:03",
+            "audio": "audio/redqueensolo-20260925-kjlv.mp3"
+          },
+          {
+            "title": "MadHatterSolo",
+            "length": "3:31",
+            "audio": "audio/madhattersolo-20260925-mcxr.mp3"
+          },
+          {
+            "title": "Shine for me",
+            "length": "5:21",
+            "audio": "audio/shine-for-me-20260925-bpf0.mp3"
+          }
+        ]
+      },
+      {
+        "title": "Dracula: The Story of Eternal Love",
+        "subtitle": "Original soundtrack",
+        "show": "",
+        "cover": "images/music-20260926-gjoy.jpg",
+        "price": "",
+        "buyUrl": "",
+        "preview": "",
+        "tracks": [
+          {
+            "title": "JohnSolo",
+            "length": "4:45",
+            "audio": "audio/johnsolo-20260925-n1cn.mp3"
+          },
+          {
+            "title": "MinaSolo",
+            "length": "3:41",
+            "audio": "audio/minasolo-20260925-npmy.mp3"
+          },
+          {
+            "title": "VampiresMarch",
+            "length": "4:43",
+            "audio": "audio/vampiresmarch-20260925-epx3.mp3"
+          }
+        ]
+      },
+      {
+        "title": "The Little Prince on Ice",
+        "subtitle": "Original soundtrack",
+        "show": "",
+        "cover": "images/music-20260926-kuqs.jpg",
+        "price": "",
+        "buyUrl": "",
+        "preview": "",
+        "tracks": [
+          {
+            "title": "Планета Короля",
+            "length": "3:01",
+            "audio": "audio/music-20260925-8vgy.mp3"
+          },
+          {
+            "title": "МП прилетел на Землю",
+            "length": "2:49",
+            "audio": "audio/music-20260925-xizy.mp3"
+          },
+          {
+            "title": "Замерзание Розы",
+            "length": "3:49",
+            "audio": "audio/music-20260925-zlii.mp3"
+          },
+          {
+            "title": "МП - год скитания по Земле",
+            "length": "1:50",
+            "audio": "audio/music-20260925-cuzf.mp3"
+          },
+          {
+            "title": "Cоло Змеи",
+            "length": "4:16",
+            "audio": "audio/c-20260925-d7lr.mp3"
+          }
+        ]
+      },
+      {
+        "title": "Princess Anastasia — The Secret of the Heir to the Throne",
+        "subtitle": "Original soundtrack",
+        "show": "",
+        "cover": "images/music-20260925-vt3o.jpg",
+        "price": "",
+        "buyUrl": "",
+        "preview": "",
+        "tracks": [
+          {
+            "title": "Anastasia",
+            "length": "2:06",
+            "audio": "audio/anastasia-20260925-ib74.mp3"
+          },
+          {
+            "title": "N9-5",
+            "length": "3:42",
+            "audio": "audio/n9-5-20260925-95uy.mp3"
+          },
+          {
+            "title": "N14",
+            "length": "3:05",
+            "audio": "audio/n14-20260925-vezo.mp3"
+          },
+          {
+            "title": "N21-22",
+            "length": "2:42",
+            "audio": "audio/n21-22-20260925-dlc2.mp3"
+          },
+          {
+            "title": "N32",
+            "length": "2:54",
+            "audio": "audio/n32-20260925-v8tm.mp3"
+          }
+        ]
+      }
+    ],
+    "showHeading": "Music from this show"
+  }
+}
