@@ -1986,7 +1986,6 @@ function albumHTML(a, i) {
         <div class="album-cover">
           <svg class="album-note" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17.5V5.2l11-2.2v12.3"/><circle cx="6.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="15.3" r="2.5"/><path d="M9 9.2l11-2.2"/></svg>
           ${cover ? `<img src="${esc(cover)}" alt="" loading="lazy" onerror="this.remove()">` : ''}
-          ${a.preview ? `<button class="album-play" type="button" aria-label="${esc(M.listen || 'Preview')}"></button>` : ''}
         </div>
         <div>
           <div class="album-title">${esc(a.title)}</div>
@@ -1999,7 +1998,6 @@ function albumHTML(a, i) {
                <a class="pick" href="${esc(a.buyUrl)}" target="_blank" rel="noopener">${esc(M.buy || 'Buy')}</a>`
             : `<span class="album-soon">${esc(M.soon || 'Coming soon')}</span>`}
         </div>
-        ${a.preview ? '<div class="album-bar"><i></i></div>' : ''}
         ${tracks.length ? `<div class="album-panel"><ol class="trks">${trackRows(tracks)}</ol></div>` : ''}
       </li>`;
 }
@@ -2025,13 +2023,7 @@ function fillAlbums(box, albums) {
       toggle();
     });
   });
-  box.querySelectorAll('.album').forEach((row) => {
-    const a = albums[+row.dataset.i];
-    if (!a || !a.preview) return;
-    wireBar(row, a.preview);
-    const btn = row.querySelector('.album-play');
-    if (btn) btn.addEventListener('click', (e) => { e.stopPropagation(); toggleRow(row, a.preview); });
-  });
+
 }
 
 /* строки треков — общие для главной и страницы шоу */
