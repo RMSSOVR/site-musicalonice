@@ -451,8 +451,6 @@ const FORM = [
 
   { t: 'Подвал', note: 'логотип, соцсети, подписи', fields: [
     ['footer.tagline', 'Короткая фраза под логотипом', 'area'],
-    ['footer.linksTitle', 'Заголовок колонки со ссылками', 'text'],
-    ['footer.contactsTitle', 'Заголовок колонки с контактами', 'text'],
     ['footer.legal', 'Нижняя строка: {year} — год, {brand} — марка', 'text'],
     ['footer.note', 'Сноска справа внизу', 'area']
   ], lines: 'footer.lines',
@@ -468,9 +466,6 @@ const FORM = [
            ['kind', 'Тип', 'select', [['', 'определить самому'], ['email', 'почта'], ['phone', 'телефон'], ['link', 'ссылка']]]],
     blank: { label: '', value: '', kind: '' } },
 
-  { t: 'Подвал: ссылки', note: 'колонка навигации', list: 'footer.links', label: 'Ссылка', cols: 'cols-2',
-    item: [['label', 'Надпись'], ['href', 'Адрес: #about, #shows, #dates или полный']],
-    blank: { label: 'Наверх', href: '#top' } }
 ];
 
 /* ——— построение формы ——— */
